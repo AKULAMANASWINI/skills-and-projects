@@ -1,7 +1,12 @@
 # Plate & Barbell
 
-A two-person food and training log. One page, no build step: `index.html` is the
-whole application.
+Madhu and Aravind's food and training log. One page, no build step: `index.html`
+is the whole application.
+
+Styled to the couple's 12-week plan document: bone ground, Fraunces headings,
+Work Sans body, Space Mono for every label and number, moss green structure with
+coral for Madhu and teal for Aravind. Square-cornered bordered cards, a 3px
+left rule for person identity, and hairline `--line` separators throughout.
 
 Live (private to the owner's account): https://claude.ai/artifact/QFgnBt4yFivKUjJo93nJCw
 
@@ -21,8 +26,12 @@ Live (private to the owner's account): https://claude.ai/artifact/QFgnBt4yFivKUj
 - Bar-loading calculator using IWF competition plate colours.
 - Water, body weight and steps.
 
-**Plan** — a weekly training split and a weekly meal plan per person, both
-editable. `Use plan` on a meal drops the planned foods straight into the log.
+**Plan** — the Mon / Wed / Fri / Sun split (Lower + Core, Upper Push, Upper Pull,
+Conditioning) built from the gym's own kit: squat rack, cable machine, assisted
+pull-up/dip station, kettlebells, TRX, RowErg, Peloton, elliptical, treadmills.
+Rest days carry the 10,000-step target. Alongside it a weekly meal plan per
+person, each day showing planned calories against that person's target so a
+mismatch is visible. `Use plan` on a meal drops the planned foods into the log.
 
 **Trends** — 14 / 30 / 90 days: calories against target, macro stack, body weight
 (both people overlaid), volume by muscle group, and a consistency grid. A `Table`
@@ -31,9 +40,20 @@ toggle shows the same numbers as rows.
 **Library** — the food table (per 100 g) and the exercise table, plus your own
 additions.
 
-**Settings** — per person: sex, age, height, weight, activity, goal. Targets come
+**Settings** — per person: sex, age, height, weight, activity, goal. Madhu is set
+to 4'10" / 58.5 kg on a fat-loss target, Aravind to 5'11" / 79 kg on a lean-gain
+target; ages are starter values. Targets come
 from Mifflin-St Jeor → TDEE → goal adjustment → 1.8–2.0 g/kg protein, 25% fat,
 carbs as the remainder; override any of them manually.
+
+## Chart colour
+
+Series colours were re-stepped into the plan's own family and validated against
+the bone card surface with the data-viz validator: light `#C4562F / #008C81 /
+#7B4F9B` passes lightness, chroma, CVD separation, normal-vision separation and
+contrast on all pairs. The dark steps `#D2703F / #1F9E92 / #9A80C4` pass every
+gate with CVD separation in the 6–8 warn band, which the always-present legend,
+the 2px gaps between stacked segments and the table view cover.
 
 ## Data
 
