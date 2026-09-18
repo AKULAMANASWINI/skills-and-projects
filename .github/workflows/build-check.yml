@@ -1,5 +1,5 @@
-# Keeps docs/index.html (what GitHub Pages serves) in step with the artifact
-# source it is generated from.
+# Keeps the docs tree (what GitHub Pages serves) in step with the artifact
+# sources it is generated from.
 #
 # This workflow does not deploy. Pages is configured as "Deploy from a branch"
 # -> /docs, so GitHub serves the committed build directly and runs its own
@@ -15,6 +15,7 @@ on:
     branches: [claude/wizardly-noether-2cbh0z]
     paths:
       - 'plate-and-barbell/index.html'
+      - 'hobby-ledger/index.html'
       - 'tools/build-standalone.mjs'
       - 'docs/**'
       - '.github/workflows/build-check.yml'
@@ -34,15 +35,15 @@ jobs:
         with:
           node-version: '22'
 
-      - name: Rebuild the standalone page
+      - name: Rebuild the standalone pages
         run: node tools/build-standalone.mjs
 
-      - name: Fail if the committed build is stale
+      - name: Fail if a committed build is stale
         run: |
-          if ! git diff --quiet -- docs/index.html; then
-            echo "::error file=docs/index.html::docs/index.html is out of date."
+          if ! git diff --quiet -- docs; then
+            echo "::error::A page under docs/ is out of date."
             echo "Run 'node tools/build-standalone.mjs' and commit the result."
-            git --no-pager diff --stat -- docs/index.html
+            git --no-pager diff --stat -- docs
             exit 1
           fi
-          echo "docs/index.html matches plate-and-barbell/index.html"
+          echo "docs/ matches the artifact sources it is built from"
