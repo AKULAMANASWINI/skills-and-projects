@@ -8,7 +8,14 @@ Work Sans body, Space Mono for every label and number, moss green structure with
 coral for Madhu and teal for Aravind. Square-cornered bordered cards, a 3px
 left rule for person identity, and hairline `--line` separators throughout.
 
-Live (private to the owner's account): https://claude.ai/artifact/QFgnBt4yFivKUjJo93nJCw
+Two places it runs:
+
+| Where | URL | Storage |
+|---|---|---|
+| claude.ai artifact | https://claude.ai/artifact/QFgnBt4yFivKUjJo93nJCw | Artifact document store — syncs across devices and between both people |
+| GitHub Pages | https://akulamanaswini.github.io/skills-and-projects/ | `localStorage` — per browser, no sync |
+
+Same code. The app detects which runtime it is in and says so in a banner.
 
 ## What it does
 
@@ -76,15 +83,19 @@ Exports, from Settings: `nutrition-log.csv` (one row per food entry),
 with targets alongside actuals) and a full JSON backup that imports back. ISO
 dates, metric units, snake_case headers.
 
-## Running it locally
+## Building the hostable copy
 
-The published page omits `<!doctype>`, `<html>`, `<head>` and `<body>` — the
-artifact runtime supplies them. To open it in a browser directly, wrap it:
+`plate-and-barbell/index.html` omits `<!doctype>`, `<html>`, `<head>` and
+`<body>` — the artifact runtime supplies them plus a small reset. Anywhere else
+the page needs that shell itself, so it is generated:
 
 ```sh
-{ printf '<!doctype html><html><head><meta charset="utf-8">'
-  printf '<meta name="viewport" content="width=device-width,initial-scale=1">'
-  printf '</head><body>'; cat index.html; printf '</body></html>'; } > preview.html
+node tools/build-standalone.mjs   # -> docs/index.html
 ```
 
-`window.claude` is absent there, so it runs on `localStorage`.
+That output is what GitHub Pages serves, and it opens straight from disk too.
+`.github/workflows/pages.yml` rebuilds it on every push, fails the build if the
+committed copy is stale, and deploys it.
+
+Edit `plate-and-barbell/index.html` — never `docs/index.html`, which is
+overwritten.
