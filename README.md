@@ -11,5 +11,6 @@
 - **GitHub Pages** — <https://akulamanaswini.github.io/skills-and-projects/> — data in
   `localStorage`, per browser, no sync.
 
-`tools/build-standalone.mjs` wraps the artifact page into `docs/index.html`, which
-`.github/workflows/pages.yml` builds and deploys on every push.
+`tools/build-standalone.mjs` wraps the artifact page into `docs/index.html`;
+`.github/workflows/build-check.yml` fails the build if that committed copy drifts
+from its source. Pages serves `/docs` straight from the branch.

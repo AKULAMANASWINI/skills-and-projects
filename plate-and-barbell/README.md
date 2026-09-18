@@ -94,8 +94,15 @@ node tools/build-standalone.mjs   # -> docs/index.html
 ```
 
 That output is what GitHub Pages serves, and it opens straight from disk too.
-`.github/workflows/pages.yml` rebuilds it on every push, fails the build if the
-committed copy is stale, and deploys it.
+`.github/workflows/build-check.yml` rebuilds it on every push and fails if the
+committed copy is stale.
+
+Pages serves it directly from the branch — **Settings -> Pages -> Source:
+"Deploy from a branch", branch `claude/wizardly-noether-2cbh0z`, folder
+`/docs`**. That one setting has to be set by hand: a workflow-based deploy
+cannot bootstrap itself, because `GITHUB_TOKEN` may deploy to Pages but may not
+create the Pages site, so `actions/configure-pages` with `enablement: true`
+fails with `Resource not accessible by integration` until Pages exists.
 
 Edit `plate-and-barbell/index.html` — never `docs/index.html`, which is
 overwritten.

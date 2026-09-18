@@ -1,0 +1,48 @@
+# Keeps docs/index.html (what GitHub Pages serves) in step with the artifact
+# source it is generated from.
+#
+# This workflow does not deploy. Pages is configured as "Deploy from a branch"
+# -> /docs, so GitHub serves the committed build directly and runs its own
+# pages-build-deployment. A workflow-based deploy was tried and cannot
+# bootstrap itself: GITHUB_TOKEN may deploy to Pages but may not create the
+# Pages site, so actions/configure-pages with enablement:true fails with
+# "Resource not accessible by integration" until a human enables Pages once.
+
+name: Check the Pages build is current
+
+on:
+  push:
+    branches: [claude/wizardly-noether-2cbh0z]
+    paths:
+      - 'plate-and-barbell/index.html'
+      - 'tools/build-standalone.mjs'
+      - 'docs/**'
+      - '.github/workflows/build-check.yml'
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build-is-current:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Rebuild the standalone page
+        run: node tools/build-standalone.mjs
+
+      - name: Fail if the committed build is stale
+        run: |
+          if ! git diff --quiet -- docs/index.html; then
+            echo "::error file=docs/index.html::docs/index.html is out of date."
+            echo "Run 'node tools/build-standalone.mjs' and commit the result."
+            git --no-pager diff --stat -- docs/index.html
+            exit 1
+          fi
+          echo "docs/index.html matches plate-and-barbell/index.html"
