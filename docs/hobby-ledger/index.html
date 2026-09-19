@@ -820,22 +820,26 @@ function mulberry32(a){
   return function(){ a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a);
     t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; };
 }
+/* Inks 1, 2 and 3 on purpose: those three slots are the ones the palette
+   validates on ALL pairs, not only adjacent ones, so with three hobbies every
+   comparison on screen — stack, bar, key swatch — clears the gates. */
 const DEMO_HOBBIES = [
-  {name:"Classical guitar", cat:"music",    ink:1, unit:"",       goalType:"minutes",  goalValue:180,
-   days:[1,2,3,4,5,6,0], chance:.55, mean:35, spread:18, hour:[19,22], rate:0,
-   notes:["Villa-Lobos étude 1, slowly","Scales and arpeggios","Bourrée, memorising the B section","Right-hand tremolo drill","Recorded a take, hated it, kept it"]},
-  {name:"Trail running",    cat:"moving",   ink:3, unit:"km",     goalType:"sessions", goalValue:3,
-   days:[2,4,6], chance:.72, mean:52, spread:20, hour:[6,8], rate:.115, projects:1,
-   notes:["Ridge loop, muddy","Easy recovery pace","Hill repeats — brutal","Long one out past the reservoir","Legs felt good for once"]},
-  {name:"Film photography", cat:"making",   ink:2, unit:"photos", goalType:"minutes",  goalValue:120,
-   days:[0,6], chance:.6, mean:95, spread:45, hour:[10,16], rate:.28,
-   notes:["Walked the canal with the Pentax","Developing two rolls of HP5","Scanning last month's backlog","Portrait light test in the kitchen","Contact sheets, finally"]},
-  {name:"Bread baking",     cat:"making",   ink:4, unit:"loaves", goalType:"sessions", goalValue:2,
-   days:[0,3,6], chance:.5, mean:110, spread:35, hour:[8,14], rate:.019,
-   notes:["Sourdough, 78% hydration","Overproofed — still ate it","Focaccia with rosemary","Starter felt sluggish today","Best crumb yet"]},
-  {name:"Reading",          cat:"words",    ink:7, unit:"pages",  goalType:"minutes",  goalValue:240,
-   days:[0,1,2,3,4,5,6], chance:.68, mean:42, spread:22, hour:[21,23], rate:.62, projects:2,
-   notes:["","Slow chapter","Couldn't put it down","Read on the train","Fell asleep holding it"]},
+  {name:"Pottery", cat:"making", ink:2, unit:"pieces", goalType:"sessions", goalValue:2,
+   days:[2,6], chance:.7, mean:120, spread:40, hour:[10,19], rate:.012,
+   projects:[["Dinner set — six bowls","making"],["Mug order for Amma","done"]],
+   notes:["Wheel practice — six cylinders, kept two","Trimming last week's bowls",
+     "Glazing day, celadon and a tenmoku test","Centring still fighting me",
+     "Hand-built a slab vase","Loaded the bisque kiln","Pulled handles until they stopped cracking"]},
+  {name:"Sewing", cat:"making", ink:1, unit:"", goalType:"minutes", goalValue:150,
+   days:[0,3,6], chance:.55, mean:85, spread:40, hour:[14,21], rate:0,
+   projects:[["Linen shirt","making"],["Tote bag","done"],["Quilt, eventually","idea"]],
+   notes:["Cut the pattern, nothing sewn yet","Set both sleeves, unpicked one",
+     "Hemming — the boring bit","Overlocked the seams","Toile fits, cutting the real fabric",
+     "Buttonholes, finally","Rethreaded the machine four times"]},
+  {name:"Journal writing", cat:"words", ink:3, unit:"pages", goalType:"sessions", goalValue:5,
+   days:[0,1,2,3,4,5,6], chance:.72, mean:22, spread:12, hour:[21,23], rate:.09,
+   notes:["","Morning pages, barely awake","Long entry about the week","Three lines and out",
+     "Wrote through something","Mostly lists","Reread January, cringed, kept going"]},
 ];
 function buildDemo(){
   const rnd = mulberry32(0x48424C21);
@@ -847,12 +851,11 @@ function buildDemo(){
       goalType: spec.goalType, goalValue: spec.goalValue,
       createdAt: addDays(todayISO(), -DAYS_BACK),
     });
-    if(spec.projects === 1) h.projects = [
-      {id: uid(), name: "Spring half marathon", status: "making", note: "Sub 1:55 if the knee holds",
-       createdAt: addDays(todayISO(), -70), doneAt: ""}];
-    if(spec.projects === 2) h.projects = [
-      {id: uid(), name: "The Overstory", status: "done", note: "", createdAt: addDays(todayISO(), -110), doneAt: addDays(todayISO(), -38)},
-      {id: uid(), name: "Piranesi", status: "making", note: "", createdAt: addDays(todayISO(), -30), doneAt: ""}];
+    h.projects = (spec.projects || []).map(([name, status], i) => ({
+      id: uid(), name, status, note: "",
+      createdAt: addDays(todayISO(), -100 + i * 30),
+      doneAt: status === "done" ? addDays(todayISO(), -40 + i * 10) : "",
+    }));
     state.hobbies[h.id] = h;
     spec._id = h.id;
   });

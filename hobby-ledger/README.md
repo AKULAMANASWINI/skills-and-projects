@@ -106,9 +106,12 @@ capability; anywhere else it is an ordinary browser download.
 
 ## The example ledger
 
-With nothing logged, the app builds four months of plausible sessions so the
-charts have something to show, labels them in a banner, and keeps them in memory
-— they are never written to storage. The first real entry clears them but keeps
+With nothing logged, the app builds four months of plausible pottery, sewing and
+journal-writing sessions so the charts have something to show, labels them in a
+banner, and keeps them in memory — they are never written to storage. Those three
+take inks 1, 2 and 3, the slots the palette validates on all pairs rather than
+only adjacent ones, so with three series every comparison on screen clears the
+gates. The first real entry clears them but keeps
 the hobbies, since the action that cleared them was almost certainly logging
 against one.
 
