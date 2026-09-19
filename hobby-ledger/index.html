@@ -1,0 +1,2361 @@
+<title>Hobby Ledger</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700&family=Hanken+Grotesk:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#EBEDEE; --card:#FAFBFB; --card-2:#E2E6E8; --sunk:#F1F3F4;
+  --line:#C8D0D4; --line-soft:#DBE1E4;
+  --ink:#0F1A1F; --body:#3E4C53; --muted:#67757D;
+  --accent:#0E4552; --accent-2:#1B6475; --accent-soft:#DAE5E8; --on-accent:#FAFBFB;
+  --good:#1F7A4D; --warning:#8A6108; --critical:#B03024;
+  --good-soft:#DFEFE6; --warning-soft:#F5EBD3; --critical-soft:#F7E1DE;
+  /* hobby inks — validated categorical palette, light steps */
+  --k1:#2a78d6; --k2:#eb6834; --k3:#1baf7a; --k4:#eda100;
+  --k5:#e87ba4; --k6:#008300; --k7:#4a3aa7; --k8:#e34948;
+  /* sequential blue ramp for the consistency grid */
+  --q0:#E2E6E8; --q1:#cde2fb; --q2:#9ec5f4; --q3:#5598e7; --q4:#2a78d6; --q5:#184f95;
+  --grid:#DBE1E4;
+  --display:'Bricolage Grotesque',ui-sans-serif,'Segoe UI',system-ui,sans-serif;
+  --sans:'Hanken Grotesk',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+  --mono:'DM Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
+  --shadow:0 1px 0 rgba(15,26,31,.04);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#0F1416; --card:#181F22; --card-2:#212A2E; --sunk:#141A1D;
+    --line:#2E393E; --line-soft:#232D31;
+    --ink:#E8EEF0; --body:#B4C0C6; --muted:#8A979E;
+    --accent:#6FC3D1; --accent-2:#93D5E0; --accent-soft:#1D3238; --on-accent:#0F1416;
+    --good:#5FB98A; --warning:#D8A93F; --critical:#E77A6B;
+    --good-soft:#163024; --warning-soft:#302710; --critical-soft:#341B18;
+    --k1:#3987e5; --k2:#d95926; --k3:#199e70; --k4:#c98500;
+    --k5:#d55181; --k6:#008300; --k7:#9085e9; --k8:#e66767;
+    --q0:#1E282C; --q1:#143453; --q2:#1C4E86; --q3:#2a78d6; --q4:#5598e7; --q5:#9ec5f4;
+    --grid:#232D31;
+    --shadow:0 1px 0 rgba(0,0,0,.25);
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#0F1416; --card:#181F22; --card-2:#212A2E; --sunk:#141A1D;
+  --line:#2E393E; --line-soft:#232D31;
+  --ink:#E8EEF0; --body:#B4C0C6; --muted:#8A979E;
+  --accent:#6FC3D1; --accent-2:#93D5E0; --accent-soft:#1D3238; --on-accent:#0F1416;
+  --good:#5FB98A; --warning:#D8A93F; --critical:#E77A6B;
+  --good-soft:#163024; --warning-soft:#302710; --critical-soft:#341B18;
+  --k1:#3987e5; --k2:#d95926; --k3:#199e70; --k4:#c98500;
+  --k5:#d55181; --k6:#008300; --k7:#9085e9; --k8:#e66767;
+  --q0:#1E282C; --q1:#143453; --q2:#1C4E86; --q3:#2a78d6; --q4:#5598e7; --q5:#9ec5f4;
+  --grid:#232D31;
+  --shadow:0 1px 0 rgba(0,0,0,.25);
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0; background:var(--paper); color:var(--body); font-family:var(--sans); font-size:15px; line-height:1.5;
+  -webkit-font-smoothing:antialiased}
+h1,h2,h3,h4{font-family:var(--display); font-weight:600; margin:0; color:var(--ink); text-wrap:balance; letter-spacing:-.015em; line-height:1.15}
+h1{font-size:1.45rem} h2{font-size:1.2rem} h3{font-size:1.02rem} h4{font-size:.94rem}
+p{margin:0}
+button,input,select,textarea{font:inherit; color:inherit}
+button{cursor:pointer}
+a{color:var(--accent-2)}
+:focus-visible{outline:2px solid var(--accent); outline-offset:2px; border-radius:1px}
+.num,.mono{font-family:var(--mono); font-variant-numeric:tabular-nums; font-feature-settings:"tnum"}
+.eyebrow{font-family:var(--mono); font-size:10.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--muted)}
+.sr{position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap}
+@media (prefers-reduced-motion: reduce){ *{animation-duration:.001ms!important; transition-duration:.001ms!important} }
+
+/* ---------------- shell ---------------- */
+.app{display:flex; flex-direction:column; min-height:100%}
+.topbar{position:sticky; top:env(safe-area-inset-top,0px); z-index:40; background:var(--paper); border-bottom:1px solid var(--line)}
+.topbar-in{max-width:1120px; margin:0 auto; padding:16px 20px 10px; display:flex; align-items:center; gap:12px; flex-wrap:wrap}
+.brand{display:flex; align-items:center; gap:10px; margin-right:auto; min-width:0}
+.brand-mark{width:28px; height:28px; flex:none}
+.brand h1{font-size:1.22rem}
+.brand .sub{font-family:var(--mono); font-size:10.5px; letter-spacing:.08em; text-transform:uppercase; color:var(--muted); margin-top:2px}
+
+.datenav{display:flex; align-items:stretch; border:1px solid var(--line); background:var(--card)}
+.datenav button{border:0; border-left:1px solid var(--line); background:transparent; color:var(--accent-2);
+  width:30px; display:grid; place-items:center; font-size:14px; line-height:1}
+.datenav button:first-child{border-left:0}
+.datenav button:hover{background:var(--card-2)}
+.datelabel{min-width:150px; text-align:center; height:32px; display:flex; align-items:center; justify-content:center;
+  gap:7px; padding:0 10px; font-family:var(--mono); font-size:12px; position:relative; border-left:1px solid var(--line); color:var(--ink)}
+.datelabel input{position:absolute; inset:0; opacity:0; width:100%; height:100%; cursor:pointer; border:0; padding:0}
+.datelabel .dow{color:var(--accent-2); text-transform:uppercase; font-size:10px; letter-spacing:.09em}
+.datelabel.is-today .dow{color:var(--k2)}
+
+.btn{border:1px solid var(--line); background:var(--card); color:var(--ink); height:32px; padding:0 12px;
+  display:inline-flex; align-items:center; gap:7px; font-family:var(--mono); font-size:11.5px; letter-spacing:.05em;
+  text-transform:uppercase; white-space:nowrap}
+.btn:hover{background:var(--card-2)}
+.btn[disabled]{opacity:.45; cursor:not-allowed}
+.btn-primary{background:var(--accent); border-color:var(--accent); color:var(--on-accent)}
+.btn-primary:hover{background:var(--accent-2); border-color:var(--accent-2)}
+.btn-danger{color:var(--critical); border-color:var(--line)}
+.btn-danger:hover{background:var(--critical-soft)}
+.btn-sm{height:26px; padding:0 9px; font-size:10.5px}
+.btn-ghost{border-color:transparent; background:transparent; color:var(--muted)}
+.btn-ghost:hover{background:var(--card-2); color:var(--ink)}
+
+.tabs{max-width:1120px; margin:0 auto; width:100%; padding:0 20px; display:flex; gap:2px; overflow-x:auto; scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tab{font-family:var(--mono); font-size:11.5px; letter-spacing:.07em; text-transform:uppercase; background:none; border:none;
+  padding:12px 14px; color:var(--muted); white-space:nowrap; border-bottom:2px solid transparent; flex:none}
+.tab:hover{color:var(--ink)}
+.tab[aria-selected="true"]{color:var(--ink); border-bottom-color:var(--accent); font-weight:500}
+main{max-width:1120px; width:100%; margin:0 auto; padding-inline:20px; padding-block:22px 64px; flex:1}
+.stack{display:flex; flex-direction:column; gap:18px}
+</style>
+<style>
+/* ---------------- surfaces ---------------- */
+.card{background:var(--card); border:1px solid var(--line); box-shadow:var(--shadow)}
+.card-h{display:flex; align-items:baseline; gap:12px; flex-wrap:wrap; padding:13px 16px; border-bottom:1px solid var(--line-soft)}
+.card-h h2,.card-h h3{margin-right:auto}
+.card-b{padding:16px}
+.card-b.tight{padding:0}
+.note{font-size:12.5px; color:var(--muted)}
+.rule{height:1px; background:var(--line-soft); border:0; margin:0}
+
+.banner{display:flex; gap:12px; align-items:center; flex-wrap:wrap; background:var(--card);
+  border:1px solid var(--line); border-left:3px solid var(--k4); padding:11px 15px; font-size:13px}
+.banner .eyebrow{flex:none}
+.banner p{color:var(--body)}
+.banner button{margin-left:auto}
+
+/* ---------------- ledger tiles ---------------- */
+.tiles{display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:0; border:1px solid var(--line); background:var(--card)}
+.tile{padding:14px 16px; border-left:1px solid var(--line-soft); display:flex; flex-direction:column; gap:3px; min-width:0}
+.tile:first-child{border-left:0}
+.tile .v{font-family:var(--mono); font-size:1.55rem; line-height:1.1; color:var(--ink); font-weight:500; letter-spacing:-.02em}
+.tile .v small{font-size:.92rem; color:var(--muted); font-weight:400; margin-left:2px}
+.tile .d{font-size:11.5px; color:var(--muted)}
+.tile .d b{font-weight:600; color:var(--body)}
+.tile.is-good .v{color:var(--good)} .tile.is-warn .v{color:var(--warning)}
+
+/* ---------------- timer ---------------- */
+.timer{display:flex; align-items:center; gap:14px; flex-wrap:wrap; padding:14px 16px;
+  background:var(--card); border:1px solid var(--line); border-left:3px solid var(--line)}
+.timer.running{border-left-color:var(--critical); background:var(--sunk)}
+.timer-read{font-family:var(--mono); font-size:1.85rem; font-weight:500; color:var(--ink); letter-spacing:-.02em; line-height:1;
+  font-variant-numeric:tabular-nums}
+.timer.running .timer-read{color:var(--critical)}
+.timer-meta{margin-right:auto; display:flex; flex-direction:column; gap:3px; min-width:0}
+.timer-meta .who{font-size:13px; color:var(--body); display:flex; align-items:center; gap:7px; min-width:0}
+.rec{width:8px; height:8px; border-radius:50%; background:var(--critical); flex:none; animation:pulse 1.8s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.28}}
+.timer select{max-width:190px}
+
+/* ---------------- forms ---------------- */
+.field{display:flex; flex-direction:column; gap:5px; min-width:0}
+.field > label{font-family:var(--mono); font-size:10.5px; letter-spacing:.09em; text-transform:uppercase; color:var(--muted)}
+input[type=text],input[type=number],input[type=date],input[type=time],select,textarea{
+  background:var(--card); border:1px solid var(--line); padding:7px 9px; width:100%; min-width:0;
+  font-size:14px; color:var(--ink); border-radius:0; appearance:none}
+input[type=number]{font-family:var(--mono)}
+textarea{resize:vertical; min-height:56px; line-height:1.45}
+select{background-image:linear-gradient(45deg,transparent 50%,var(--muted) 50%),linear-gradient(135deg,var(--muted) 50%,transparent 50%);
+  background-position:calc(100% - 15px) 14px,calc(100% - 10px) 14px; background-size:5px 5px,5px 5px; background-repeat:no-repeat; padding-right:28px}
+input:disabled,select:disabled{opacity:.5}
+.form-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(130px,1fr)); gap:12px; align-items:end}
+.form-actions{display:flex; gap:8px; flex-wrap:wrap; align-items:center}
+.form-actions .spacer{margin-left:auto}
+.chiprow{display:flex; gap:6px; flex-wrap:wrap}
+.chip{border:1px solid var(--line); background:var(--card); padding:5px 10px; font-family:var(--mono); font-size:11px;
+  color:var(--body); display:inline-flex; align-items:center; gap:6px}
+.chip:hover{background:var(--card-2)}
+.chip[aria-pressed="true"]{border-color:var(--accent); background:var(--accent-soft); color:var(--ink); font-weight:500}
+.chip .sw{width:9px; height:9px; flex:none}
+.mood{display:flex; gap:4px}
+.mood button{width:32px; height:30px; border:1px solid var(--line); background:var(--card); font-family:var(--mono); font-size:12px; color:var(--muted)}
+.mood button[aria-pressed="true"]{background:var(--accent); border-color:var(--accent); color:var(--on-accent); font-weight:500}
+
+/* ---------------- session rows ---------------- */
+.rows{display:flex; flex-direction:column}
+.row{display:flex; align-items:center; gap:12px; padding:11px 16px; border-top:1px solid var(--line-soft); min-width:0}
+.rows > .row:first-child{border-top:0}
+.row:hover{background:var(--sunk)}
+.row .bar{width:3px; align-self:stretch; min-height:26px; flex:none}
+.row .main{flex:1; min-width:0; display:flex; flex-direction:column; gap:2px}
+.row .t{color:var(--ink); font-size:14px; display:flex; align-items:baseline; gap:8px; flex-wrap:wrap}
+.row .t .when{font-family:var(--mono); font-size:11px; color:var(--muted)}
+.row .s{font-size:12.5px; color:var(--muted); overflow-wrap:anywhere}
+.row .mins{font-family:var(--mono); font-size:15px; color:var(--ink); text-align:right; flex:none}
+.row .mins small{color:var(--muted); font-size:11px}
+.row .acts{display:flex; gap:4px; flex:none}
+.empty{padding:26px 16px; text-align:center; color:var(--muted); font-size:13.5px}
+.empty b{display:block; color:var(--ink); font-family:var(--display); font-size:15px; margin-bottom:4px; font-weight:600}
+
+/* ---------------- badges ---------------- */
+.badge{display:inline-flex; align-items:center; gap:5px; font-family:var(--mono); font-size:10px; letter-spacing:.07em;
+  text-transform:uppercase; padding:2px 7px; border:1px solid var(--line); color:var(--muted); white-space:nowrap}
+.badge.good{color:var(--good); border-color:var(--good); background:var(--good-soft)}
+.badge.warn{color:var(--warning); border-color:var(--warning); background:var(--warning-soft)}
+.badge.crit{color:var(--critical); border-color:var(--critical); background:var(--critical-soft)}
+.badge.accent{color:var(--accent-2); border-color:var(--accent-2); background:var(--accent-soft)}
+.swatch{width:10px; height:10px; flex:none; display:inline-block}
+</style>
+<style>
+/* ---------------- hobby cards ---------------- */
+.hobbies{display:grid; grid-template-columns:repeat(auto-fill,minmax(290px,1fr)); gap:14px}
+.hcard{background:var(--card); border:1px solid var(--line); border-left:3px solid var(--line); display:flex; flex-direction:column;
+  box-shadow:var(--shadow)}
+.hcard.archived{opacity:.6}
+.hcard-h{display:flex; align-items:flex-start; gap:10px; padding:13px 15px 10px}
+.hcard-h .name{flex:1; min-width:0}
+.hcard-h h3{overflow-wrap:anywhere}
+.hcard-h .cat{font-family:var(--mono); font-size:10px; letter-spacing:.09em; text-transform:uppercase; color:var(--muted); margin-top:3px}
+.hcard-stats{display:flex; border-top:1px solid var(--line-soft); border-bottom:1px solid var(--line-soft)}
+.hcard-stats > div{flex:1; padding:9px 15px; border-left:1px solid var(--line-soft); min-width:0}
+.hcard-stats > div:first-child{border-left:0}
+.hcard-stats .v{font-family:var(--mono); font-size:1.05rem; color:var(--ink); line-height:1.2}
+.hcard-stats .l{font-family:var(--mono); font-size:9.5px; letter-spacing:.08em; text-transform:uppercase; color:var(--muted); margin-top:2px}
+.hcard-b{padding:12px 15px; display:flex; flex-direction:column; gap:10px; flex:1}
+.hcard-f{display:flex; gap:6px; padding:10px 15px; border-top:1px solid var(--line-soft); flex-wrap:wrap}
+
+.goal{display:flex; flex-direction:column; gap:5px}
+.goal-top{display:flex; align-items:baseline; gap:8px; font-size:12px; color:var(--muted)}
+.goal-top .g{margin-left:auto; font-family:var(--mono); color:var(--body)}
+.meter{height:7px; background:var(--card-2); position:relative; overflow:hidden}
+.meter > i{position:absolute; inset:0 auto 0 0; display:block}
+.meter.met > i{background:var(--good)}
+.spark{display:block; width:100%; height:30px}
+
+/* ---------------- charts ---------------- */
+.chart-wrap{padding:6px 16px 16px}
+.chart{display:block; width:100%; height:auto; overflow:visible}
+.chart text{font-family:var(--mono); font-size:10px; fill:var(--muted)}
+.chart .ax{font-size:9.5px}
+.chart .vlabel{fill:var(--body); font-size:10px}
+.chart .gridline{stroke:var(--grid); stroke-width:1}
+.chart .axisline{stroke:var(--line); stroke-width:1}
+.legend{display:flex; flex-wrap:wrap; gap:4px 14px; padding:0 16px 12px}
+.legend .item{display:inline-flex; align-items:center; gap:6px; font-size:12px; color:var(--body)}
+.legend .item .sw{width:10px; height:10px; flex:none}
+.legend .item .n{font-family:var(--mono); font-size:11px; color:var(--muted)}
+.legend .item[aria-pressed="false"]{opacity:.4}
+.legend button.item{border:0; background:none; padding:2px 0}
+
+.hoverable{cursor:crosshair}
+.tipwrap{position:relative}
+.tip{position:absolute; z-index:30; pointer-events:none; background:var(--ink); color:var(--paper); padding:7px 9px;
+  font-size:12px; line-height:1.4; max-width:240px; box-shadow:0 4px 14px rgba(0,0,0,.22); transform:translate(-50%,-100%)}
+.tip[hidden]{display:none!important}
+.tip .th{font-family:var(--mono); font-size:10px; letter-spacing:.07em; text-transform:uppercase; opacity:.7; margin-bottom:3px}
+.tip .tr{display:flex; gap:10px; align-items:center}
+.tip .tr .sw{width:8px; height:8px; flex:none}
+.tip .tr .tv{margin-left:auto; font-family:var(--mono)}
+
+/* ---------------- consistency grid ---------------- */
+.heat{overflow-x:auto; padding:6px 16px 14px}
+.heat-in{display:flex; gap:3px; min-width:min-content}
+.heat-col{display:flex; flex-direction:column; gap:3px}
+.heat-cell{width:12px; height:12px; background:var(--q0); border:0; padding:0; display:block}
+.heat-cell:hover{outline:1.5px solid var(--ink); outline-offset:1px}
+.heat-dow{display:flex; flex-direction:column; gap:3px; margin-right:5px; width:14px; flex:none}
+.heat-dow span{height:12px; font-family:var(--mono); font-size:9px; color:var(--muted); line-height:12px}
+.heat-key{display:flex; align-items:center; gap:6px; padding:0 16px 14px; font-family:var(--mono); font-size:10px; color:var(--muted)}
+.heat-key .sw{width:12px; height:12px}
+.heat-months{display:flex; gap:3px; padding-left:22px; font-family:var(--mono); font-size:9.5px; color:var(--muted); min-width:min-content}
+.heat-months span{width:12px; flex:none; white-space:nowrap; overflow:visible}
+
+/* ---------------- tables ---------------- */
+.tablewrap{overflow-x:auto; border-top:1px solid var(--line-soft)}
+table{border-collapse:collapse; width:100%; font-size:13px}
+th,td{padding:7px 12px; text-align:right; border-bottom:1px solid var(--line-soft); white-space:nowrap}
+th:first-child,td:first-child{text-align:left}
+thead th{font-family:var(--mono); font-size:10px; letter-spacing:.08em; text-transform:uppercase; color:var(--muted);
+  font-weight:400; background:var(--sunk); position:sticky; top:0}
+tbody td{font-family:var(--mono); color:var(--body)}
+tbody td:first-child{font-family:var(--sans); color:var(--ink)}
+tbody tr:hover{background:var(--sunk)}
+tfoot td{font-family:var(--mono); color:var(--ink); border-top:1px solid var(--line); font-weight:500}
+
+/* ---------------- milestones ---------------- */
+.mstones{display:flex; flex-wrap:wrap; gap:6px}
+.mstone{display:inline-flex; align-items:center; gap:6px; border:1px solid var(--line); padding:4px 9px;
+  font-family:var(--mono); font-size:11px; color:var(--muted); background:var(--card)}
+.mstone.hit{color:var(--ink); border-color:var(--accent); background:var(--accent-soft)}
+.mstone.hit .dot{background:var(--accent)}
+.mstone .dot{width:7px; height:7px; background:var(--line); flex:none}
+.projects{display:flex; flex-direction:column}
+.proj{display:flex; align-items:center; gap:10px; padding:10px 16px; border-top:1px solid var(--line-soft)}
+.proj:first-child{border-top:0}
+.proj .pn{flex:1; min-width:0; color:var(--ink); overflow-wrap:anywhere}
+.proj .pn small{display:block; font-size:11.5px; color:var(--muted); font-family:var(--mono)}
+
+/* ---------------- toast & modal ---------------- */
+.toast{position:fixed; left:50%; bottom:calc(20px + env(safe-area-inset-bottom,0px)); transform:translateX(-50%); z-index:90;
+  background:var(--ink); color:var(--paper); padding:10px 16px; font-size:13.5px; box-shadow:0 6px 22px rgba(0,0,0,.25); max-width:min(92vw,420px)}
+.toast[hidden]{display:none!important}
+.modal{position:fixed; inset:0; z-index:80; background:rgba(8,14,17,.55); display:grid; place-items:center; padding:16px}
+.modal[hidden]{display:none!important}
+.modal-in{background:var(--card); border:1px solid var(--line); width:min(520px,100%); max-height:88vh; overflow:auto; box-shadow:0 18px 50px rgba(0,0,0,.3)}
+.modal-h{display:flex; align-items:center; gap:12px; padding:14px 16px; border-bottom:1px solid var(--line-soft); position:sticky; top:0; background:var(--card)}
+.modal-h h3{margin-right:auto}
+.modal-b{padding:16px; display:flex; flex-direction:column; gap:14px}
+.modal-f{display:flex; gap:8px; padding:13px 16px; border-top:1px solid var(--line-soft); flex-wrap:wrap}
+.modal-f .spacer{margin-left:auto}
+
+/* ---------------- responsive ---------------- */
+@media (max-width:760px){
+  .topbar-in{padding:12px 16px 8px; gap:9px}
+  .tabs{padding:0 16px}
+  main{padding-inline:16px; padding-block:18px 56px}
+  .brand h1{font-size:1.1rem}
+  .datelabel{min-width:0; flex:1}
+  .datenav{flex:1 1 100%; order:5}
+  .tile .v{font-size:1.32rem}
+  .row{padding:10px 13px; gap:9px}
+  .chart-wrap,.legend,.heat,.heat-key{padding-left:13px; padding-right:13px}
+  .card-h,.card-b{padding-left:13px; padding-right:13px}
+  th,td{padding:7px 9px}
+}
+@media (max-width:460px){
+  .tiles{grid-template-columns:1fr 1fr}
+  .tile{border-left:1px solid var(--line-soft); border-top:1px solid var(--line-soft)}
+  .tile:nth-child(-n+2){border-top:0}
+  .tile:nth-child(odd){border-left:0}
+  .timer{gap:10px}
+  .timer-read{font-size:1.6rem}
+}
+</style>
+<div class="app">
+  <header class="topbar">
+    <div class="topbar-in">
+      <div class="brand">
+        <svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true">
+          <rect x="1" y="1" width="30" height="30" fill="var(--card)" stroke="var(--line)" stroke-width="1"></rect>
+          <rect x="6"  y="19" width="4" height="7"  fill="var(--k1)"></rect>
+          <rect x="12" y="14" width="4" height="12" fill="var(--k3)"></rect>
+          <rect x="18" y="9"  width="4" height="17" fill="var(--k2)"></rect>
+          <rect x="24" y="5"  width="3" height="21" fill="var(--accent)"></rect>
+        </svg>
+        <div>
+          <h1>Hobby Ledger</h1>
+          <div class="sub" id="brandsub">Hours you meant to spend</div>
+        </div>
+      </div>
+      <div class="datenav" role="group" aria-label="Choose a day">
+        <button type="button" id="dprev" aria-label="Previous day">&#8249;</button>
+        <div class="datelabel" id="dlabel">
+          <span class="dow" id="ddow">—</span><span class="num" id="ddate">—</span>
+          <input type="date" id="dinput" aria-label="Jump to a date">
+        </div>
+        <button type="button" id="dnext" aria-label="Next day">&#8250;</button>
+        <button type="button" id="dtoday" aria-label="Go to today" title="Today">&#9679;</button>
+      </div>
+      <button type="button" class="btn" id="themebtn" aria-label="Switch theme">Theme</button>
+    </div>
+    <nav class="tabs" role="tablist" aria-label="Sections" id="tabs"></nav>
+  </header>
+  <main id="view" role="tabpanel" tabindex="-1"></main>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+<div class="modal" id="modal" hidden role="dialog" aria-modal="true" aria-labelledby="modaltitle">
+  <div class="modal-in" id="modalin"></div>
+</div>
+
+<script>
+/* ============================ tiny DOM + date helpers ============================ */
+const SVGNS = "http://www.w3.org/2000/svg";
+function el(tag, attrs, kids){
+  const n = document.createElement(tag);
+  apply(n, attrs);
+  add(n, kids);
+  return n;
+}
+function svgEl(tag, attrs, kids){
+  const n = document.createElementNS(SVGNS, tag);
+  for(const k in (attrs||{})){
+    const v = attrs[k];
+    if(v === null || v === undefined || v === false) continue;
+    if(k === "text"){ n.textContent = v; continue; }
+    if(k.startsWith("on") && typeof v === "function"){ n.addEventListener(k.slice(2), v); continue; }
+    n.setAttribute(k, v);
+  }
+  add(n, kids);
+  return n;
+}
+function apply(n, attrs){
+  for(const k in (attrs||{})){
+    const v = attrs[k];
+    if(v === null || v === undefined || v === false) continue;
+    if(k === "text"){ n.textContent = v; continue; }
+    if(k === "html"){ n.innerHTML = v; continue; }
+    if(k === "class"){ n.className = v; continue; }
+    if(k === "style"){ n.setAttribute("style", v); continue; }
+    if(k === "value"){ n.value = v; continue; }
+    if(k === "checked" || k === "disabled" || k === "hidden" || k === "selected"){ n[k] = !!v; continue; }
+    if(k.startsWith("on") && typeof v === "function"){ n.addEventListener(k.slice(2), v); continue; }
+    n.setAttribute(k, v);
+  }
+}
+function add(n, kids){
+  if(kids === null || kids === undefined) return;
+  (Array.isArray(kids) ? kids : [kids]).forEach(k => {
+    if(k === null || k === undefined || k === false) return;
+    n.appendChild(typeof k === "object" ? k : document.createTextNode(String(k)));
+  });
+}
+function clear(n){ while(n.firstChild) n.removeChild(n.firstChild); return n; }
+function $(id){ return document.getElementById(id); }
+
+const clamp = (v,a,b) => Math.min(b, Math.max(a, v));
+const r0 = n => Math.round(n||0).toLocaleString();
+const r1 = n => Math.round((n||0)*10)/10;
+const sum = (a, f) => a.reduce((t,x) => t + (f ? f(x) : x), 0);
+function uid(){ return Math.random().toString(36).slice(2,10) + Date.now().toString(36).slice(-4); }
+
+const DAY_MS = 86400000;
+function todayISO(){ const d = new Date(); return iso(d); }
+function iso(d){
+  return d.getFullYear() + "-" + String(d.getMonth()+1).padStart(2,"0") + "-" + String(d.getDate()).padStart(2,"0");
+}
+function parseISO(s){ const [y,m,d] = String(s).split("-").map(Number); return new Date(y, (m||1)-1, d||1); }
+function addDays(isoStr, n){ const d = parseISO(isoStr); d.setDate(d.getDate()+n); return iso(d); }
+function daysBetween(a, b){ return Math.round((parseISO(b) - parseISO(a)) / DAY_MS); }
+const DOW_SHORT = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+const MON_SHORT = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+function dowIndex(isoStr){ return parseISO(isoStr).getDay(); }
+function fmtDate(isoStr){ const d = parseISO(isoStr); return MON_SHORT[d.getMonth()] + " " + d.getDate(); }
+function fmtDateFull(isoStr){ const d = parseISO(isoStr); return MON_SHORT[d.getMonth()] + " " + d.getDate() + ", " + d.getFullYear(); }
+function monthKey(isoStr){ return String(isoStr).slice(0,7); }
+/* Start of the week containing `isoStr`, honouring the week-start setting. */
+function weekStartOf(isoStr, weekStart){
+  const back = (dowIndex(isoStr) - (weekStart||0) + 7) % 7;
+  return addDays(isoStr, -back);
+}
+/* Minutes as the ledger writes them: 95 -> "1h 35m", 40 -> "40m". */
+function fmtMins(m){
+  m = Math.round(m||0);
+  if(m < 60) return m + "m";
+  const h = Math.floor(m/60), r = m % 60;
+  return r ? h + "h " + r + "m" : h + "h";
+}
+function fmtHours(m){ return r1((m||0)/60) + "h"; }
+function fmtClock(ms){
+  const t = Math.max(0, Math.floor(ms/1000));
+  const h = Math.floor(t/3600), m = Math.floor((t%3600)/60), s = t%60;
+  return (h ? h + ":" + String(m).padStart(2,"0") : String(m)) + ":" + String(s).padStart(2,"0");
+}
+function nowHM(){ const d = new Date(); return String(d.getHours()).padStart(2,"0") + ":" + String(d.getMinutes()).padStart(2,"0"); }
+function hourOf(hm){ const h = parseInt(String(hm||"").slice(0,2), 10); return isNaN(h) ? null : h; }
+function fmtHour(h){ const ap = h < 12 ? "am" : "pm"; const v = h % 12 === 0 ? 12 : h % 12; return v + ap; }
+</script>
+<script>
+/* ============================ the model ============================ */
+/* Eight inks, assigned in fixed order as hobbies are created and never recycled
+   by rank — a hobby keeps its colour for life, so a filter that hides three
+   series does not repaint the rest. */
+const INKS = [
+  {id:1, css:"var(--k1)", name:"Blue"},   {id:2, css:"var(--k2)", name:"Orange"},
+  {id:3, css:"var(--k3)", name:"Aqua"},   {id:4, css:"var(--k4)", name:"Yellow"},
+  {id:5, css:"var(--k5)", name:"Magenta"},{id:6, css:"var(--k6)", name:"Green"},
+  {id:7, css:"var(--k7)", name:"Violet"}, {id:8, css:"var(--k8)", name:"Red"},
+];
+const inkCss = n => (INKS[((n||1)-1) % 8] || INKS[0]).css;
+
+const CATEGORIES = [
+  ["making","Making"], ["music","Music"], ["words","Reading & writing"], ["moving","Moving"],
+  ["outdoors","Outdoors"], ["mind","Mind"], ["games","Games"], ["other","Other"],
+];
+const catLabel = c => (CATEGORIES.find(x => x[0] === c) || ["","Other"])[1];
+
+/* A hobby may count its own thing alongside minutes — pages, kilometres, words.
+   Blank means minutes are the whole story. */
+const UNIT_SUGGESTIONS = ["pages","km","words","routes","photos","pieces","tracks","plants","chapters","recipes","games","rows"];
+
+const MOODS = [["1","Slog"],["2","Meh"],["3","Fine"],["4","Good"],["5","Flow"]];
+const MILESTONE_HOURS = [10, 25, 50, 100, 250, 500, 1000];
+const PROJECT_STATUS = [["idea","Idea"],["making","In progress"],["done","Finished"],["shelved","Shelved"]];
+const statusLabel = s => (PROJECT_STATUS.find(x => x[0] === s) || ["","In progress"])[1];
+
+const TABS = [["today","Today"],["hobbies","Hobbies"],["trends","Trends"],["milestones","Milestones"],["settings","Settings"]];
+
+const state = {
+  tab: "today",
+  date: todayISO(),
+  hobbies: {},          /* id -> hobby */
+  months: {},           /* "YYYY-MM" -> [session] */
+  config: {weekStart: 1},
+  timer: null,          /* {hobbyId, startedAt} */
+  loaded: false,
+  demo: false,
+  trendRange: 90,
+  trendTable: false,
+  hidden: {},           /* hobbyId -> true, for the legend filter */
+  heatHobby: "",
+  timerPick: "",
+  showArchived: false,
+};
+
+function newHobby(over){
+  return Object.assign({
+    id: uid(), name: "", cat: "other", ink: nextInk(), unit: "",
+    goalType: "minutes", goalValue: 120, createdAt: todayISO(),
+    archived: false, projects: [],
+  }, over || {});
+}
+function nextInk(){
+  const used = new Set(Object.values(state.hobbies).map(h => h.ink));
+  for(let i=1; i<=8; i++) if(!used.has(i)) return i;
+  return (Object.keys(state.hobbies).length % 8) + 1;
+}
+function normaliseHobby(h){
+  const base = {id: h.id || uid(), name: "", cat: "other", ink: 1, unit: "", goalType: "minutes",
+    goalValue: 0, createdAt: todayISO(), archived: false, projects: []};
+  const o = Object.assign(base, h);
+  o.ink = clamp(Number(o.ink) || 1, 1, 8);
+  o.goalValue = Number(o.goalValue) || 0;
+  o.archived = !!o.archived;
+  o.projects = Array.isArray(o.projects) ? o.projects.map(p => Object.assign(
+    {id: uid(), name: "", status: "making", note: "", createdAt: todayISO(), doneAt: ""}, p)) : [];
+  return o;
+}
+function normaliseSession(s){
+  return {
+    id: s.id || uid(),
+    date: s.date || todayISO(),
+    hobbyId: s.hobbyId || "",
+    minutes: Math.max(0, Math.round(Number(s.minutes) || 0)),
+    at: s.at || "",
+    mood: Number(s.mood) || 0,
+    amount: (s.amount === null || s.amount === undefined || s.amount === "") ? null : Number(s.amount),
+    note: s.note || "",
+    projectId: s.projectId || "",
+  };
+}
+
+/* ---------------- reading the ledger ---------------- */
+function hobby(id){ return state.hobbies[id] || null; }
+function hobbyName(id){ const h = hobby(id); return h ? h.name : "Deleted hobby"; }
+function hobbyInk(id){ const h = hobby(id); return h ? inkCss(h.ink) : "var(--muted)"; }
+function liveHobbies(){
+  return Object.values(state.hobbies)
+    .filter(h => !h.archived)
+    .sort((a,b) => a.name.localeCompare(b.name));
+}
+function allHobbies(){
+  return Object.values(state.hobbies)
+    .sort((a,b) => (a.archived - b.archived) || a.name.localeCompare(b.name));
+}
+function monthList(){ return Object.keys(state.months).sort(); }
+function allSessions(){
+  const out = [];
+  monthList().forEach(k => (state.months[k] || []).forEach(s => out.push(s)));
+  return out;
+}
+function sessionsOn(dateISO){
+  const list = state.months[monthKey(dateISO)] || [];
+  return list.filter(s => s.date === dateISO)
+    .sort((a,b) => (a.at || "99:99").localeCompare(b.at || "99:99"));
+}
+function sessionsBetween(fromISO, toISO){
+  const out = [];
+  monthList().forEach(k => {
+    if(k < monthKey(fromISO) || k > monthKey(toISO)) return;
+    (state.months[k] || []).forEach(s => { if(s.date >= fromISO && s.date <= toISO) out.push(s); });
+  });
+  return out.sort((a,b) => a.date.localeCompare(b.date));
+}
+function findSession(id){
+  for(const k of monthList()){
+    const hit = (state.months[k] || []).find(s => s.id === id);
+    if(hit) return hit;
+  }
+  return null;
+}
+function hasAnyData(){ return allSessions().length > 0; }
+
+/* Lifetime figures per hobby, computed in one pass over the ledger. */
+function hobbyTotals(){
+  const bag = {};
+  Object.keys(state.hobbies).forEach(id => { bag[id] = {minutes:0, sessions:0, amount:0, first:"", last:"", best:0}; });
+  allSessions().forEach(s => {
+    const t = bag[s.hobbyId]; if(!t) return;
+    t.minutes += s.minutes; t.sessions += 1;
+    if(s.amount) t.amount += s.amount;
+    if(s.minutes > t.best) t.best = s.minutes;
+    if(!t.first || s.date < t.first) t.first = s.date;
+    if(!t.last || s.date > t.last) t.last = s.date;
+  });
+  return bag;
+}
+/* Consecutive days ending today (or yesterday — a streak survives until the
+   day is actually missed) with at least one logged session. */
+function streak(hobbyId){
+  const days = new Set();
+  allSessions().forEach(s => { if(!hobbyId || s.hobbyId === hobbyId) days.add(s.date); });
+  if(!days.size) return {current: 0, longest: 0, days};
+  const sorted = [...days].sort();
+  let longest = 1, run = 1;
+  for(let i=1; i<sorted.length; i++){
+    run = daysBetween(sorted[i-1], sorted[i]) === 1 ? run + 1 : 1;
+    if(run > longest) longest = run;
+  }
+  const t = todayISO();
+  let cur = 0, cursor = days.has(t) ? t : (days.has(addDays(t,-1)) ? addDays(t,-1) : null);
+  while(cursor && days.has(cursor)){ cur++; cursor = addDays(cursor, -1); }
+  return {current: cur, longest, days};
+}
+/* Consecutive weeks, ending this week or last, carrying at least one session.
+   A hobby done twice a week never holds a day streak; this is what "kept it up"
+   actually looks like for one. */
+function weekRun(hobbyId){
+  const weeks = new Set();
+  allSessions().forEach(s => { if(!hobbyId || s.hobbyId === hobbyId) weeks.add(weekStartOf(s.date, state.config.weekStart)); });
+  if(!weeks.size) return 0;
+  const thisWk = weekStartOf(todayISO(), state.config.weekStart);
+  let cursor = weeks.has(thisWk) ? thisWk : (weeks.has(addDays(thisWk, -7)) ? addDays(thisWk, -7) : null);
+  let n = 0;
+  while(cursor && weeks.has(cursor)){ n++; cursor = addDays(cursor, -7); }
+  return n;
+}
+function weekProgress(h, onDate){
+  const from = weekStartOf(onDate, state.config.weekStart), to = addDays(from, 6);
+  const mine = sessionsBetween(from, to).filter(s => s.hobbyId === h.id);
+  const value = h.goalType === "sessions" ? mine.length : sum(mine, s => s.minutes);
+  const goal = h.goalType === "none" ? 0 : h.goalValue;
+  return {value, goal, met: goal > 0 && value >= goal, from, to, count: mine.length,
+    minutes: sum(mine, s => s.minutes)};
+}
+function goalLabel(h){
+  if(h.goalType === "none" || !h.goalValue) return "No weekly goal";
+  return h.goalType === "sessions"
+    ? h.goalValue + (h.goalValue === 1 ? " session" : " sessions") + " a week"
+    : fmtMins(h.goalValue) + " a week";
+}
+function goalText(h, p){
+  if(!p.goal) return h.goalType === "sessions" ? p.value + " logged" : fmtMins(p.value) + " logged";
+  return (h.goalType === "sessions" ? p.value + " / " + p.goal : fmtMins(p.value) + " / " + fmtMins(p.goal));
+}
+</script>
+<script>
+/* ============================ persistence ============================
+   Two runtimes, one source. Inside a claude.ai artifact the ledger lives in the
+   document store and follows you between devices; anywhere else it falls back
+   to localStorage and says so in a banner.
+
+     config/app              week start and other preferences
+     hobbies/<hid>           one document per hobby, with its projects
+     sessions/<YYYY-MM>      one document per month, holding that month's sessions
+     timer/current           the running timer, so a reload does not lose it
+
+   Sessions are bucketed by month rather than stored one document each: the
+   store caps an artifact at 5,000 documents, and a per-session document would
+   spend that cap in a couple of years of honest logging. A month document holds
+   roughly 1,500 sessions inside the 256 KiB body limit — far past what a month
+   can physically contain.
+==================================================================== */
+const LS_KEY = "hobby_ledger_v1";
+const Persist = {db: null, queue: {}};
+
+/* One write at a time per document: each key keeps its own promise chain. */
+function enqueue(key, fn){
+  const prev = Persist.queue[key] || Promise.resolve();
+  const next = prev.then(fn, fn).catch(err => onWriteError(err));
+  Persist.queue[key] = next;
+  return next;
+}
+function onWriteError(err){
+  if(!err || !err.code) { console.warn(err); return; }
+  if(err.code === "quota_exceeded") toast("The store is full — export a backup and delete some old months.");
+  else if(err.code === "invalid_argument") toast("This view can read the ledger but not write to it.");
+  else if(err.code === "revoked") toast("Access to the stored ledger ended — this session stays in memory.");
+  else console.warn("db", err.code, err.message);
+}
+const plain = v => JSON.parse(JSON.stringify(v));
+
+function flush(key){
+  if(!Persist.db){ localSave(); return Promise.resolve(); }
+  const parts = key.split("|");
+  return enqueue(key, () => {
+    const db = Persist.db;
+    if(parts[0] === "hobby"){
+      const h = state.hobbies[parts[1]];
+      return h ? db.doc("hobbies/" + parts[1]).set(plain(h)) : db.doc("hobbies/" + parts[1]).delete();
+    }
+    if(parts[0] === "month"){
+      const items = state.months[parts[1]];
+      if(!items || !items.length) return db.doc("sessions/" + parts[1]).delete();
+      return db.doc("sessions/" + parts[1]).set({month: parts[1], items: plain(items)});
+    }
+    if(parts[0] === "config") return db.doc("config/app").set(plain(state.config));
+    if(parts[0] === "timer"){
+      return state.timer ? db.doc("timer/current").set(plain(state.timer)) : db.doc("timer/current").delete();
+    }
+    return Promise.resolve();
+  });
+}
+function localSave(){
+  if(state.demo) return;   /* the examples live in memory and nowhere else */
+  try{
+    localStorage.setItem(LS_KEY, JSON.stringify({
+      hobbies: state.hobbies, months: state.months, config: state.config, timer: state.timer,
+    }));
+  }catch(e){ /* private window or a full quota — the session still works in memory */ }
+}
+function localLoad(){
+  try{
+    const raw = localStorage.getItem(LS_KEY);
+    if(!raw) return false;
+    const o = JSON.parse(raw);
+    if(o.hobbies) Object.values(o.hobbies).forEach(h => { const n = normaliseHobby(h); state.hobbies[n.id] = n; });
+    if(o.months) Object.keys(o.months).forEach(k => { state.months[k] = (o.months[k] || []).map(normaliseSession); });
+    if(o.config) state.config = Object.assign(state.config, o.config);
+    if(o.timer && o.timer.hobbyId) state.timer = o.timer;
+    return hasAnyData();
+  }catch(e){ return false; }
+}
+
+/* ---------------- mutations ----------------
+   Every write goes through here so the example ledger is retired the moment
+   real data arrives, and so the right documents — and only those — are saved. */
+function mutate(fn){
+  const wasDemo = state.demo;
+  if(wasDemo) retireDemo();
+  const touched = fn() || [];
+  (Array.isArray(touched) ? touched : [touched]).forEach(flush);
+  if(wasDemo) saveEverything();
+  render();
+}
+/* For changes that are real but are not an entry in the ledger — the running
+   timer — so pressing Start does not retire the examples. */
+function mutateQuiet(fn){
+  const touched = fn() || [];
+  (Array.isArray(touched) ? touched : [touched]).forEach(flush);
+  render();
+}
+function saveEverything(){
+  Object.keys(state.hobbies).forEach(id => flush("hobby|" + id));
+  monthList().forEach(k => flush("month|" + k));
+  flush("config");
+}
+/* The example ledger only ever lived in memory, so retiring it is a matter of
+   dropping it — but the hobbies are kept, because any action that retires the
+   examples is either logging against one of them or editing one, and pulling
+   them out from under that would lose the user's work. The banner's own button
+   clears everything. */
+function retireDemo(){
+  state.demo = false;
+  state.months = {};
+  toast("Example sessions cleared — the hobbies stay, delete any you do not want.");
+}
+function clearExamples(){
+  state.demo = false;
+  state.hobbies = {};
+  state.months = {};
+  state.timer = null;
+  resetDraft();
+  localSave();
+  render();
+  toast("Examples cleared — add your first hobby.");
+}
+
+function addSession(data){
+  const s = normaliseSession(data);
+  const k = monthKey(s.date);
+  if(!state.months[k]) state.months[k] = [];
+  state.months[k].push(s);
+  return "month|" + k;
+}
+function updateSession(id, patch){
+  const old = findSession(id);
+  if(!old) return [];
+  const oldKey = monthKey(old.date);
+  const merged = normaliseSession(Object.assign({}, old, patch, {id}));
+  const newKey = monthKey(merged.date);
+  state.months[oldKey] = (state.months[oldKey] || []).filter(s => s.id !== id);
+  if(!state.months[newKey]) state.months[newKey] = [];
+  state.months[newKey].push(merged);
+  return oldKey === newKey ? ["month|" + newKey] : ["month|" + oldKey, "month|" + newKey];
+}
+function removeSession(id){
+  const old = findSession(id);
+  if(!old) return [];
+  const k = monthKey(old.date);
+  state.months[k] = (state.months[k] || []).filter(s => s.id !== id);
+  return ["month|" + k];
+}
+function saveHobby(h){
+  const n = normaliseHobby(h);
+  state.hobbies[n.id] = n;
+  return ["hobby|" + n.id];
+}
+function deleteHobby(id){
+  delete state.hobbies[id];
+  const keys = ["hobby|" + id];
+  monthList().forEach(k => {
+    const before = (state.months[k] || []).length;
+    state.months[k] = (state.months[k] || []).filter(s => s.hobbyId !== id);
+    if(state.months[k].length !== before) keys.push("month|" + k);
+  });
+  if(state.timer && state.timer.hobbyId === id){ state.timer = null; keys.push("timer"); }
+  return keys;
+}
+</script>
+<script>
+/* ============================ the example ledger ============================
+   Shown only when nothing has been logged yet, so the first look shows what the
+   app does rather than an empty shell. Clearly labelled, and retired the moment
+   anything real is entered. ========================================== */
+function mulberry32(a){
+  return function(){ a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a);
+    t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; };
+}
+/* Inks 1, 2 and 3 on purpose: those three slots are the ones the palette
+   validates on ALL pairs, not only adjacent ones, so with three hobbies every
+   comparison on screen — stack, bar, key swatch — clears the gates. */
+const DEMO_HOBBIES = [
+  {name:"Pottery", cat:"making", ink:2, unit:"pieces", goalType:"sessions", goalValue:2,
+   days:[2,6], chance:.7, mean:120, spread:40, hour:[10,19], rate:.012,
+   projects:[["Dinner set — six bowls","making"],["Mug order for Amma","done"]],
+   notes:["Wheel practice — six cylinders, kept two","Trimming last week's bowls",
+     "Glazing day, celadon and a tenmoku test","Centring still fighting me",
+     "Hand-built a slab vase","Loaded the bisque kiln","Pulled handles until they stopped cracking"]},
+  {name:"Sewing", cat:"making", ink:1, unit:"", goalType:"minutes", goalValue:150,
+   days:[0,3,6], chance:.55, mean:85, spread:40, hour:[14,21], rate:0,
+   projects:[["Linen shirt","making"],["Tote bag","done"],["Quilt, eventually","idea"]],
+   notes:["Cut the pattern, nothing sewn yet","Set both sleeves, unpicked one",
+     "Hemming — the boring bit","Overlocked the seams","Toile fits, cutting the real fabric",
+     "Buttonholes, finally","Rethreaded the machine four times"]},
+  {name:"Journal writing", cat:"words", ink:3, unit:"pages", goalType:"sessions", goalValue:5,
+   days:[0,1,2,3,4,5,6], chance:.72, mean:22, spread:12, hour:[21,23], rate:.09,
+   notes:["","Morning pages, barely awake","Long entry about the week","Three lines and out",
+     "Wrote through something","Mostly lists","Reread January, cringed, kept going"]},
+];
+function buildDemo(){
+  const rnd = mulberry32(0x48424C21);
+  const DAYS_BACK = 118;
+  state.hobbies = {}; state.months = {};
+  DEMO_HOBBIES.forEach(spec => {
+    const h = normaliseHobby({
+      name: spec.name, cat: spec.cat, ink: spec.ink, unit: spec.unit,
+      goalType: spec.goalType, goalValue: spec.goalValue,
+      createdAt: addDays(todayISO(), -DAYS_BACK),
+    });
+    h.projects = (spec.projects || []).map(([name, status], i) => ({
+      id: uid(), name, status, note: "",
+      createdAt: addDays(todayISO(), -100 + i * 30),
+      doneAt: status === "done" ? addDays(todayISO(), -40 + i * 10) : "",
+    }));
+    state.hobbies[h.id] = h;
+    spec._id = h.id;
+  });
+  const nowH = new Date().getHours();
+  for(let back = DAYS_BACK; back >= 0; back--){
+    const date = addDays(todayISO(), -back), dw = dowIndex(date);
+    /* Real life has quiet fortnights; a demo that logs every planned day reads fake. */
+    const slump = (back > 52 && back < 64) ? 0.25 : 1;
+    DEMO_HOBBIES.forEach(spec => {
+      if(spec.days.indexOf(dw) === -1) return;
+      if(back === 0 && spec.hour[0] > nowH) return;   /* that hour has not come round yet today */
+      if(rnd() > spec.chance * slump) return;
+      const minutes = Math.max(10, Math.round((spec.mean + (rnd() - .5) * 2 * spec.spread) / 5) * 5);
+      let hour = spec.hour[0] + Math.floor(rnd() * (spec.hour[1] - spec.hour[0] + 1));
+      if(back === 0) hour = Math.min(hour, nowH);
+      const at = String(clamp(hour,0,23)).padStart(2,"0") + ":" + String(Math.floor(rnd()*4) * 15).padStart(2,"0");
+      const notes = spec.notes;
+      const s = normaliseSession({
+        date, hobbyId: spec._id, minutes, at,
+        mood: 2 + Math.round(rnd() * 3),
+        amount: spec.rate ? Math.max(1, Math.round(minutes * spec.rate * (0.8 + rnd() * 0.4))) : null,
+        note: notes[Math.floor(rnd() * notes.length)],
+        projectId: "",
+      });
+      const k = monthKey(date);
+      (state.months[k] = state.months[k] || []).push(s);
+    });
+  }
+  /* Open on a day that has something on it, whatever the dice did. */
+  const tk = monthKey(todayISO());
+  if(!(state.months[tk] || []).some(s => s.date === todayISO())){
+    const spec = DEMO_HOBBIES.filter(x => x.hour[0] <= nowH).pop() || DEMO_HOBBIES[0];
+    (state.months[tk] = state.months[tk] || []).push(normaliseSession({
+      date: todayISO(), hobbyId: spec._id, minutes: Math.round(spec.mean / 5) * 5,
+      at: String(clamp(nowH - 1, 0, 23)).padStart(2, "0") + ":15", mood: 4,
+      amount: spec.rate ? Math.max(1, Math.round(spec.mean * spec.rate)) : null,
+      note: spec.notes[1] || "", projectId: "",
+    }));
+  }
+  state.demo = true;
+}
+
+/* ============================ chrome ============================ */
+let toastTimer = null;
+function toast(msg){
+  const t = $("toast");
+  t.textContent = msg;
+  t.hidden = false;
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => { t.hidden = true; }, 3400);
+}
+let lastFocus = null;
+function openModal(title, bodyNodes, footNodes){
+  lastFocus = document.activeElement;
+  const box = clear($("modalin"));
+  box.appendChild(el("div", {class:"modal-h"}, [
+    el("h3", {id:"modaltitle", text:title}),
+    el("button", {class:"btn btn-sm btn-ghost", type:"button", text:"Close", onclick:closeModal}),
+  ]));
+  box.appendChild(el("div", {class:"modal-b"}, bodyNodes));
+  if(footNodes) box.appendChild(el("div", {class:"modal-f"}, footNodes));
+  $("modal").hidden = false;
+  const first = box.querySelector("input,select,textarea,button:not(.btn-ghost)");
+  if(first) setTimeout(() => first.focus(), 30);
+}
+function closeModal(){
+  $("modal").hidden = true;
+  clear($("modalin"));
+  if(lastFocus && lastFocus.focus) lastFocus.focus();
+}
+$("modal").addEventListener("click", e => { if(e.target === $("modal")) closeModal(); });
+document.addEventListener("keydown", e => {
+  if(e.key === "Escape" && !$("modal").hidden) closeModal();
+});
+
+function applyTheme(t){
+  if(t) document.documentElement.setAttribute("data-theme", t);
+  else document.documentElement.removeAttribute("data-theme");
+}
+function currentTheme(){ return document.documentElement.getAttribute("data-theme") || ""; }
+function toggleTheme(){
+  const order = ["", "light", "dark"];
+  const next = order[(order.indexOf(currentTheme()) + 1) % 3];
+  applyTheme(next);
+  try{ localStorage.setItem("hl_theme", next); }catch(e){}
+  toast(next ? (next === "dark" ? "Dark theme" : "Light theme") : "Following your system theme");
+  render();
+}
+try{ const th = localStorage.getItem("hl_theme"); if(th) applyTheme(th); }catch(e){}
+</script>
+<script>
+/* ============================ charts ============================
+   Hand-drawn SVG at 1:1 with CSS pixels — the viewBox is sized from the real
+   container width so a 10px label is 10px on a phone as well as a laptop, and
+   a debounced resize re-renders. Every chart takes its text colour from the
+   theme tokens, carries a legend whenever two or more series are on screen,
+   and has a table view behind a toggle: three of the light-mode inks sit under
+   3:1 against the card, so the labels are the relief, not an optional extra. */
+function vizWidth(){
+  const page = Math.min(document.documentElement.clientWidth || 900, 1120);
+  const gutter = page <= 760 ? 16 : 20;
+  const pad = page <= 760 ? 13 : 16;
+  return Math.max(250, page - gutter * 2 - 2 - pad * 2);
+}
+/* A bar whose data-end is rounded and whose baseline end stays square. */
+function barPath(x, y, w, h, r, up){
+  r = Math.min(r, w / 2, Math.max(0, h));
+  if(h <= 0.6) return "M" + x + "," + y + "h" + w;
+  return up
+    ? "M" + x + "," + (y + h) + "V" + (y + r) + "a" + r + "," + r + " 0 0 1 " + r + "," + (-r) +
+      "h" + (w - 2 * r) + "a" + r + "," + r + " 0 0 1 " + r + "," + r + "V" + (y + h) + "Z"
+    : "M" + x + "," + y + "H" + (x + w - r) + "a" + r + "," + r + " 0 0 1 " + r + "," + r +
+      "v" + (h - 2 * r) + "a" + r + "," + r + " 0 0 1 " + (-r) + "," + r + "H" + x + "Z";
+}
+/* A "nice" axis maximum, so the top tick names a round number the chart reaches. */
+function niceMax(v){
+  if(v <= 0) return 1;
+  const mag = Math.pow(10, Math.floor(Math.log10(v)));
+  const n = v / mag;
+  const step = [1, 1.5, 2, 2.5, 3, 4, 5, 6, 8, 10].find(x => n <= x) || 10;
+  return step * mag;
+}
+function tipRow(swatch, label, value){
+  return el("div", {class:"tr"}, [
+    swatch ? el("span", {class:"sw", style:"background:" + swatch}) : null,
+    el("span", {text:label}),
+    el("span", {class:"tv", text:value}),
+  ]);
+}
+/* One tooltip per chart, driven by a builder hung off each mark. */
+function tipWrap(svg, extra){
+  const tip = el("div", {class:"tip", hidden:true});
+  const wrap = el("div", {class:"tipwrap"}, [svg, tip].concat(extra || []));
+  const show = e => {
+    const t = e.target, build = t && t.__tip;
+    if(!build){ tip.hidden = true; return; }
+    clear(tip);
+    add(tip, build());
+    tip.hidden = false;
+    const r = wrap.getBoundingClientRect();
+    const x = clamp(e.clientX - r.left, 60, Math.max(60, r.width - 60));
+    tip.style.left = x + "px";
+    tip.style.top = Math.max(34, e.clientY - r.top - 12) + "px";
+  };
+  svg.addEventListener("mousemove", show);
+  svg.addEventListener("mouseleave", () => { tip.hidden = true; });
+  svg.addEventListener("touchstart", e => {
+    if(e.touches && e.touches[0]) show({target: e.target, clientX: e.touches[0].clientX, clientY: e.touches[0].clientY});
+  }, {passive: true});
+  return wrap;
+}
+function legendFor(items, onToggle){
+  return el("div", {class:"legend", role:"list"}, items.map(it =>
+    onToggle
+      ? el("button", {class:"item", type:"button", role:"listitem", "aria-pressed": String(!it.off),
+          onclick:() => onToggle(it.key)}, [
+          el("span", {class:"sw", style:"background:" + it.color}),
+          el("span", {text:it.label}),
+          it.note ? el("span", {class:"n", text:it.note}) : null,
+        ])
+      : el("span", {class:"item", role:"listitem"}, [
+          el("span", {class:"sw", style:"background:" + it.color}),
+          el("span", {text:it.label}),
+          it.note ? el("span", {class:"n", text:it.note}) : null,
+        ])
+  ));
+}
+
+/* ---------------- weekly minutes, stacked by hobby ---------------- */
+function weeklyStack(weeks, series){
+  const W = vizWidth(), H = 236;
+  const M = {t: 12, r: 8, b: 26, l: 40};
+  const iw = Math.max(60, W - M.l - M.r), ih = H - M.t - M.b;
+  const totals = weeks.map(w => sum(series, s => s.by[w.key] || 0));
+  const max = niceMax(Math.max(1, ...totals) / 60) * 60;
+  const bw = Math.min(46, iw / Math.max(1, weeks.length) * 0.72);
+  const step = iw / Math.max(1, weeks.length);
+  const y = v => M.t + ih - (v / max) * ih;
+  const kids = [];
+  /* gridlines at 0, ¼, ½, ¾, max — every one names a value the chart reaches */
+  for(let i = 0; i <= 4; i++){
+    const v = max * i / 4, yy = y(v);
+    kids.push(svgEl("line", {class:"gridline", x1:M.l, x2:M.l + iw, y1:yy, y2:yy}));
+    kids.push(svgEl("text", {class:"ax", x:M.l - 7, y:yy + 3.5, "text-anchor":"end", text: i === 0 ? "0" : r1(v/60) + "h"}));
+  }
+  weeks.forEach((wk, i) => {
+    const cx = M.l + step * i + step / 2;
+    let acc = 0;
+    const stackRows = [];
+    series.forEach(s => {
+      const v = s.by[wk.key] || 0;
+      if(v > 0) stackRows.push(s);
+    });
+    series.forEach((s, si) => {
+      const v = s.by[wk.key] || 0;
+      if(v <= 0) return;
+      const top = y(acc + v), bot = y(acc);
+      const isTop = stackRows[stackRows.length - 1] === s;
+      /* a 2px surface gap keeps adjacent segments legible without a stroke */
+      const h = Math.max(1, bot - top - (isTop ? 0 : 2));
+      const node = svgEl("path", {d: barPath(cx - bw/2, top, bw, h, isTop ? 4 : 0, true), fill: s.color});
+      node.__tip = () => [
+        el("div", {class:"th", text: "Week of " + fmtDate(wk.key)}),
+      ].concat(stackRows.map(r => tipRow(r.color, r.label, fmtMins(r.by[wk.key] || 0))))
+       .concat([tipRow(null, "Total", fmtMins(sum(stackRows, r => r.by[wk.key] || 0)))]);
+      kids.push(node);
+      acc += v;
+    });
+    const maxLabels = Math.max(3, Math.floor(iw / 58));
+    const showLabel = weeks.length <= maxLabels || i % Math.ceil(weeks.length / maxLabels) === 0;
+    if(showLabel) kids.push(svgEl("text", {class:"ax", x:cx, y:H - 8, "text-anchor":"middle", text:fmtDate(wk.key)}));
+  });
+  kids.push(svgEl("line", {class:"axisline", x1:M.l, x2:M.l + iw, y1:M.t + ih, y2:M.t + ih}));
+  const svg = svgEl("svg", {class:"chart hoverable", viewBox:"0 0 " + W + " " + H, width:W, height:H,
+    role:"img", "aria-label":"Minutes a week, stacked by hobby"}, kids);
+  return tipWrap(svg);
+}
+
+/* ---------------- lifetime hours by hobby, direct-labelled ---------------- */
+function hoursByHobby(rows){
+  const W = vizWidth(), rowH = 26, M = {t: 6, r: 8, b: 6, l: 0};
+  const H = M.t + M.b + Math.max(1, rows.length) * rowH;
+  /* ~6px per character in DM Mono at 10px, so the label column and the
+     truncation agree and a long hobby name never runs under its own bar. */
+  const labelW = clamp(Math.round(W * 0.3), 70, 170);
+  const valueW = W < 420 ? 50 : 64;
+  const maxChars = Math.max(6, Math.floor((labelW - 10) / 6));
+  const iw = Math.max(40, W - labelW - valueW - 8);
+  const max = Math.max(1, ...rows.map(r => r.minutes));
+  const kids = [];
+  rows.forEach((r, i) => {
+    const yy = M.t + i * rowH;
+    const bw = Math.max(2, (r.minutes / max) * iw);
+    kids.push(svgEl("text", {x:0, y:yy + 15, class:"vlabel",
+      text: r.label.length > maxChars ? r.label.slice(0, maxChars - 1) + "…" : r.label}, svgEl("title", {text:r.label})));
+    const node = svgEl("path", {d: barPath(labelW, yy + 5, bw, 14, 4, false), fill: r.color});
+    node.__tip = () => [el("div", {class:"th", text:r.label}),
+      tipRow(r.color, "Logged", fmtMins(r.minutes)),
+      tipRow(null, "Sessions", String(r.sessions)),
+      tipRow(null, "Average", fmtMins(r.sessions ? r.minutes / r.sessions : 0))];
+    kids.push(node);
+    kids.push(svgEl("text", {x: W, y: yy + 16, class:"vlabel", "text-anchor":"end",
+      style:"font-family:var(--mono)", text: fmtHours(r.minutes)}));
+  });
+  const svg = svgEl("svg", {class:"chart hoverable", viewBox:"0 0 " + W + " " + H, width:W, height:H,
+    role:"img", "aria-label":"Hours logged per hobby"}, kids);
+  return tipWrap(svg);
+}
+
+/* ---------------- when you actually do it ---------------- */
+function hourHistogram(counts, colorVar){
+  const W = vizWidth(), H = 150, M = {t: 10, r: 6, b: 22, l: 28};
+  const iw = Math.max(60, W - M.l - M.r), ih = H - M.t - M.b;
+  const max = niceMax(Math.max(1, ...counts));
+  const step = iw / 24, bw = Math.min(18, step * 0.66);
+  const y = v => M.t + ih - (v / max) * ih;
+  const kids = [];
+  [0, max].forEach(v => {
+    kids.push(svgEl("line", {class:"gridline", x1:M.l, x2:M.l + iw, y1:y(v), y2:y(v)}));
+    kids.push(svgEl("text", {class:"ax", x:M.l - 6, y:y(v) + 3.5, "text-anchor":"end", text:String(v)}));
+  });
+  counts.forEach((c, h) => {
+    const cx = M.l + step * h + step / 2;
+    if(c > 0){
+      const node = svgEl("path", {d: barPath(cx - bw/2, y(c), bw, M.t + ih - y(c), 3, true), fill: colorVar});
+      node.__tip = () => [el("div", {class:"th", text: fmtHour(h) + " – " + fmtHour((h+1) % 24)}),
+        tipRow(colorVar, c === 1 ? "session" : "sessions", String(c))];
+      kids.push(node);
+    }
+    if(h % 4 === 0) kids.push(svgEl("text", {class:"ax", x:cx, y:H - 7, "text-anchor":"middle", text:fmtHour(h)}));
+  });
+  kids.push(svgEl("line", {class:"axisline", x1:M.l, x2:M.l + iw, y1:M.t + ih, y2:M.t + ih}));
+  const svg = svgEl("svg", {class:"chart hoverable", viewBox:"0 0 " + W + " " + H, width:W, height:H,
+    role:"img", "aria-label":"Sessions by hour of day"}, kids);
+  return tipWrap(svg);
+}
+
+/* ---------------- twelve-week sparkline for a hobby card ---------------- */
+function sparkline(values, color){
+  const W = 260, H = 30, n = Math.max(1, values.length);
+  const max = Math.max(1, ...values);
+  const bw = W / n;
+  return svgEl("svg", {class:"spark", viewBox:"0 0 " + W + " " + H, preserveAspectRatio:"none",
+    role:"img", "aria-label":"Minutes a week over the last " + n + " weeks"},
+    values.map((v, i) => {
+      const h = (v / max) * (H - 3);
+      return svgEl("rect", {x: i * bw + bw * 0.16, y: H - h, width: Math.max(1, bw * 0.68), height: Math.max(v > 0 ? 1.5 : 0, h),
+        fill: v > 0 ? color : "transparent"});
+    }).concat([svgEl("line", {x1:0, x2:W, y1:H - .5, y2:H - .5, stroke:"var(--line-soft)", "stroke-width":1})]));
+}
+</script>
+<script>
+/* ============================ shared pieces ============================ */
+const draft = {hobbyId:"", minutes:"", at:"", mood:0, amount:"", note:"", projectId:"", editingId:""};
+function resetDraft(keepHobby){
+  const h = keepHobby ? draft.hobbyId : "";
+  draft.hobbyId = h; draft.minutes = ""; draft.at = ""; draft.mood = 0;
+  draft.amount = ""; draft.note = ""; draft.projectId = ""; draft.editingId = "";
+}
+function cardHead(title, right){
+  return el("div", {class:"card-h"}, [el("h2", {text:title})].concat(right || []));
+}
+function emptyState(head, body, action){
+  return el("div", {class:"empty"}, [el("b", {text:head}), el("div", {text:body}), action ? el("div", {style:"margin-top:12px"}, action) : null]);
+}
+function swatchEl(color){ return el("span", {class:"swatch", style:"background:" + color}); }
+function tile(label, value, unit, detail, mod){
+  return el("div", {class:"tile" + (mod ? " " + mod : "")}, [
+    el("div", {class:"eyebrow", text:label}),
+    el("div", {class:"v"}, [String(value), unit ? el("small", {text:unit}) : null]),
+    detail ? el("div", {class:"d"}, detail) : null,
+  ]);
+}
+function hobbySelect(id, value, onchange, opts){
+  const list = (opts && opts.all) ? allHobbies() : liveHobbies();
+  return el("select", {id, onchange}, [
+    el("option", {value:"", text: (opts && opts.blank) || "Choose a hobby", selected: !value}),
+  ].concat(list.map(h => el("option", {value:h.id, text: h.name + (h.archived ? " (archived)" : ""), selected: h.id === value}))));
+}
+function moodPicker(value, onpick){
+  let cur = Number(value) || 0;
+  const wrap = el("div", {class:"mood", role:"group", "aria-label":"How it went"});
+  MOODS.forEach(([v, label]) => {
+    const n = Number(v);
+    add(wrap, el("button", {type:"button", title:label, "aria-label":label, text:v,
+      "aria-pressed": String(cur === n),
+      onclick:() => {
+        cur = cur === n ? 0 : n;
+        onpick(cur);
+        Array.from(wrap.children).forEach((c, i) => c.setAttribute("aria-pressed", String(Number(MOODS[i][0]) === cur)));
+      }}));
+  });
+  return wrap;
+}
+function moodLabel(m){ const hit = MOODS.find(x => Number(x[0]) === Number(m)); return hit ? hit[1] : ""; }
+
+/* Minutes a week for one hobby over the last `n` weeks, oldest first. */
+function weeklySeries(hobbyId, n, endDate){
+  const end = weekStartOf(endDate || todayISO(), state.config.weekStart);
+  const out = [];
+  for(let i = n - 1; i >= 0; i--){
+    const from = addDays(end, -7 * i);
+    const mins = sum(sessionsBetween(from, addDays(from, 6)).filter(s => !hobbyId || s.hobbyId === hobbyId), s => s.minutes);
+    out.push(mins);
+  }
+  return out;
+}
+
+/* ============================ TODAY ============================ */
+function viewToday(){
+  const date = state.date, isToday = date === todayISO();
+  const today = sessionsOn(date);
+  const wkFrom = weekStartOf(date, state.config.weekStart), wkTo = addDays(wkFrom, 6);
+  const week = sessionsBetween(wkFrom, wkTo);
+  const st = streak(null);
+  const touched = new Set(today.map(s => s.hobbyId));
+  const live = liveHobbies();
+  const out = el("div", {class:"stack"});
+
+  add(out, runtimeBanners());
+
+  /* ---- the timer ---- */
+  add(out, timerStrip());
+
+  /* ---- the day at a glance ---- */
+  add(out, el("div", {class:"tiles"}, [
+    tile(isToday ? "Logged today" : "Logged that day", fmtMins(sum(today, s => s.minutes)), null,
+      today.length ? today.length + (today.length === 1 ? " session" : " sessions") : "Nothing yet"),
+    tile("This week", fmtMins(sum(week, s => s.minutes)), null,
+      fmtDate(wkFrom) + " – " + fmtDate(wkTo)),
+    tile("Streak", st.current, st.current === 1 ? " day" : " days",
+      st.longest > st.current ? ["best ", el("b", {text: st.longest + " days"})] : (st.current ? "Keep it going" : "Log something to start one"),
+      st.current >= 3 ? "is-good" : ""),
+    tile("Hobbies touched", touched.size, " of " + live.length,
+      live.length ? neglectedNote() : "Add your first hobby"),
+  ]));
+
+  /* ---- log a session ---- */
+  add(out, logForm());
+
+  /* ---- the day's ledger ---- */
+  const rows = el("div", {class:"rows"});
+  if(!today.length){
+    add(rows, emptyState(isToday ? "Nothing logged today" : "Nothing logged that day",
+      live.length ? "Start the timer above, or fill in the form and log it by hand."
+                  : "Add a hobby first, over on the Hobbies tab."));
+  } else {
+    today.forEach(s => add(rows, sessionRow(s)));
+  }
+  add(out, el("section", {class:"card"}, [
+    cardHead(isToday ? "Today’s ledger" : fmtDateFull(date), [
+      el("span", {class:"eyebrow", text: fmtMins(sum(today, s => s.minutes)) + " · " + today.length + (today.length === 1 ? " entry" : " entries")}),
+    ]),
+    el("div", {class:"card-b tight"}, rows),
+  ]));
+
+  /* ---- where the week stands ---- */
+  if(live.length) add(out, weekGoalsCard(wkFrom));
+  return out;
+}
+
+function neglectedNote(){
+  const totals = hobbyTotals();
+  const stale = liveHobbies()
+    .map(h => ({h, last: totals[h.id] ? totals[h.id].last : ""}))
+    .filter(x => x.last && daysBetween(x.last, todayISO()) >= 14)
+    .sort((a,b) => a.last.localeCompare(b.last));
+  if(!stale.length) return "All of them seen recently";
+  return [el("b", {text: stale[0].h.name}), " untouched for " + daysBetween(stale[0].last, todayISO()) + " days"];
+}
+
+function runtimeBanners(){
+  const out = [];
+  if(!Persist.db){
+    out.push(el("div", {class:"banner"}, [
+      el("span", {class:"eyebrow", text:"This browser only"}),
+      el("p", {text:"The ledger is saved in this browser’s local storage. It will not follow you to another device — take a backup from Settings."}),
+    ]));
+  }
+  if(state.demo){
+    out.push(el("div", {class:"banner", style:"border-left-color:var(--k4)"}, [
+      el("span", {class:"eyebrow", text:"Example ledger"}),
+      el("p", {text:"Four months of made-up sessions, so the charts have something to show. The moment you log anything real, all of this goes."}),
+      el("button", {class:"btn btn-sm", type:"button", text:"Clear it now", onclick:clearExamples}),
+    ]));
+  }
+  return out;
+}
+
+/* ---------------- the timer ---------------- */
+function timerStrip(){
+  let h = state.timer ? hobby(state.timer.hobbyId) : null;
+  if(state.timer && !h){ state.timer = null; flush("timer"); }
+  const running = !!state.timer;
+  const live = liveHobbies();
+  const readout = el("div", {class:"timer-read", id:"timerread",
+    text: running ? fmtClock(Date.now() - state.timer.startedAt) : "0:00"});
+  const strip = el("div", {class:"timer" + (running ? " running" : "")}, [
+    readout,
+    el("div", {class:"timer-meta"}, running ? [
+      el("div", {class:"who"}, [el("span", {class:"rec"}), swatchEl(inkCss(h.ink)), el("strong", {text:h.name})]),
+      el("div", {class:"note", text:"Started at " + new Date(state.timer.startedAt).toLocaleTimeString([], {hour:"2-digit", minute:"2-digit"})}),
+    ] : [
+      el("div", {class:"eyebrow", text:"Session timer"}),
+      el("div", {class:"note", text: live.length ? "Pick a hobby and start the clock — it survives a reload." : "Add a hobby to use the timer."}),
+    ]),
+  ]);
+  if(!running){
+    const sel = hobbySelect("timerhobby", state.timerPick, e => { state.timerPick = e.target.value; }, {blank:"Which hobby?"});
+    add(strip, sel);
+    add(strip, el("button", {class:"btn btn-primary", type:"button", text:"Start", disabled: !live.length,
+      onclick:() => {
+        const id = sel.value || (live[0] && live[0].id);
+        if(!id){ toast("Add a hobby first."); return; }
+        mutateQuiet(() => { state.timer = {hobbyId: id, startedAt: Date.now()}; return ["timer"]; });
+      }}));
+  } else {
+    add(strip, el("button", {class:"btn btn-primary", type:"button", text:"Stop & log", onclick:stopTimer}));
+    add(strip, el("button", {class:"btn btn-ghost btn-sm", type:"button", text:"Discard",
+      onclick:() => { if(confirm("Throw this session away?")) mutateQuiet(() => { state.timer = null; return ["timer"]; }); }}));
+  }
+  return strip;
+}
+/* The button says log, so it logs — staging the session in the form instead
+   would lose it the moment the tab changed. The note goes on afterwards. */
+function stopTimer(){
+  if(!state.timer) return;
+  const {hobbyId, startedAt} = state.timer;
+  const minutes = Math.max(1, Math.round((Date.now() - startedAt) / 60000));
+  const started = new Date(startedAt);
+  const at = String(started.getHours()).padStart(2,"0") + ":" + String(started.getMinutes()).padStart(2,"0");
+  const date = iso(started);
+  state.timer = null;
+  state.date = date;
+  state.tab = "today";
+  mutate(() => [addSession({date, hobbyId, minutes, at}), "timer"]);
+  toast(fmtMins(minutes) + " of " + hobbyName(hobbyId) + " logged — hit Edit on it to add a note.");
+}
+function tickTimer(){
+  const node = $("timerread");
+  if(node && state.timer) node.textContent = fmtClock(Date.now() - state.timer.startedAt);
+}
+setInterval(tickTimer, 1000);
+</script>
+<script>
+/* ---------------- log / edit a session ---------------- */
+function logForm(){
+  const live = liveHobbies();
+  const editing = !!draft.editingId;
+  const h = hobby(draft.hobbyId);
+  const openProjects = h ? h.projects.filter(p => p.status !== "done" && p.status !== "shelved") : [];
+  const body = el("div", {class:"card-b", style:"display:flex; flex-direction:column; gap:14px"});
+
+  const grid = el("div", {class:"form-grid"});
+  add(grid, el("div", {class:"field"}, [
+    el("label", {for:"loghobby", text:"Hobby"}),
+    hobbySelect("loghobby", draft.hobbyId, e => { draft.hobbyId = e.target.value; draft.projectId = ""; render(); }),
+  ]));
+  add(grid, el("div", {class:"field"}, [
+    el("label", {for:"logminutes", text:"Minutes"}),
+    el("input", {type:"number", id:"logminutes", min:"1", max:"1440", step:"5", inputmode:"numeric",
+      placeholder:"45", value:draft.minutes, oninput:e => { draft.minutes = e.target.value; }}),
+  ]));
+  add(grid, el("div", {class:"field"}, [
+    el("label", {for:"logat", text:"Started at"}),
+    el("input", {type:"time", id:"logat", value:draft.at, oninput:e => { draft.at = e.target.value; }}),
+  ]));
+  if(h && h.unit) add(grid, el("div", {class:"field"}, [
+    el("label", {for:"logamount", text:h.unit}),
+    el("input", {type:"number", id:"logamount", min:"0", step:"any", inputmode:"decimal",
+      placeholder:"0", value:draft.amount, oninput:e => { draft.amount = e.target.value; }}),
+  ]));
+  add(grid, el("div", {class:"field"}, [
+    el("label", {text:"How it went"}),
+    moodPicker(draft.mood, v => { draft.mood = v; }),
+  ]));
+  if(openProjects.length) add(grid, el("div", {class:"field"}, [
+    el("label", {for:"logproject", text:"Project"}),
+    el("select", {id:"logproject", onchange:e => { draft.projectId = e.target.value; }}, [
+      el("option", {value:"", text:"—", selected: !draft.projectId}),
+    ].concat(openProjects.map(p => el("option", {value:p.id, text:p.name, selected: p.id === draft.projectId})))),
+  ]));
+  add(body, grid);
+  add(body, el("div", {class:"field"}, [
+    el("label", {for:"lognote", text:"What you did"}),
+    el("input", {type:"text", id:"lognote", maxlength:"240", placeholder:"Optional — the bit you will want to read back",
+      value:draft.note, oninput:e => { draft.note = e.target.value; }}),
+  ]));
+
+  const quick = el("div", {class:"chiprow"}, [15, 30, 45, 60, 90, 120].map(m =>
+    el("button", {class:"chip", type:"button", text:m + "m",
+      onclick:() => { draft.minutes = String(m); const f = $("logminutes"); if(f) f.value = m; }})));
+  add(body, el("div", {class:"form-actions"}, [
+    quick,
+    el("span", {class:"spacer"}),
+    editing ? el("button", {class:"btn", type:"button", text:"Cancel", onclick:() => { resetDraft(); render(); }}) : null,
+    el("button", {class:"btn btn-primary", type:"button", text: editing ? "Save changes" : "Log session",
+      disabled: !live.length, onclick:submitLog}),
+  ]));
+
+  return el("section", {class:"card"}, [
+    cardHead(editing ? "Edit session" : "Log a session", [
+      el("span", {class:"eyebrow", text: state.date === todayISO() ? "Today" : fmtDateFull(state.date)}),
+    ]),
+    body,
+  ]);
+}
+function submitLog(){
+  const minutes = Math.round(Number(draft.minutes));
+  if(!draft.hobbyId){ toast("Pick a hobby first."); const f = $("loghobby"); if(f) f.focus(); return; }
+  if(!minutes || minutes < 1){ toast("How many minutes? Anything from 1 to 1440."); const f = $("logminutes"); if(f) f.focus(); return; }
+  if(minutes > 1440){ toast("That is more than a day — check the minutes."); return; }
+  const payload = {
+    date: state.date, hobbyId: draft.hobbyId, minutes, at: draft.at || nowHM(),
+    mood: draft.mood, amount: draft.amount === "" ? null : Number(draft.amount),
+    note: draft.note.trim(), projectId: draft.projectId,
+  };
+  const editingId = draft.editingId;
+  mutate(() => editingId ? updateSession(editingId, payload) : addSession(payload));
+  toast(editingId ? "Session updated." : fmtMins(minutes) + " of " + hobbyName(payload.hobbyId) + " logged.");
+  resetDraft(true);
+  render();
+}
+function editSession(s){
+  draft.editingId = s.id; draft.hobbyId = s.hobbyId; draft.minutes = String(s.minutes);
+  draft.at = s.at; draft.mood = s.mood; draft.amount = s.amount === null ? "" : String(s.amount);
+  draft.note = s.note; draft.projectId = s.projectId;
+  state.date = s.date;
+  render();
+  const f = $("logminutes"); if(f) f.scrollIntoView({block:"center", behavior:"smooth"});
+}
+function sessionRow(s){
+  const h = hobby(s.hobbyId);
+  const proj = h && s.projectId ? h.projects.find(p => p.id === s.projectId) : null;
+  const bits = [];
+  if(s.amount !== null && h && h.unit) bits.push(r1(s.amount) + " " + h.unit);
+  if(s.mood) bits.push(moodLabel(s.mood));
+  if(proj) bits.push(proj.name);
+  if(s.note) bits.push(s.note);
+  return el("div", {class:"row"}, [
+    el("span", {class:"bar", style:"background:" + hobbyInk(s.hobbyId)}),
+    el("div", {class:"main"}, [
+      el("div", {class:"t"}, [
+        el("strong", {text: h ? h.name : "Deleted hobby"}),
+        s.at ? el("span", {class:"when", text:s.at}) : null,
+      ]),
+      bits.length ? el("div", {class:"s", text: bits.join(" · ")}) : null,
+    ]),
+    el("div", {class:"mins"}, [fmtMins(s.minutes)]),
+    el("div", {class:"acts"}, [
+      el("button", {class:"btn btn-sm btn-ghost", type:"button", text:"Edit", "aria-label":"Edit this session",
+        onclick:() => editSession(s)}),
+      el("button", {class:"btn btn-sm btn-ghost", type:"button", text:"×", title:"Delete", "aria-label":"Delete this session",
+        onclick:() => { if(confirm("Delete this " + fmtMins(s.minutes) + " session?")) mutate(() => removeSession(s.id)); }}),
+    ]),
+  ]);
+}
+
+/* ---------------- weekly goals ---------------- */
+function weekGoalsCard(wkFrom){
+  const rows = el("div", {class:"rows"});
+  const withGoals = liveHobbies();
+  withGoals.forEach(h => {
+    const p = weekProgress(h, wkFrom);
+    const pct = p.goal ? clamp(p.value / p.goal, 0, 1) : 0;
+    add(rows, el("div", {class:"row", style:"align-items:stretch"}, [
+      el("span", {class:"bar", style:"background:" + inkCss(h.ink)}),
+      el("div", {class:"main", style:"gap:6px"}, [
+        el("div", {class:"goal-top"}, [
+          el("span", {style:"color:var(--ink); font-size:14px", text:h.name}),
+          p.met ? el("span", {class:"badge good", text:"Met"}) : null,
+          el("span", {class:"g", text: goalText(h, p)}),
+        ]),
+        el("div", {class:"meter" + (p.met ? " met" : ""), role:"img",
+          "aria-label": h.name + ": " + goalText(h, p)},
+          el("i", {style:"width:" + (pct * 100).toFixed(1) + "%; background:" + (p.met ? "var(--good)" : inkCss(h.ink))})),
+      ]),
+    ]));
+  });
+  return el("section", {class:"card"}, [
+    cardHead("The week so far", [el("span", {class:"eyebrow", text: fmtDate(wkFrom) + " – " + fmtDate(addDays(wkFrom, 6))})]),
+    el("div", {class:"card-b tight"}, rows),
+  ]);
+}
+</script>
+<script>
+/* ============================ HOBBIES ============================ */
+function viewHobbies(){
+  const totals = hobbyTotals();
+  const list = state.showArchived ? allHobbies() : liveHobbies();
+  const out = el("div", {class:"stack"});
+  add(out, el("section", {class:"card"}, [
+    cardHead("Your hobbies", [
+      el("span", {class:"eyebrow", text: liveHobbies().length + " active · " +
+        Object.values(state.hobbies).filter(h => h.archived).length + " archived"}),
+      el("button", {class:"btn btn-sm", type:"button", "aria-pressed":String(state.showArchived),
+        text: state.showArchived ? "Hide archived" : "Show archived",
+        onclick:() => { state.showArchived = !state.showArchived; render(); }}),
+      el("button", {class:"btn btn-sm btn-primary", type:"button", text:"Add hobby",
+        onclick:() => editHobby(newHobby())}),
+    ]),
+    !list.length ? el("div", {class:"card-b tight"}, emptyState(
+      "No hobbies yet",
+      "A hobby is a name, a colour and — if you want one — a weekly goal. Everything else follows from the sessions you log against it.",
+      el("button", {class:"btn btn-primary", type:"button", text:"Add your first hobby", onclick:() => editHobby(newHobby())}))) : null,
+  ]));
+  if(list.length) add(out, el("div", {class:"hobbies"}, list.map(h => hobbyCard(h, totals[h.id]))));
+  return out;
+}
+
+function hobbyCard(h, t){
+  t = t || {minutes:0, sessions:0, amount:0, first:"", last:"", best:0};
+  const ink = inkCss(h.ink);
+  const run = weekRun(h.id);
+  const p = weekProgress(h, todayISO());
+  const pct = p.goal ? clamp(p.value / p.goal, 0, 1) : 0;
+  const since = t.last ? daysBetween(t.last, todayISO()) : null;
+  const lastText = since === null ? "Never logged" : since === 0 ? "Today" : since === 1 ? "Yesterday" : since + " days ago";
+  return el("article", {class:"hcard" + (h.archived ? " archived" : ""), style:"border-left-color:" + ink}, [
+    el("div", {class:"hcard-h"}, [
+      swatchEl(ink),
+      el("div", {class:"name"}, [
+        el("h3", {text:h.name || "Untitled"}),
+        el("div", {class:"cat", text: catLabel(h.cat) + (h.unit ? " · " + h.unit : "")}),
+      ]),
+      h.archived ? el("span", {class:"badge", text:"Archived"}) :
+        (since !== null && since >= 14 ? el("span", {class:"badge warn", text:"Cold"}) : null),
+    ]),
+    el("div", {class:"hcard-stats"}, [
+      el("div", {}, [el("div", {class:"v", text: fmtHours(t.minutes)}), el("div", {class:"l", text:"Lifetime"})]),
+      el("div", {}, [el("div", {class:"v", text: String(t.sessions)}), el("div", {class:"l", text:"Sessions"})]),
+      el("div", {}, [el("div", {class:"v", text: String(run)}), el("div", {class:"l", text: run === 1 ? "Week running" : "Weeks running"})]),
+    ]),
+    el("div", {class:"hcard-b"}, [
+      el("div", {class:"goal"}, [
+        el("div", {class:"goal-top"}, [
+          el("span", {text: goalLabel(h)}),
+          p.met ? el("span", {class:"badge good", text:"Met"}) : null,
+          el("span", {class:"g", text: h.goalType === "none" ? fmtMins(p.minutes) + " this week" : goalText(h, p)}),
+        ]),
+        h.goalType !== "none" && h.goalValue
+          ? el("div", {class:"meter" + (p.met ? " met" : "")},
+              el("i", {style:"width:" + (pct * 100).toFixed(1) + "%; background:" + (p.met ? "var(--good)" : ink)}))
+          : null,
+      ]),
+      el("div", {}, [
+        el("div", {class:"eyebrow", style:"margin-bottom:4px", text:"Last 12 weeks"}),
+        sparkline(weeklySeries(h.id, 12), ink),
+      ]),
+      el("div", {class:"note", text: lastText + (t.amount ? " · " + r0(t.amount) + " " + h.unit + " all told" : "")}),
+    ]),
+    el("div", {class:"hcard-f"}, [
+      el("button", {class:"btn btn-sm", type:"button", text:"Log", disabled:h.archived, onclick:() => {
+        resetDraft(); draft.hobbyId = h.id; state.tab = "today"; state.date = todayISO(); render();
+        const f = $("logminutes"); if(f) f.focus();
+      }}),
+      el("button", {class:"btn btn-sm", type:"button", text:"Edit", onclick:() => editHobby(h)}),
+      el("button", {class:"btn btn-sm btn-ghost", type:"button", text: h.archived ? "Restore" : "Archive",
+        onclick:() => mutate(() => saveHobby(Object.assign({}, h, {archived: !h.archived})))}),
+    ]),
+  ]);
+}
+
+/* ---------------- the hobby editor ---------------- */
+function editHobby(source){
+  const h = normaliseHobby(plain(source));
+  const isNew = !state.hobbies[h.id];
+  const set = (k, v) => { h[k] = v; };
+  const inkRow = el("div", {class:"chiprow", role:"group", "aria-label":"Ink"});
+  const paint = () => {
+    clear(inkRow);
+    INKS.forEach(k => {
+      const taken = Object.values(state.hobbies).some(x => x.ink === k.id && x.id !== h.id);
+      add(inkRow, el("button", {class:"chip", type:"button", "aria-pressed":String(h.ink === k.id),
+        title: k.name + (taken ? " — already used" : ""), "aria-label": k.name,
+        onclick:() => { set("ink", k.id); paint(); }}, [
+        el("span", {class:"sw", style:"background:" + k.css}),
+        el("span", {text: taken ? "·" : ""}),
+      ]));
+    });
+  };
+  paint();
+
+  const goalValue = el("input", {type:"number", id:"hgoalvalue", min:"0", step: h.goalType === "sessions" ? "1" : "15",
+    value: String(h.goalValue || ""), disabled: h.goalType === "none",
+    oninput:e => set("goalValue", Number(e.target.value) || 0)});
+  const goalUnit = el("span", {class:"note", text: h.goalType === "sessions" ? "sessions a week" : "minutes a week"});
+
+  const body = [
+    el("div", {class:"field"}, [
+      el("label", {for:"hname", text:"Name"}),
+      el("input", {type:"text", id:"hname", maxlength:"48", placeholder:"Classical guitar", value:h.name,
+        oninput:e => set("name", e.target.value)}),
+    ]),
+    el("div", {class:"form-grid"}, [
+      el("div", {class:"field"}, [
+        el("label", {for:"hcat", text:"Category"}),
+        el("select", {id:"hcat", onchange:e => set("cat", e.target.value)},
+          CATEGORIES.map(([v, l]) => el("option", {value:v, text:l, selected: v === h.cat}))),
+      ]),
+      el("div", {class:"field"}, [
+        el("label", {for:"hunit", text:"Counts its own thing (optional)"}),
+        el("input", {type:"text", id:"hunit", maxlength:"16", list:"unitlist", placeholder:"pages, km, loaves…",
+          value:h.unit, oninput:e => set("unit", e.target.value.trim())}),
+        el("datalist", {id:"unitlist"}, UNIT_SUGGESTIONS.map(u => el("option", {value:u}))),
+      ]),
+    ]),
+    el("div", {class:"field"}, [el("label", {text:"Ink"}), inkRow,
+      el("span", {class:"note", text:"A hobby keeps its ink for life, so the charts never swap colours under you. A dot marks one already in use."})]),
+    el("div", {class:"form-grid"}, [
+      el("div", {class:"field"}, [
+        el("label", {for:"hgoaltype", text:"Weekly goal"}),
+        el("select", {id:"hgoaltype", onchange:e => {
+          set("goalType", e.target.value);
+          goalValue.disabled = e.target.value === "none";
+          goalValue.step = e.target.value === "sessions" ? "1" : "15";
+          goalUnit.textContent = e.target.value === "sessions" ? "sessions a week" : "minutes a week";
+        }}, [
+          el("option", {value:"minutes", text:"Minutes a week", selected: h.goalType === "minutes"}),
+          el("option", {value:"sessions", text:"Sessions a week", selected: h.goalType === "sessions"}),
+          el("option", {value:"none", text:"No goal — just log it", selected: h.goalType === "none"}),
+        ]),
+      ]),
+      el("div", {class:"field"}, [el("label", {for:"hgoalvalue", text:"Target"}), goalValue, goalUnit]),
+    ]),
+  ];
+  const foot = [
+    !isNew ? el("button", {class:"btn btn-danger", type:"button", text:"Delete", onclick:() => {
+      const t = hobbyTotals()[h.id];
+      const n = t ? t.sessions : 0;
+      if(!confirm("Delete " + (h.name || "this hobby") + (n ? " and its " + n + " logged sessions?" : "?") + "\nThis cannot be undone.")) return;
+      closeModal();
+      mutate(() => deleteHobby(h.id));
+      toast((h.name || "Hobby") + " deleted.");
+    }}) : null,
+    el("span", {class:"spacer"}),
+    el("button", {class:"btn", type:"button", text:"Cancel", onclick:closeModal}),
+    el("button", {class:"btn btn-primary", type:"button", text: isNew ? "Add hobby" : "Save", onclick:() => {
+      h.name = (h.name || "").trim();
+      if(!h.name){ toast("Give the hobby a name."); const f = $("hname"); if(f) f.focus(); return; }
+      closeModal();
+      mutate(() => saveHobby(h));
+      toast(isNew ? h.name + " added." : h.name + " saved.");
+    }}),
+  ];
+  openModal(isNew ? "New hobby" : "Edit hobby", body, foot);
+}
+</script>
+<script>
+/* ============================ TRENDS ============================ */
+const RANGES = [[30,"30 days"],[90,"90 days"],[365,"A year"]];
+function viewTrends(){
+  const to = todayISO(), from = addDays(to, -(state.trendRange - 1));
+  const inRange = sessionsBetween(from, to);
+  const live = allHobbies().filter(h => inRange.some(s => s.hobbyId === h.id));
+  const out = el("div", {class:"stack"});
+
+  if(!hasAnyData()){
+    add(out, el("section", {class:"card"}, el("div", {class:"card-b tight"}, emptyState(
+      "Nothing to chart yet", "Log a few sessions and this fills up: minutes a week, where the hours went, and the days you showed up."))));
+    return out;
+  }
+
+  /* ---- range picker + headline figures ---- */
+  add(out, el("div", {class:"form-actions"}, [
+    el("div", {class:"chiprow", role:"group", "aria-label":"Time range"}, RANGES.map(([d, l]) =>
+      el("button", {class:"chip", type:"button", "aria-pressed": String(state.trendRange === d), text:l,
+        onclick:() => { state.trendRange = d; render(); }}))),
+    el("span", {class:"spacer"}),
+    el("button", {class:"btn btn-sm", type:"button", "aria-pressed":String(state.trendTable),
+      text: state.trendTable ? "Show charts" : "Show table",
+      onclick:() => { state.trendTable = !state.trendTable; render(); }}),
+  ]));
+
+  const mins = sum(inRange, s => s.minutes);
+  const days = new Set(inRange.map(s => s.date));
+  const byDay = {};
+  inRange.forEach(s => { byDay[s.date] = (byDay[s.date] || 0) + s.minutes; });
+  const busiest = Object.keys(byDay).sort((a,b) => byDay[b] - byDay[a])[0];
+  add(out, el("div", {class:"tiles"}, [
+    tile("Logged", fmtHours(mins), null, inRange.length + (inRange.length === 1 ? " session" : " sessions")),
+    tile("Days on", days.size, " of " + state.trendRange, Math.round(days.size / state.trendRange * 100) + "% of days"),
+    tile("Typical session", fmtMins(inRange.length ? mins / inRange.length : 0), null,
+      "longest " + fmtMins(Math.max(0, ...inRange.map(s => s.minutes)))),
+    tile("Best day", busiest ? fmtDate(busiest) : "—", null, busiest ? fmtMins(byDay[busiest]) : "No sessions yet"),
+  ]));
+
+  /* ---- minutes a week, stacked ---- */
+  const nWeeks = Math.min(53, Math.ceil(state.trendRange / 7));
+  const weekKeys = [];
+  const firstWeek = weekStartOf(to, state.config.weekStart);
+  for(let i = nWeeks - 1; i >= 0; i--) weekKeys.push({key: addDays(firstWeek, -7 * i)});
+  const series = live.filter(h => !state.hidden[h.id]).map(h => {
+    const by = {};
+    weekKeys.forEach(w => {
+      by[w.key] = sum(sessionsBetween(w.key, addDays(w.key, 6)).filter(s => s.hobbyId === h.id), s => s.minutes);
+    });
+    return {key: h.id, label: h.name, color: inkCss(h.ink), by};
+  });
+  const allSeries = live.map(h => ({key: h.id, label: h.name, color: inkCss(h.ink), off: !!state.hidden[h.id],
+    note: fmtHours(sum(inRange.filter(s => s.hobbyId === h.id), s => s.minutes))}));
+  const weekCard = el("section", {class:"card"}, [
+    cardHead("Minutes a week", [el("span", {class:"eyebrow", text: nWeeks + " weeks to " + fmtDate(to)})]),
+  ]);
+  if(state.trendTable){
+    add(weekCard, weeklyTable(weekKeys, live));
+  } else {
+    add(weekCard, el("div", {class:"chart-wrap"}, weeklyStack(weekKeys, series)));
+    add(weekCard, legendFor(allSeries, key => { state.hidden[key] = !state.hidden[key]; render(); }));
+    add(weekCard, el("div", {class:"note", style:"padding:0 16px 13px", text:"Click a hobby in the key to drop it from the stack."}));
+  }
+  add(out, weekCard);
+
+  /* ---- where the hours went ---- */
+  const totals = hobbyTotals();
+  const rangeRows = live.map(h => {
+    const mine = inRange.filter(s => s.hobbyId === h.id);
+    return {label: h.name, color: inkCss(h.ink), minutes: sum(mine, s => s.minutes), sessions: mine.length};
+  }).sort((a, b) => b.minutes - a.minutes);
+  add(out, el("section", {class:"card"}, [
+    cardHead("Where the hours went", [el("span", {class:"eyebrow", text:"Last " + state.trendRange + " days"})]),
+    rangeRows.length
+      ? el("div", {class:"chart-wrap"}, hoursByHobby(rangeRows))
+      : el("div", {class:"card-b tight"}, emptyState("Nothing in this range", "Try a longer range.")),
+  ]));
+
+  /* ---- consistency ---- */
+  add(out, consistencyCard());
+
+  /* ---- when you do it ---- */
+  const counts = new Array(24).fill(0);
+  let timed = 0;
+  inRange.forEach(s => { const h = hourOf(s.at); if(h !== null){ counts[h]++; timed++; } });
+  if(timed > 0) add(out, el("section", {class:"card"}, [
+    cardHead("When you do it", [el("span", {class:"eyebrow", text: timed + " timed sessions"})]),
+    el("div", {class:"chart-wrap"}, hourHistogram(counts, "var(--accent)")),
+    el("div", {class:"note", style:"padding:0 16px 13px",
+      text:"Sessions by the hour they started. One series, so the title names it — no key needed."}),
+  ]));
+
+  /* ---- lifetime table, always available ---- */
+  add(out, lifetimeTable(totals));
+  return out;
+}
+
+function weeklyTable(weekKeys, hobbies){
+  const wrap = el("div", {class:"tablewrap"});
+  const head = el("tr", {}, [el("th", {text:"Week of"})].concat(
+    hobbies.map(h => el("th", {text:h.name})), [el("th", {text:"Total"})]));
+  const rows = weekKeys.map(w => {
+    const vals = hobbies.map(h => sum(sessionsBetween(w.key, addDays(w.key, 6)).filter(s => s.hobbyId === h.id), s => s.minutes));
+    return el("tr", {}, [el("td", {text: fmtDateFull(w.key)})].concat(
+      vals.map(v => el("td", {text: v ? fmtMins(v) : "—"})),
+      [el("td", {text: fmtMins(sum(vals))})]));
+  }).reverse();
+  const totals = hobbies.map(h => sum(weekKeys, w =>
+    sum(sessionsBetween(w.key, addDays(w.key, 6)).filter(s => s.hobbyId === h.id), s => s.minutes)));
+  add(wrap, el("table", {}, [
+    el("thead", {}, head),
+    el("tbody", {}, rows),
+    el("tfoot", {}, el("tr", {}, [el("td", {text:"Total"})].concat(
+      totals.map(v => el("td", {text: fmtHours(v)})), [el("td", {text: fmtHours(sum(totals))})]))),
+  ]));
+  return wrap;
+}
+
+function lifetimeTable(totals){
+  const rows = allHobbies().filter(h => totals[h.id] && totals[h.id].sessions);
+  if(!rows.length) return null;
+  const st = {};
+  rows.forEach(h => { st[h.id] = streak(h.id); });
+  return el("section", {class:"card"}, [
+    cardHead("Every hobby, all time", [el("span", {class:"eyebrow", text:"The same numbers as rows"})]),
+    el("div", {class:"tablewrap"}, el("table", {}, [
+      el("thead", {}, el("tr", {}, ["Hobby","Hours","Sessions","Average","Longest","Best streak","First","Last"]
+        .map(t => el("th", {text:t})))),
+      el("tbody", {}, rows.sort((a,b) => totals[b.id].minutes - totals[a.id].minutes).map(h => {
+        const t = totals[h.id];
+        return el("tr", {}, [
+          el("td", {}, [swatchEl(inkCss(h.ink)), " " + h.name]),
+          el("td", {text: r1(t.minutes / 60)}),
+          el("td", {text: String(t.sessions)}),
+          el("td", {text: fmtMins(t.minutes / t.sessions)}),
+          el("td", {text: fmtMins(t.best)}),
+          el("td", {text: st[h.id].longest + "d"}),
+          el("td", {text: t.first ? fmtDate(t.first) : "—"}),
+          el("td", {text: t.last ? fmtDate(t.last) : "—"}),
+        ]);
+      })),
+      el("tfoot", {}, el("tr", {}, [
+        el("td", {text:"All hobbies"}),
+        el("td", {text: r1(sum(rows, h => totals[h.id].minutes) / 60)}),
+        el("td", {text: String(sum(rows, h => totals[h.id].sessions))}),
+        el("td", {text:"—"}), el("td", {text:"—"}),
+        el("td", {text: streak(null).longest + "d"}),
+        el("td", {text:"—"}), el("td", {text:"—"}),
+      ])),
+    ])),
+  ]);
+}
+</script>
+<script>
+/* ---------------- the consistency grid ---------------- */
+const HEAT_BANDS = [[1,"var(--q1)","under 30m"],[30,"var(--q2)","30m – 1h"],[60,"var(--q3)","1 – 2h"],
+                    [120,"var(--q4)","2 – 4h"],[240,"var(--q5)","4h and up"]];
+function heatColor(m){
+  if(!m) return "var(--q0)";
+  let c = "var(--q1)";
+  HEAT_BANDS.forEach(b => { if(m >= b[0]) c = b[1]; });
+  return c;
+}
+function consistencyCard(){
+  const weeks = 53;
+  const thisWeek = weekStartOf(todayISO(), state.config.weekStart);
+  const start = addDays(thisWeek, -7 * (weeks - 1));
+  const hid = state.heatHobby;
+  const byDay = {};
+  sessionsBetween(start, todayISO()).forEach(s => {
+    if(hid && s.hobbyId !== hid) return;
+    byDay[s.date] = (byDay[s.date] || 0) + s.minutes;
+  });
+
+  const dowLabels = el("div", {class:"heat-dow"});
+  for(let i = 0; i < 7; i++){
+    const d = (state.config.weekStart + i) % 7;
+    add(dowLabels, el("span", {text: (i === 0 || i === 2 || i === 4) ? DOW_SHORT[d].slice(0,1) : ""}));
+  }
+  const grid = el("div", {class:"heat-in"}, dowLabels);
+  const months = el("div", {class:"heat-months"});
+  let lastMonth = "";
+  for(let w = 0; w < weeks; w++){
+    const colStart = addDays(start, 7 * w);
+    const m = parseISO(colStart).getMonth();
+    const label = (MON_SHORT[m] !== lastMonth && parseISO(colStart).getDate() <= 7) ? MON_SHORT[m] : "";
+    if(label) lastMonth = label;
+    add(months, el("span", {text: label}));
+    const col = el("div", {class:"heat-col"});
+    for(let d = 0; d < 7; d++){
+      const date = addDays(colStart, d);
+      if(date > todayISO()){ add(col, el("span", {class:"heat-cell", style:"background:transparent"})); continue; }
+      const mins = byDay[date] || 0;
+      add(col, el("button", {class:"heat-cell", type:"button", style:"background:" + heatColor(mins),
+        title: fmtDateFull(date) + " — " + (mins ? fmtMins(mins) : "nothing logged"),
+        "aria-label": fmtDateFull(date) + ", " + (mins ? fmtMins(mins) : "nothing logged"),
+        onclick:() => { state.date = date; state.tab = "today"; render(); }}));
+    }
+    add(grid, col);
+  }
+  const key = el("div", {class:"heat-key"}, [
+    el("span", {text:"Less"}),
+    el("span", {class:"sw", style:"background:var(--q0)"}),
+  ].concat(HEAT_BANDS.map(b => el("span", {class:"sw", style:"background:" + b[1], title:b[2]})))
+   .concat([el("span", {text:"More"}), el("span", {style:"margin-left:auto", text:"Click a day to open it"})]));
+
+  return el("section", {class:"card"}, [
+    cardHead("Days you showed up", [
+      el("span", {class:"eyebrow", text:"The last 52 weeks"}),
+      el("select", {"aria-label":"Filter the grid by hobby", style:"width:auto; min-width:150px",
+        onchange:e => { state.heatHobby = e.target.value; render(); }}, [
+        el("option", {value:"", text:"All hobbies", selected: !hid}),
+      ].concat(allHobbies().map(h => el("option", {value:h.id, text:h.name, selected: h.id === hid})))),
+    ]),
+    el("div", {class:"heat"}, [months, grid]),
+    key,
+  ]);
+}
+
+/* ============================ MILESTONES ============================ */
+function viewMilestones(){
+  const totals = hobbyTotals();
+  const out = el("div", {class:"stack"});
+  const st = streak(null);
+  const all = allSessions();
+
+  if(!all.length){
+    add(out, el("section", {class:"card"}, el("div", {class:"card-b tight"}, emptyState(
+      "No milestones yet", "Hours accumulate here: 10, 25, 50, 100 and on up, per hobby. Projects live here too."))));
+    return out;
+  }
+
+  const longest = all.reduce((a, s) => s.minutes > (a ? a.minutes : 0) ? s : a, null);
+  const byDay = {};
+  all.forEach(s => { byDay[s.date] = (byDay[s.date] || 0) + s.minutes; });
+  const bigDay = Object.keys(byDay).sort((a,b) => byDay[b] - byDay[a])[0];
+  const weekTotals = {};
+  all.forEach(s => { const k = weekStartOf(s.date, state.config.weekStart); weekTotals[k] = (weekTotals[k] || 0) + s.minutes; });
+  const bigWeek = Object.keys(weekTotals).sort((a,b) => weekTotals[b] - weekTotals[a])[0];
+
+  add(out, el("div", {class:"tiles"}, [
+    tile("All time", fmtHours(sum(all, s => s.minutes)), null, all.length + " sessions since " + fmtDateFull(all[0].date)),
+    tile("Longest streak", st.longest, st.longest === 1 ? " day" : " days", st.current ? "on " + st.current + " right now" : "not running"),
+    tile("Longest session", fmtMins(longest ? longest.minutes : 0), null,
+      longest ? hobbyName(longest.hobbyId) + " · " + fmtDate(longest.date) : ""),
+    tile("Biggest week", fmtHours(bigWeek ? weekTotals[bigWeek] : 0), null, bigWeek ? "week of " + fmtDate(bigWeek) : ""),
+  ]));
+  add(out, el("div", {class:"note", style:"margin-top:-8px",
+    text:"Best day so far: " + (bigDay ? fmtDateFull(bigDay) + ", " + fmtMins(byDay[bigDay]) : "—") + "."}));
+
+  /* ---- hour milestones ---- */
+  const cards = allHobbies().filter(h => totals[h.id] && totals[h.id].minutes > 0)
+    .sort((a,b) => totals[b.id].minutes - totals[a.id].minutes);
+  add(out, el("section", {class:"card"}, [
+    cardHead("Hours banked", [el("span", {class:"eyebrow", text:"10 · 25 · 50 · 100 · 250 · 500 · 1000"})]),
+    el("div", {class:"card-b tight"}, el("div", {class:"rows"}, cards.map(h => {
+      const hrs = totals[h.id].minutes / 60;
+      const next = MILESTONE_HOURS.find(m => hrs < m);
+      const prev = [...MILESTONE_HOURS].reverse().find(m => hrs >= m) || 0;
+      const pct = next ? clamp((hrs - prev) / (next - prev), 0, 1) : 1;
+      return el("div", {class:"row", style:"align-items:stretch"}, [
+        el("span", {class:"bar", style:"background:" + inkCss(h.ink)}),
+        el("div", {class:"main", style:"gap:7px"}, [
+          el("div", {class:"goal-top"}, [
+            el("span", {style:"color:var(--ink); font-size:14px", text:h.name}),
+            el("span", {class:"g", text: next ? r1(hrs) + " / " + next + "h" : r1(hrs) + "h — every milestone cleared"}),
+          ]),
+          el("div", {class:"meter"}, el("i", {style:"width:" + (pct * 100).toFixed(1) + "%; background:" + inkCss(h.ink)})),
+          el("div", {class:"mstones"}, MILESTONE_HOURS.map(m =>
+            el("span", {class:"mstone" + (hrs >= m ? " hit" : "")}, [el("span", {class:"dot"}), String(m) + "h"]))),
+          next ? el("div", {class:"note", text: r1(next - hrs) + " hours to " + next + "h — about " +
+            Math.ceil((next - hrs) * 60 / Math.max(1, totals[h.id].minutes / totals[h.id].sessions)) + " more sessions at your usual length."}) : null,
+        ]),
+      ]);
+    }))),
+  ]));
+
+  /* ---- projects ---- */
+  add(out, projectsCard());
+  return out;
+}
+</script>
+<script>
+/* ---------------- projects ---------------- */
+function projectsCard(){
+  const all = [];
+  allHobbies().forEach(h => h.projects.forEach(p => all.push({h, p})));
+  const mins = {};
+  allSessions().forEach(s => { if(s.projectId) mins[s.projectId] = (mins[s.projectId] || 0) + s.minutes; });
+  const order = {making: 0, idea: 1, done: 2, shelved: 3};
+  all.sort((a, b) => (order[a.p.status] - order[b.p.status]) || a.p.name.localeCompare(b.p.name));
+  const list = el("div", {class:"projects"});
+  if(!all.length){
+    add(list, emptyState("No projects", "A project is the thing a hobby is currently making — a half-marathon, a novel, a table. Attach sessions to it and the hours add up.",
+      el("button", {class:"btn btn-primary", type:"button", text:"Add a project", onclick:() => editProject(null)})));
+  }
+  all.forEach(({h, p}) => {
+    const cls = p.status === "done" ? "good" : p.status === "shelved" ? "" : p.status === "idea" ? "" : "accent";
+    add(list, el("div", {class:"proj"}, [
+      swatchEl(inkCss(h.ink)),
+      el("div", {class:"pn"}, [
+        p.name,
+        el("small", {text: h.name + (mins[p.id] ? " · " + fmtHours(mins[p.id]) + " logged" : "") +
+          (p.doneAt ? " · finished " + fmtDate(p.doneAt) : "") + (p.note ? " · " + p.note : "")}),
+      ]),
+      el("span", {class:"badge " + cls, text: statusLabel(p.status)}),
+      el("button", {class:"btn btn-sm btn-ghost", type:"button", text:"Edit", onclick:() => editProject({h, p})}),
+    ]));
+  });
+  return el("section", {class:"card"}, [
+    cardHead("Projects", [
+      el("span", {class:"eyebrow", text: all.filter(x => x.p.status === "making").length + " in progress"}),
+      liveHobbies().length ? el("button", {class:"btn btn-sm", type:"button", text:"Add project",
+        onclick:() => editProject(null)}) : null,
+    ]),
+    el("div", {class:"card-b tight"}, list),
+  ]);
+}
+function editProject(existing){
+  const isNew = !existing;
+  let hobbyId = existing ? existing.h.id : (liveHobbies()[0] || {}).id || "";
+  const p = existing ? plain(existing.p)
+    : {id: uid(), name: "", status: "making", note: "", createdAt: todayISO(), doneAt: ""};
+  if(!hobbyId){ toast("Add a hobby first."); return; }
+  const body = [
+    el("div", {class:"field"}, [
+      el("label", {for:"pname", text:"Project"}),
+      el("input", {type:"text", id:"pname", maxlength:"60", placeholder:"Spring half marathon", value:p.name,
+        oninput:e => { p.name = e.target.value; }}),
+    ]),
+    el("div", {class:"form-grid"}, [
+      el("div", {class:"field"}, [
+        el("label", {for:"phobby", text:"Hobby"}),
+        hobbySelect("phobby", hobbyId, e => { hobbyId = e.target.value; }, {all:true, blank:"Choose a hobby"}),
+      ]),
+      el("div", {class:"field"}, [
+        el("label", {for:"pstatus", text:"Status"}),
+        el("select", {id:"pstatus", onchange:e => {
+          p.status = e.target.value;
+          if(p.status === "done" && !p.doneAt) p.doneAt = todayISO();
+          if(p.status !== "done") p.doneAt = "";
+        }}, PROJECT_STATUS.map(([v, l]) => el("option", {value:v, text:l, selected: v === p.status}))),
+      ]),
+    ]),
+    el("div", {class:"field"}, [
+      el("label", {for:"pnote", text:"Note (optional)"}),
+      el("input", {type:"text", id:"pnote", maxlength:"120", value:p.note, oninput:e => { p.note = e.target.value; }}),
+    ]),
+  ];
+  const foot = [
+    !isNew ? el("button", {class:"btn btn-danger", type:"button", text:"Delete", onclick:() => {
+      if(!confirm("Delete the project “" + p.name + "”? Sessions stay, they just stop pointing at it.")) return;
+      closeModal();
+      mutate(() => {
+        const h = hobby(existing.h.id);
+        h.projects = h.projects.filter(x => x.id !== p.id);
+        const keys = ["hobby|" + h.id];
+        monthList().forEach(k => {
+          let hit = false;
+          (state.months[k] || []).forEach(s => { if(s.projectId === p.id){ s.projectId = ""; hit = true; } });
+          if(hit) keys.push("month|" + k);
+        });
+        return keys;
+      });
+    }}) : null,
+    el("span", {class:"spacer"}),
+    el("button", {class:"btn", type:"button", text:"Cancel", onclick:closeModal}),
+    el("button", {class:"btn btn-primary", type:"button", text: isNew ? "Add project" : "Save", onclick:() => {
+      p.name = (p.name || "").trim();
+      if(!p.name){ toast("Give the project a name."); const f = $("pname"); if(f) f.focus(); return; }
+      closeModal();
+      mutate(() => {
+        const keys = [];
+        if(existing && existing.h.id !== hobbyId){
+          const old = hobby(existing.h.id);
+          old.projects = old.projects.filter(x => x.id !== p.id);
+          keys.push("hobby|" + old.id);
+        }
+        const target = hobby(hobbyId);
+        const i = target.projects.findIndex(x => x.id === p.id);
+        if(i >= 0) target.projects[i] = p; else target.projects.push(p);
+        keys.push("hobby|" + target.id);
+        return keys;
+      });
+      toast(isNew ? "Project added." : "Project saved.");
+    }}),
+  ];
+  openModal(isNew ? "New project" : "Edit project", body, foot);
+}
+
+/* ============================ exports ============================ */
+function csvCell(v){
+  const s = v === null || v === undefined ? "" : String(v);
+  return /[",\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s;
+}
+function toCsv(header, rows){
+  return [header].concat(rows).map(r => r.map(csvCell).join(",")).join("\n") + "\n";
+}
+async function saveFile(filename, text){
+  if(Persist.downloads){
+    try{
+      await Persist.downloads.save({filename, data: text});
+      toast("Saved " + filename + ".");
+      return;
+    }catch(err){
+      const code = err && err.code;
+      if(code === "declined") return;
+      if(code === "rate_limited"){ toast("One download at a time — try again in a moment."); return; }
+      if(code === "too_large"){ toast("That export is too big to save here. Narrow the range and try again."); return; }
+      /* anything else: fall through to the ordinary browser download */
+    }
+  }
+  try{
+    const blob = new Blob([text], {type: filename.endsWith(".json") ? "application/json" : "text/csv;charset=utf-8"});
+    const url = URL.createObjectURL(blob);
+    const a = el("a", {href:url, download:filename, style:"display:none"});
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(() => { URL.revokeObjectURL(url); a.remove(); }, 1200);
+    toast("Saved " + filename + ".");
+  }catch(e){ toast("This view will not let the page hand you a file."); }
+}
+function exportSessions(){
+  const rows = allSessions().sort((a,b) => a.date.localeCompare(b.date) || (a.at || "").localeCompare(b.at || ""))
+    .map(s => {
+      const h = hobby(s.hobbyId);
+      const proj = h && s.projectId ? (h.projects.find(p => p.id === s.projectId) || {}).name : "";
+      return [s.date, s.at, h ? h.name : "", h ? h.cat : "", s.minutes, r1(s.minutes / 60),
+        s.amount === null ? "" : s.amount, h ? h.unit : "", s.mood || "", moodLabel(s.mood), proj || "", s.note];
+    });
+  saveFile("hobby-sessions.csv", toCsv(
+    ["date","started_at","hobby","category","minutes","hours","amount","unit","mood","mood_label","project","note"], rows));
+}
+function exportHobbies(){
+  const totals = hobbyTotals();
+  const rows = allHobbies().map(h => {
+    const t = totals[h.id] || {minutes:0, sessions:0, amount:0, first:"", last:"", best:0};
+    const st = streak(h.id);
+    return [h.name, h.cat, h.unit, h.goalType, h.goalValue, h.archived ? "true" : "false",
+      t.sessions, t.minutes, r1(t.minutes / 60), t.sessions ? Math.round(t.minutes / t.sessions) : 0,
+      t.best, t.amount || "", st.current, st.longest, t.first, t.last, h.projects.length];
+  });
+  saveFile("hobby-summary.csv", toCsv(
+    ["hobby","category","unit","goal_type","goal_value","archived","sessions","total_minutes","total_hours",
+     "mean_minutes","longest_minutes","total_amount","current_streak_days","longest_streak_days",
+     "first_session","last_session","projects"], rows));
+}
+function exportWeekly(){
+  const all = allSessions();
+  if(!all.length){ toast("Nothing to export yet."); return; }
+  const bag = {};
+  all.forEach(s => {
+    const wk = weekStartOf(s.date, state.config.weekStart);
+    const key = wk + "|" + s.hobbyId;
+    if(!bag[key]) bag[key] = {wk, hobbyId: s.hobbyId, minutes: 0, sessions: 0, amount: 0, days: new Set()};
+    bag[key].minutes += s.minutes; bag[key].sessions += 1;
+    if(s.amount) bag[key].amount += s.amount;
+    bag[key].days.add(s.date);
+  });
+  const rows = Object.values(bag)
+    .sort((a,b) => a.wk.localeCompare(b.wk) || hobbyName(a.hobbyId).localeCompare(hobbyName(b.hobbyId)))
+    .map(r => {
+      const h = hobby(r.hobbyId);
+      const goal = h && h.goalType !== "none" ? h.goalValue : "";
+      const actual = h && h.goalType === "sessions" ? r.sessions : r.minutes;
+      return [r.wk, addDays(r.wk, 6), h ? h.name : "", r.sessions, r.minutes, r1(r.minutes / 60),
+        r.days.size, r.amount || "", h ? h.goalType : "", goal, goal === "" ? "" : (actual >= goal ? "true" : "false")];
+    });
+  saveFile("hobby-weekly.csv", toCsv(
+    ["week_start","week_end","hobby","sessions","minutes","hours","days_active","amount","goal_type","goal_value","goal_met"], rows));
+}
+function exportBackup(){
+  saveFile("hobby-ledger-backup.json", JSON.stringify({
+    app: "hobby-ledger", version: 1, exportedAt: new Date().toISOString(),
+    config: state.config, hobbies: state.hobbies, months: state.months,
+  }, null, 2));
+}
+</script>
+<script>
+/* ============================ SETTINGS ============================ */
+function viewSettings(){
+  const out = el("div", {class:"stack"});
+  const all = allSessions();
+  const docs = 1 + Object.keys(state.hobbies).length + monthList().length + (state.timer ? 1 : 0);
+
+  add(out, el("section", {class:"card"}, [
+    cardHead("Where the ledger lives"),
+    el("div", {class:"card-b", style:"display:flex; flex-direction:column; gap:10px"}, [
+      el("p", {text: Persist.db
+        ? "In this artifact’s document store. It follows you between devices and survives a republish."
+        : "In this browser’s local storage. It stays on this device and this browser — nowhere else."}),
+      el("div", {class:"note", text: Persist.db
+        ? docs + " documents in use: one for preferences, one per hobby, one per month of sessions. The store holds 5,000."
+        : "Nothing is sent anywhere. Clearing site data clears the ledger, so keep a backup."}),
+      el("div", {class:"note", text: all.length
+        ? all.length + " sessions across " + monthList().length + " months, " + fmtHours(sum(all, s => s.minutes)) + " all told."
+        : "Nothing logged yet."}),
+    ]),
+  ]));
+
+  add(out, el("section", {class:"card"}, [
+    cardHead("Preferences"),
+    el("div", {class:"card-b"}, el("div", {class:"form-grid"}, [
+      el("div", {class:"field"}, [
+        el("label", {for:"setweek", text:"Weeks start on"}),
+        el("select", {id:"setweek", onchange:e => mutate(() => {
+          state.config.weekStart = Number(e.target.value); return ["config"];
+        })}, [[1,"Monday"],[0,"Sunday"],[6,"Saturday"]].map(([v, l]) =>
+          el("option", {value:v, text:l, selected: state.config.weekStart === v}))),
+      ]),
+      el("div", {class:"field"}, [
+        el("label", {text:"Theme"}),
+        el("button", {class:"btn", type:"button", onclick:toggleTheme,
+          text: currentTheme() === "dark" ? "Dark" : currentTheme() === "light" ? "Light" : "System"}),
+      ]),
+    ])),
+  ]));
+
+  add(out, el("section", {class:"card"}, [
+    cardHead("Take the data out", [el("span", {class:"eyebrow", text:"ISO dates · minutes · snake_case"})]),
+    el("div", {class:"card-b", style:"display:flex; flex-direction:column; gap:12px"}, [
+      el("p", {class:"note", text:"Three tidy tables plus a full backup. One row per session, one per hobby, one per hobby-week — the shapes you would actually load somewhere."}),
+      el("div", {class:"form-actions"}, [
+        el("button", {class:"btn", type:"button", text:"Sessions CSV", onclick:exportSessions}),
+        el("button", {class:"btn", type:"button", text:"Hobby summary CSV", onclick:exportHobbies}),
+        el("button", {class:"btn", type:"button", text:"Weekly rollup CSV", onclick:exportWeekly}),
+        el("button", {class:"btn", type:"button", text:"JSON backup", onclick:exportBackup}),
+      ]),
+      el("hr", {class:"rule"}),
+      el("div", {class:"field"}, [
+        el("label", {for:"importfile", text:"Restore a JSON backup"}),
+        el("input", {type:"file", id:"importfile", accept:"application/json,.json", onchange:importBackup}),
+        el("span", {class:"note", text:"Sessions and hobbies are merged in by id — restoring the same file twice changes nothing."}),
+      ]),
+    ]),
+  ]));
+
+  add(out, el("section", {class:"card", style:"border-left:3px solid var(--critical)"}, [
+    cardHead("Start over"),
+    el("div", {class:"card-b", style:"display:flex; flex-direction:column; gap:10px"}, [
+      el("p", {class:"note", text:"Deletes every hobby, session and project. There is no undo — export a backup first."}),
+      el("div", {class:"form-actions"}, [
+        el("button", {class:"btn btn-danger", type:"button", text:"Delete everything", onclick:() => {
+          if(!confirm("Delete the whole ledger? Every hobby and session goes.")) return;
+          if(!confirm("Really? This cannot be undone.")) return;
+          const hobbyIds = Object.keys(state.hobbies), months = monthList();
+          state.hobbies = {}; state.months = {}; state.timer = null; state.demo = false;
+          hobbyIds.forEach(id => flush("hobby|" + id));
+          months.forEach(k => flush("month|" + k));
+          flush("timer");
+          localSave();
+          resetDraft();
+          render();
+          toast("Ledger cleared.");
+        }}),
+      ]),
+    ]),
+  ]));
+
+  add(out, el("section", {class:"card"}, [
+    cardHead("About"),
+    el("div", {class:"card-b", style:"display:flex; flex-direction:column; gap:8px"}, [
+      el("p", {class:"note", text:"Hobby Ledger keeps one row per session: how long, when, how it went, and what you did. Everything else on these tabs — streaks, goals, milestones, the grid — is computed from those rows, so nothing is stored twice and an export is the whole truth."}),
+      el("p", {class:"note", text:"Eight inks, assigned in order and never recycled, so a hobby keeps its colour and a filter never repaints the rest of the chart."}),
+    ]),
+  ]));
+  return out;
+}
+
+function importBackup(e){
+  const file = e.target.files && e.target.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = () => {
+    let o;
+    try{ o = JSON.parse(String(reader.result)); }
+    catch(err){ toast("That file is not readable JSON."); return; }
+    if(!o || (!o.hobbies && !o.months)){ toast("That does not look like a Hobby Ledger backup."); return; }
+    const hobbyIds = [], monthKeys = new Set();
+    mutate(() => {
+      Object.values(o.hobbies || {}).forEach(h => {
+        const n = normaliseHobby(h);
+        state.hobbies[n.id] = n;
+        hobbyIds.push(n.id);
+      });
+      Object.keys(o.months || {}).forEach(k => {
+        const existing = state.months[k] || [];
+        const seen = new Set(existing.map(s => s.id));
+        (o.months[k] || []).forEach(raw => {
+          const s = normaliseSession(raw);
+          if(seen.has(s.id)) return;
+          existing.push(s);
+          seen.add(s.id);
+        });
+        state.months[k] = existing;
+        monthKeys.add(k);
+      });
+      if(o.config) state.config = Object.assign(state.config, o.config);
+      return hobbyIds.map(id => "hobby|" + id).concat([...monthKeys].map(k => "month|" + k), ["config"]);
+    });
+    toast("Restored " + hobbyIds.length + " hobbies and " + sum([...monthKeys], k => state.months[k].length) + " sessions.");
+  };
+  reader.readAsText(file);
+  e.target.value = "";
+}
+
+/* ============================ render ============================ */
+const VIEWS = {today: viewToday, hobbies: viewHobbies, trends: viewTrends, milestones: viewMilestones, settings: viewSettings};
+function render(){
+  if(!state.loaded){
+    clear($("view")).appendChild(el("div", {class:"card"},
+      el("div", {class:"card-b", style:"color:var(--muted)", text:"Opening the ledger…"})));
+    return;
+  }
+  /* tabs */
+  const tabs = clear($("tabs"));
+  TABS.forEach(([id, label]) => add(tabs, el("button", {
+    class:"tab", type:"button", role:"tab", "aria-controls":"view", id:"tab-" + id,
+    "aria-selected": String(state.tab === id),
+    onclick:() => { state.tab = id; render(); $("view").focus(); }, text: label,
+  })));
+  /* date strip */
+  const d = state.date, isToday = d === todayISO();
+  $("ddow").textContent = DOW_SHORT[dowIndex(d)];
+  $("ddate").textContent = fmtDate(d);
+  $("dinput").value = d;
+  $("dlabel").classList.toggle("is-today", isToday);
+  $("dnext").disabled = d >= todayISO();
+  $("brandsub").textContent = state.demo ? "Example ledger" : (Persist.db ? "Synced to this artifact" : "This browser only");
+  /* body */
+  const view = clear($("view"));
+  view.setAttribute("aria-labelledby", "tab-" + state.tab);
+  view.appendChild((VIEWS[state.tab] || viewToday)());
+}
+
+$("dprev").onclick = () => { state.date = addDays(state.date, -1); render(); };
+$("dnext").onclick = () => { if(state.date < todayISO()){ state.date = addDays(state.date, 1); render(); } };
+$("dtoday").onclick = () => { state.date = todayISO(); render(); };
+$("dinput").onchange = e => { if(e.target.value){ state.date = e.target.value; render(); } };
+$("themebtn").onclick = toggleTheme;
+
+let resizeTimer = null;
+addEventListener("resize", () => {
+  clearTimeout(resizeTimer);
+  resizeTimer = setTimeout(() => { if(state.loaded) render(); }, 180);
+});
+
+/* ============================ boot ============================ */
+async function boot(){
+  let db = null, downloads = null;
+  try{ if(window.claude && window.claude.use) db = await claude.use("db"); }catch(e){ db = null; }
+  try{ if(window.claude && window.claude.use) downloads = await claude.use("downloads"); }catch(e){ downloads = null; }
+  Persist.db = db;
+  Persist.downloads = downloads;
+
+  if(!db){
+    if(!localLoad()) buildDemo();
+    state.loaded = true;
+    render();
+    return;
+  }
+  /* Four subscriptions, registered once: preferences, hobbies, months, timer. */
+  let arrivals = 0;
+  const settle = () => {
+    arrivals++;
+    if(arrivals >= 4 && !state.loaded){
+      state.loaded = true;
+      if(!hasAnyData() && !Object.keys(state.hobbies).length) buildDemo();
+    }
+    if(state.loaded) render();
+  };
+  const onErr = e => { if(e && e.code) console.warn("db", e.code, e.message); settle(); };
+  try{
+    db.doc("config/app").onSnapshot(s => {
+      const d = s.exists && s.data();
+      if(d) state.config = Object.assign(state.config, d);
+      settle();
+    }, onErr);
+    db.collection("hobbies").onSnapshot(s => {
+      const bag = {};
+      s.docs.forEach(doc => { const d = doc.data(); if(d) bag[doc.id] = normaliseHobby(Object.assign({}, d, {id: doc.id})); });
+      if(s.size){ state.hobbies = bag; state.demo = false; }
+      else if(!state.demo) state.hobbies = bag;
+      settle();
+    }, onErr);
+    db.collection("sessions").orderBy("month", "desc").limit(120).onSnapshot(s => {
+      const bag = {};
+      s.docs.forEach(doc => {
+        const d = doc.data();
+        if(d && Array.isArray(d.items)) bag[doc.id] = d.items.map(normaliseSession);
+      });
+      if(s.size){ state.months = bag; state.demo = false; }
+      else if(!state.demo) state.months = bag;
+      settle();
+    }, onErr);
+    db.doc("timer/current").onSnapshot(s => {
+      const d = s.exists && s.data();
+      state.timer = (d && d.hobbyId) ? {hobbyId: d.hobbyId, startedAt: Number(d.startedAt) || Date.now()} : null;
+      settle();
+    }, onErr);
+  }catch(e){
+    console.warn(e);
+    if(!state.loaded){ state.loaded = true; buildDemo(); render(); }
+  }
+  /* If the store never answers, open on the example ledger rather than a spinner. */
+  setTimeout(() => {
+    if(!state.loaded){
+      state.loaded = true;
+      if(!hasAnyData() && !Object.keys(state.hobbies).length) buildDemo();
+      render();
+    }
+  }, 4500);
+  render();
+}
+
+function startWith(hot){
+  if(hot && typeof hot === "object"){
+    if(hot.tab && VIEWS[hot.tab]) state.tab = hot.tab;
+    if(hot.date) state.date = hot.date;
+    if(typeof hot.trendRange === "number") state.trendRange = hot.trendRange;
+    if(hot.heatHobby) state.heatHobby = hot.heatHobby;
+  }
+  boot();
+}
+if(window.claude && window.claude.hot){
+  window.claude.hot.snapshot(() => ({tab: state.tab, date: state.date, trendRange: state.trendRange, heatHobby: state.heatHobby}));
+  window.claude.hot.ready ? window.claude.hot.ready(startWith) : startWith(window.claude.hot.data);
+} else {
+  startWith(null);
+}
+</script>
