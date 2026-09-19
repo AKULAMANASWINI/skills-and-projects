@@ -15,13 +15,19 @@ import { fileURLToPath } from "node:url";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const SRC = resolve(root, "plate-and-barbell/index.html");
+/* config.js must run before the app reads window.PB_CONFIG, so it is linked
+   from <head> above the app's own scripts. It is not generated — it is
+   hand-edited and committed, and holds only the public anon key. */
 const OUT = resolve(root, "docs/index.html");
 
 const src = readFileSync(SRC, "utf8");
-const split = src.indexOf('<div class="app">');
-if (split === -1) throw new Error('could not find `<div class="app">` in ' + SRC);
-const head = src.slice(0, split).trim();
-const body = src.slice(split).trim();
+/* Everything through the closing </style> is head material (title, font
+   links, the stylesheet); everything after it is the document body. */
+const marker = "</style>";
+const at = src.indexOf(marker);
+if (at === -1) throw new Error("could not find the closing </style> in " + SRC);
+const head = src.slice(0, at + marker.length).trim();
+const body = src.slice(at + marker.length).trim();
 
 const FAVICON =
   "data:image/svg+xml," +
@@ -51,6 +57,7 @@ const out = `<!doctype html>
 <meta name="theme-color" content="#161B15" media="(prefers-color-scheme: dark)">
 <link rel="icon" href="${FAVICON}">
 <style>${RESET}</style>
+<script src="config.js"></script>
 ${head}
 </head>
 <body>

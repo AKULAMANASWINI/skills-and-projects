@@ -12,6 +12,7 @@
 body{margin:0}
 img{max-width:100%}
 [hidden]{display:none!important}</style>
+<script src="config.js"></script>
 <title>Plate &amp; Barbell</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -275,7 +276,8 @@ footer.legal{max-width:1080px; margin:44px auto 0; padding:22px 24px 0; border-t
 </style>
 </head>
 <body>
-<div class="app">
+<div id="authRoot" hidden></div>
+<div class="app" id="appRoot">
   <header class="topbar">
     <div class="topbar-in">
       <div class="brand">
@@ -626,7 +628,14 @@ function historicBest(pid, exId, beforeDate){
 
 /* ============================ persistence ============================ */
 const LS_KEY = "plate_barbell_v1";
-const Persist = { db:null, subs:[], ready:false };
+/* Three places the log can live, picked at boot:
+     "artifact"  — the claude.ai artifact document store
+     "supabase"  — your own Postgres behind a login (config.js)
+     "local"     — this browser only                                        */
+const CFG = (typeof window !== "undefined" && window.PB_CONFIG) || {};
+const SUPABASE_CONFIGURED = !!(CFG.supabaseUrl && CFG.supabaseAnonKey &&
+  /^https:\/\//.test(CFG.supabaseUrl) && !/YOUR_|EXAMPLE/i.test(CFG.supabaseUrl + CFG.supabaseAnonKey));
+const Persist = { mode:"local", db:null, sb:null, user:null, subs:[], ready:false };
 const pending = new Map();
 function save(key){
   if(state.demo) return;
@@ -636,6 +645,7 @@ function save(key){
 function cleanProfile(p){ return JSON.parse(JSON.stringify(p)); }
 async function flush(key){
   const parts = key.split("|");
+  if(Persist.mode==="supabase"){ await sbWrite(parts); return; }
   if(!Persist.db){ localSave(); return; }
   try{
     if(parts[0]==="profile") await Persist.db.doc("profiles/"+parts[1]).set(cleanProfile(state.profiles[parts[1]]));
@@ -751,12 +761,13 @@ function clearDemo(){
 async function boot(){
   let db = null;
   try{ if(window.claude && window.claude.use) db = await claude.use("db"); }catch(e){ db = null; }
-  Persist.db = db;
-  if(!db){
-    if(!localLoad()) buildDemo();
-    state.loaded = true; render();
-    return;
-  }
+  if(db){ Persist.mode="artifact"; Persist.db = db; return bootArtifact(db); }
+  if(SUPABASE_CONFIGURED){ Persist.mode="supabase"; return bootSupabase(); }
+  Persist.mode = "local";
+  if(!localLoad()) buildDemo();
+  state.loaded = true; render();
+}
+async function bootArtifact(db){
   let firstSnaps = 0;
   const arrived = ()=>{ firstSnaps++; if(firstSnaps>=6 && !state.loaded){
       state.loaded = true; if(!hasAnyData()) buildDemo(); }
@@ -793,6 +804,231 @@ function normaliseDay(d){
 /* Any change to the log retires the example data first. */
 function mutate(fn){ clearDemo(); fn(); render(); }
 </script>
+
+<script>
+/* ============================ supabase backend ============================ */
+/* Only ever reached when config.js carries real values, which is the
+   self-hosted build. The artifact and the offline copy never load this CDN. */
+/* Exact pin first; the major-version tag is the fallback so a bad pin cannot
+   take the whole app down. Both resolve to the same UMD global, `supabase`. */
+const SB_CDNS = [
+  "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.58.0/dist/umd/supabase.js",
+  "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"
+];
+const recentWrites = new Map();   /* our own echoes, so realtime does not fight the cursor */
+
+function loadScript(src){
+  return new Promise((res,rej)=>{
+    const t=document.createElement("script"); t.src=src; t.async=true;
+    t.onload=()=>res(); t.onerror=()=>rej(new Error("could not load "+src));
+    document.head.appendChild(t);
+  });
+}
+function showApp(on){
+  const a=$("#appRoot"), b=$("#authRoot");
+  if(a) a.hidden = !on;
+  if(b) b.hidden = on;
+}
+function authCard(kids){
+  const root=$("#authRoot"); root.innerHTML="";
+  root.appendChild(el("div",{style:"display:grid;place-items:start center;padding:clamp(40px,12vh,140px) 16px 64px"},[
+    el("div",{style:"width:100%;max-width:380px"},[
+      el("div",{style:"display:flex;align-items:center;gap:11px;margin-bottom:22px"},[
+        el("div",{html:'<svg width="30" height="30" viewBox="0 0 32 32" aria-hidden="true">'+
+          '<circle cx="11" cy="16" r="8.4" fill="none" stroke="var(--moss)" stroke-width="2.2"/>'+
+          '<circle cx="11" cy="16" r="2.6" fill="var(--coral)"/>'+
+          '<rect x="19.4" y="14.6" width="3" height="2.8" fill="var(--moss-deep)"/>'+
+          '<rect x="23.8" y="11.2" width="4.4" height="9.6" fill="var(--moss-deep)"/></svg>'}),
+        el("div",{},[ el("h1",{text:"Plate & Barbell"}),
+          el("div",{class:"eyebrow",style:"margin-top:2px",text:"Madhu & Aravind"}) ])
+      ]),
+      el("div",{class:"card"}, kids)
+    ])
+  ]));
+  showApp(false);
+}
+function authMessage(title, body){
+  authCard([ el("div",{class:"card-b"},[
+    el("h2",{style:"margin-bottom:8px",text:title}),
+    body? el("div",{class:"note",text:body}) : null ]) ]);
+}
+function renderSignIn(prefill, problem){
+  const email = el("input",{class:"inp",type:"email",id:"authEmail",autocomplete:"username",
+    placeholder:"you@example.com",value:prefill||"","aria-label":"Email"});
+  const pass  = el("input",{class:"inp",type:"password",id:"authPass",autocomplete:"current-password",
+    placeholder:"••••••••","aria-label":"Password"});
+  const err   = el("div",{class:"note",style:"color:var(--critical)",text:problem||""});
+  const btn   = el("button",{class:"btn btn-accent",style:"width:100%",text:"Sign in"});
+  const go = async ()=>{
+    err.textContent=""; btn.disabled=true; btn.textContent="Signing in…";
+    const { error } = await Persist.sb.auth.signInWithPassword({
+      email: email.value.trim(), password: pass.value });
+    btn.disabled=false; btn.textContent="Sign in";
+    if(error){
+      err.textContent = /invalid login/i.test(error.message||"")
+        ? "That email and password don't match an account."
+        : (error.message || "Could not sign in.");
+      pass.value=""; pass.focus();
+    }
+  };
+  btn.addEventListener("click", go);
+  [email,pass].forEach(i=> i.addEventListener("keydown", e=>{ if(e.key==="Enter") go(); }));
+  authCard([
+    el("div",{class:"card-h"},[el("h2",{text:"Sign in"})]),
+    el("div",{class:"card-b",style:"display:flex;flex-direction:column;gap:13px"},[
+      el("div",{class:"field"},[el("label",{for:"authEmail",text:"Email"}),email]),
+      el("div",{class:"field"},[el("label",{for:"authPass",text:"Password"}),pass]),
+      err, btn,
+      el("div",{class:"note",style:"color:var(--muted);font-size:.8rem",
+        text:"Accounts are created by hand — there is no sign-up. Only the two addresses on the allowlist can read this log."})
+    ])
+  ]);
+  setTimeout(()=>{ (prefill?pass:email).focus(); },0);
+}
+async function bootSupabase(){
+  authMessage("Connecting…");
+  try{
+    if(!window.supabase){
+      let lastErr = null;
+      for(const url of SB_CDNS){
+        try{ await loadScript(url); if(window.supabase) break; }
+        catch(e){ lastErr = e; }
+      }
+      if(!window.supabase) throw lastErr || new Error("supabase-js did not load");
+    }
+    Persist.sb = window.supabase.createClient(CFG.supabaseUrl, CFG.supabaseAnonKey,
+      { auth:{ persistSession:true, autoRefreshToken:true } });
+  }catch(e){
+    authMessage("Can't reach the sign-in service",
+      "The authentication library did not load. That is usually a dropped connection, "+
+      "or an ad blocker blocking cdn.jsdelivr.net. Check both and reload.");
+    return;
+  }
+  Persist.sb.auth.onAuthStateChange((evt, session)=>{
+    const u = session && session.user;
+    if(u && (!Persist.user || Persist.user.id !== u.id)){ Persist.user = u; afterSignIn(); }
+    else if(!u && Persist.user){ Persist.user = null; location.reload(); }
+  });
+  let session = null;
+  try{ const { data } = await Persist.sb.auth.getSession(); session = data && data.session; }catch(e){}
+  if(session){ Persist.user = session.user; await afterSignIn(); }
+  else renderSignIn();
+}
+async function afterSignIn(){
+  authMessage("Loading your log…");
+  try{
+    const { data: member, error: mErr } = await Persist.sb.rpc("is_member");
+    if(mErr) throw mErr;
+    if(member === false){
+      const who = (Persist.user && Persist.user.email) || "";
+      await Persist.sb.auth.signOut();
+      Persist.user = null;
+      renderSignIn(who, "That account is not on the allowlist for this log.");
+      return;
+    }
+    await sbLoadAll();
+  }catch(err){
+    console.warn(err);
+    authMessage("Could not load the log", (err && err.message) || "Something went wrong. Reload to try again.");
+    return;
+  }
+  if(!hasAnyData()) buildDemo();
+  sbSubscribe();
+  state.loaded = true;
+  showApp(true);
+  render();
+}
+async function sbLoadAll(){
+  const sb = Persist.sb;
+  const [pf, dy, lb, cf] = await Promise.all([
+    sb.from("profiles").select("id,data"),
+    sb.from("days").select("profile_id,day,data"),
+    sb.from("library").select("data").eq("id","custom").maybeSingle(),
+    sb.from("app_config").select("data").eq("id","app").maybeSingle()
+  ]);
+  const err = pf.error || dy.error || lb.error || cf.error;
+  if(err) throw err;
+  (pf.data||[]).forEach(r=>{ if(PIDS.indexOf(r.id)!==-1) state.profiles[r.id] =
+    Object.assign(defaultProfile(r.id,"","male",30,175,75,"maintain"), r.data||{}, {id:r.id}); });
+  state.days = {p1:{},p2:{}};
+  (dy.data||[]).forEach(r=>{
+    const bag = state.days[r.profile_id] || (state.days[r.profile_id]={});
+    bag[r.day] = normaliseDay(Object.assign({}, r.data||{}, {date:r.day}));
+  });
+  if(lb.data && lb.data.data) state.custom =
+    {foods:lb.data.data.foods||[], exercises:lb.data.data.exercises||[]};
+  if(cf.data && cf.data.data){
+    if(cf.data.data.units) state.units = cf.data.data.units;
+    if(cf.data.data.active) state.active = cf.data.data.active;
+  }
+}
+function sbError(err){
+  const m = (err && (err.message || err.error_description)) || "";
+  if(/JWT|expired|not authenticated|session/i.test(m)) toast("Signed out — reload and sign in again.");
+  else if(/row-level security|permission|policy/i.test(m)) toast("This account cannot write to the log.");
+  else toast("Could not save that — it will retry on your next change.");
+  console.warn(err);
+}
+async function sbWrite(parts){
+  const sb = Persist.sb; if(!sb) return;
+  const stamp = k => recentWrites.set(k, Date.now());
+  try{
+    let r;
+    if(parts[0]==="profile"){
+      stamp("profile:"+parts[1]);
+      r = await sb.from("profiles").upsert({id:parts[1], data:cleanProfile(state.profiles[parts[1]])});
+    } else if(parts[0]==="day"){
+      const d = state.days[parts[1]] && state.days[parts[1]][parts[2]];
+      if(!d) return;
+      stamp("day:"+parts[1]+":"+parts[2]);
+      r = await sb.from("days").upsert(
+        {profile_id:parts[1], day:parts[2], data:JSON.parse(JSON.stringify(d))},
+        {onConflict:"profile_id,day"});
+    } else if(parts[0]==="lib"){
+      r = await sb.from("library").upsert({id:"custom", data:JSON.parse(JSON.stringify(state.custom))});
+    } else if(parts[0]==="config"){
+      r = await sb.from("app_config").upsert({id:"app", data:{units:state.units, active:state.active}});
+    }
+    if(r && r.error) throw r.error;
+  }catch(err){ sbError(err); }
+}
+function echoOfOurOwn(key){
+  const t = recentWrites.get(key);
+  return !!t && (Date.now() - t) < 2500;
+}
+function sbSubscribe(){
+  const sb = Persist.sb;
+  const ch = sb.channel("plate-and-barbell")
+    .on("postgres_changes", {event:"*", schema:"public", table:"days"}, payload=>{
+      const row = (payload.new && payload.new.profile_id) ? payload.new : payload.old;
+      if(!row || !row.profile_id) return;
+      if(echoOfOurOwn("day:"+row.profile_id+":"+row.day)) return;
+      const bag = state.days[row.profile_id] || (state.days[row.profile_id]={});
+      if(payload.eventType === "DELETE") delete bag[row.day];
+      else bag[row.day] = normaliseDay(Object.assign({}, row.data||{}, {date:row.day}));
+      state.demo = false; render();
+    })
+    .on("postgres_changes", {event:"*", schema:"public", table:"profiles"}, payload=>{
+      const row = payload.new; if(!row || PIDS.indexOf(row.id)===-1) return;
+      if(echoOfOurOwn("profile:"+row.id)) return;
+      state.profiles[row.id] = Object.assign(
+        defaultProfile(row.id,"","male",30,175,75,"maintain"), row.data||{}, {id:row.id});
+      render();
+    })
+    .subscribe();
+  Persist.subs.push(ch);
+}
+async function sbDeleteAllDays(){
+  const sb = Persist.sb; if(!sb) return;
+  const r = await sb.from("days").delete().in("profile_id", PIDS);
+  if(r.error) sbError(r.error);
+}
+async function signOut(){
+  try{ await Persist.sb.auth.signOut(); }catch(e){}
+  location.reload();
+}
+</script>
+
 
 <script>
 /* ============================ shared UI pieces ============================ */
@@ -849,6 +1085,12 @@ function renderHeader(){
   people.appendChild(el("button",{class:"person-btn both","aria-pressed":String(state.compare),
     onclick:()=>{ state.compare=true; render(); },text:"Both"}));
 
+  if(Persist.mode === "supabase" && Persist.user && !$("#signOutBtn")){
+    const t = $("#themeBtn");
+    if(t) t.insertAdjacentElement("beforebegin", el("button",{class:"icon-btn",id:"signOutBtn",
+      style:"width:auto;padding:0 10px", title:"Signed in as "+(Persist.user.email||""),
+      onclick:signOut, text:"Sign out"}));
+  }
   $("#dateText").textContent = fmtDate(state.date);
   $("#dateDow").textContent = state.date===todayISO() ? "today" : DOW_LABEL[dowOf(state.date)].slice(0,3);
   $("#datePick").value = state.date;
@@ -860,9 +1102,9 @@ function renderHeader(){
       el("span",{class:"spacer"}),
       el("button",{class:"btn btn-sm",onclick:()=>{ clearDemo(); render(); },text:"Start my log"})
     ]));
-  } else if(!Persist.db){
+  } else if(Persist.mode === "local"){
     banner.appendChild(el("div",{class:"banner"},[
-      el("span",{html:"Saving to <strong>this browser only</strong>. Export a backup from Settings if you clear site data."})
+      el("span",{html:"Saving to <strong>this browser only</strong> — no sync. Export a backup from Settings if you clear site data."})
     ]));
   }
 }
@@ -1925,8 +2167,11 @@ function renderSettings(){
   root.appendChild(grid);
 
   const data = el("div",{class:"card",style:"margin-top:16px"});
+  const storeLabel = Persist.mode==="supabase"
+    ? "synced · signed in as "+((Persist.user&&Persist.user.email)||"?")
+    : Persist.mode==="artifact" ? "synced store" : "this browser only";
   data.appendChild(el("div",{class:"card-h"},[el("h2",{text:"Data"}),
-    el("span",{class:"eyebrow",text: Persist.db? "synced store" : "this browser only"})]));
+    el("span",{class:"eyebrow",text:storeLabel})]));
   const fileIn = el("input",{type:"file",accept:"application/json",style:"display:none",
     onchange:ev=>{ const f=ev.target.files[0]; if(!f) return; const rd=new FileReader();
       rd.onload=()=>importJSON(rd.result); rd.readAsText(f); }});
@@ -1945,11 +2190,16 @@ function renderSettings(){
         el("button",{"aria-pressed":String(state.units==="metric"),onclick:()=>{ state.units="metric"; save("config"); render(); },text:"kg"}),
         el("button",{"aria-pressed":String(state.units==="imperial"),onclick:()=>{ state.units="imperial"; save("config"); render(); },text:"lb"})]),
       el("button",{class:"btn btn-danger",onclick:()=>confirmThen(
-        "Delete every logged day for both profiles? Targets, plans and custom foods stay. This cannot be undone.",
-        ()=>{ PIDS.forEach(pid=>{ Object.keys(state.days[pid]||{}).forEach(d=>{
-            if(Persist.db) Persist.db.doc("profiles/"+pid+"/days/"+d).delete().catch(()=>{}); });
+        "Delete every logged day for both people? Targets, plans and custom foods stay. This cannot be undone.",
+        ()=>{
+          if(Persist.mode==="supabase") sbDeleteAllDays();
+          PIDS.forEach(pid=>{ Object.keys(state.days[pid]||{}).forEach(d=>{
+              if(Persist.mode==="artifact" && Persist.db)
+                Persist.db.doc("profiles/"+pid+"/days/"+d).delete().catch(()=>{}); });
             state.days[pid]={}; });
-          state.demo=false; localSave(); render(); toast("Log cleared"); }),text:"Clear all logged days"})
+          state.demo=false;
+          if(Persist.mode==="local") localSave();
+          render(); toast("Log cleared"); }),text:"Clear all logged days"})
     ])
   ]));
   root.appendChild(data);

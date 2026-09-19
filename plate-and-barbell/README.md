@@ -8,14 +8,17 @@ Work Sans body, Space Mono for every label and number, moss green structure with
 coral for Madhu and teal for Aravind. Square-cornered bordered cards, a 3px
 left rule for person identity, and hairline `--line` separators throughout.
 
-Two places it runs:
+One file, three storage backends, chosen at boot:
 
-| Where | URL | Storage |
+| Where it runs | Storage | Login |
 |---|---|---|
-| claude.ai artifact | https://claude.ai/artifact/QFgnBt4yFivKUjJo93nJCw | Artifact document store — syncs across devices and between both people |
-| GitHub Pages | https://akulamanaswini.github.io/skills-and-projects/ | `localStorage` — per browser, no sync |
+| claude.ai artifact | artifact document store, synced | claude.ai account |
+| your own domain | Supabase Postgres, synced, realtime | email + password |
+| from disk, or unconfigured | `localStorage`, this browser only | none |
 
-Same code. The app detects which runtime it is in and says so in a banner.
+`boot()` tries the artifact runtime, then `window.PB_CONFIG` from `config.js`,
+then falls back to local. The app says which one it is using in a banner and in
+Settings. Self-hosting is documented in [SETUP.md](../SETUP.md).
 
 ## What it does
 
@@ -63,6 +66,17 @@ gate with CVD separation in the 6–8 warn band, which the always-present legend
 the 2px gaps between stacked segments and the table view cover.
 
 ## Data
+
+### Self-hosted (Supabase)
+
+`supabase/schema.sql` creates four tables — `app_config`, `library`, `profiles`
+and `days` (one row per person-day) — plus an `allowed_emails` table that every
+row-level-security policy checks through `public.is_member()`. A stranger who
+somehow obtains an account still reads and writes nothing. Realtime is enabled
+on `days` and `profiles`, and the client ignores the echo of its own writes for
+2.5s so a remote update never fights the cursor.
+
+### Artifact
 
 Stored in the artifact's document store (`db` capability), shared across the
 owner's devices:
