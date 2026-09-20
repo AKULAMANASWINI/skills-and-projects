@@ -46,10 +46,33 @@ when you drift away from something, and the history stays.
 **Milestones** — the long game. Hours banked against 10 / 25 / 50 / 100 / 250 /
 500 / 1000 per hobby, with how many more sessions at your usual length it takes
 to reach the next one. Longest streak, longest session, biggest week, best day.
-Projects — the half marathon, the novel, the table — carry a status and collect
-the hours logged against them.
+Projects — the dinner set, the linen shirt, the book — carry a credit, a status
+and a finish date, and collect the hours logged against them.
 
 **Settings** — week start, theme, exports, restore, and a way to wipe it.
+
+## Books are projects with an author
+
+A book being read is exactly what a project already is: a named thing a hobby
+works through over many sessions. So rather than bolt on a separate reading
+list, a project carries a **by** — the author of a book, the designer of a
+sewing pattern, whoever's form a pot copies — and the vocabulary follows the
+hobby's category:
+
+| Hobby category | The thing | The credit | Statuses |
+|---|---|---|---|
+| Reading | Book | Author | To read · Reading · Finished · Abandoned |
+| Everything else | Project | By | Idea · In progress · Finished · Shelved |
+
+`Reading` and `Writing` are separate categories for this reason — a journal
+volume is not a book with an author. A hobby saved under the old combined
+`words` category migrates to `Writing` on load.
+
+Finishing something sets a date you can edit, so a book finished last week can
+be logged today. Attach sessions to a book and its hours, session count and
+first/last dates all accrue to it; `hobby-projects.csv` is the reading log as a
+table. The board is reachable before anything is logged — you line up what you
+are going to read before you have read any of it.
 
 ## Why weeks running, not a day streak
 
@@ -97,10 +120,12 @@ One row per session is the only thing stored. Streaks, goals, milestones and the
 grid are all computed from those rows, so nothing is held twice and an export is
 the whole truth.
 
-Exports, from Settings: `hobby-sessions.csv` (one row per session),
-`hobby-summary.csv` (one row per hobby), `hobby-weekly.csv` (one row per
-hobby-week, with the goal alongside the actual) and a JSON backup that imports
-back, merging by id so restoring twice changes nothing. ISO dates, minutes,
+Exports, from Settings: `hobby-sessions.csv` (one row per session, carrying the
+book or project and its author), `hobby-summary.csv` (one row per hobby),
+`hobby-weekly.csv` (one row per hobby-week, with the goal alongside the actual),
+`hobby-projects.csv` (one row per book or project, with credit, status, finish
+date and the hours logged against it) and a JSON backup that imports back,
+merging by id so restoring twice changes nothing. ISO dates, minutes,
 snake_case headers. Inside the artifact the file goes through the `downloads`
 capability; anywhere else it is an ordinary browser download.
 

@@ -457,8 +457,8 @@ const INKS = [
 const inkCss = n => (INKS[((n||1)-1) % 8] || INKS[0]).css;
 
 const CATEGORIES = [
-  ["making","Making"], ["music","Music"], ["words","Reading & writing"], ["moving","Moving"],
-  ["outdoors","Outdoors"], ["mind","Mind"], ["games","Games"], ["other","Other"],
+  ["making","Making"], ["music","Music"], ["reading","Reading"], ["writing","Writing"],
+  ["moving","Moving"], ["outdoors","Outdoors"], ["mind","Mind"], ["games","Games"], ["other","Other"],
 ];
 const catLabel = c => (CATEGORIES.find(x => x[0] === c) || ["","Other"])[1];
 
@@ -469,7 +469,18 @@ const UNIT_SUGGESTIONS = ["pages","km","words","routes","photos","pieces","track
 const MOODS = [["1","Slog"],["2","Meh"],["3","Fine"],["4","Good"],["5","Flow"]];
 const MILESTONE_HOURS = [10, 25, 50, 100, 250, 500, 1000];
 const PROJECT_STATUS = [["idea","Idea"],["making","In progress"],["done","Finished"],["shelved","Shelved"]];
-const statusLabel = s => (PROJECT_STATUS.find(x => x[0] === s) || ["","In progress"])[1];
+/* A book is a project with an author, so reading and writing hobbies get the
+   words a reading log actually uses and everything else keeps the general ones. */
+const BOOK_STATUS = [["idea","To read"],["making","Reading"],["done","Finished"],["shelved","Abandoned"]];
+const statusList = cat => (cat === "reading" ? BOOK_STATUS : PROJECT_STATUS);
+const statusLabel = (st, cat) => (statusList(cat).find(x => x[0] === st) || ["","In progress"])[1];
+function projectWords(cat){
+  return cat === "reading"
+    ? {thing:"Book", things:"Books", lower:"book", by:"Author",
+       namePlaceholder:"Piranesi", byPlaceholder:"Susanna Clarke", doneLabel:"Finished on"}
+    : {thing:"Project", things:"Projects", lower:"project", by:"By",
+       namePlaceholder:"Linen shirt", byPlaceholder:"Pattern, designer, maker", doneLabel:"Finished on"};
+}
 
 const TABS = [["today","Today"],["hobbies","Hobbies"],["trends","Trends"],["milestones","Milestones"],["settings","Settings"]];
 
@@ -506,11 +517,12 @@ function normaliseHobby(h){
   const base = {id: h.id || uid(), name: "", cat: "other", ink: 1, unit: "", goalType: "minutes",
     goalValue: 0, createdAt: todayISO(), archived: false, projects: []};
   const o = Object.assign(base, h);
+  if(o.cat === "words") o.cat = "writing";   /* the category used to cover both */
   o.ink = clamp(Number(o.ink) || 1, 1, 8);
   o.goalValue = Number(o.goalValue) || 0;
   o.archived = !!o.archived;
   o.projects = Array.isArray(o.projects) ? o.projects.map(p => Object.assign(
-    {id: uid(), name: "", status: "making", note: "", createdAt: todayISO(), doneAt: ""}, p)) : [];
+    {id: uid(), name: "", by: "", status: "making", note: "", createdAt: todayISO(), doneAt: ""}, p)) : [];
   return o;
 }
 function normaliseSession(s){
@@ -820,7 +832,7 @@ const DEMO_HOBBIES = [
    notes:["Cut the pattern, nothing sewn yet","Set both sleeves, unpicked one",
      "Hemming — the boring bit","Overlocked the seams","Toile fits, cutting the real fabric",
      "Buttonholes, finally","Rethreaded the machine four times"]},
-  {name:"Journal writing", cat:"words", ink:3, unit:"pages", goalType:"sessions", goalValue:5,
+  {name:"Journal writing", cat:"writing", ink:3, unit:"pages", goalType:"sessions", goalValue:5,
    days:[0,1,2,3,4,5,6], chance:.72, mean:22, spread:12, hour:[21,23], rate:.09,
    notes:["","Morning pages, barely awake","Long entry about the week","Three lines and out",
      "Wrote through something","Mostly lists","Reread January, cringed, kept going"]},
@@ -1357,10 +1369,11 @@ function logForm(){
     moodPicker(draft.mood, v => { draft.mood = v; }),
   ]));
   if(openProjects.length) add(grid, el("div", {class:"field"}, [
-    el("label", {for:"logproject", text:"Project"}),
+    el("label", {for:"logproject", text: h && h.cat === "reading" ? "Book" : "Project"}),
     el("select", {id:"logproject", onchange:e => { draft.projectId = e.target.value; }}, [
       el("option", {value:"", text:"—", selected: !draft.projectId}),
-    ].concat(openProjects.map(p => el("option", {value:p.id, text:p.name, selected: p.id === draft.projectId})))),
+    ].concat(openProjects.map(p => el("option", {value:p.id,
+      text: p.by ? p.name + " — " + p.by : p.name, selected: p.id === draft.projectId})))),
   ]));
   add(body, grid);
   add(body, el("div", {class:"field"}, [
@@ -1417,7 +1430,7 @@ function sessionRow(s){
   const bits = [];
   if(s.amount !== null && h && h.unit) bits.push(r1(s.amount) + " " + h.unit);
   if(s.mood) bits.push(moodLabel(s.mood));
-  if(proj) bits.push(proj.name);
+  if(proj) bits.push(proj.by ? proj.name + " — " + proj.by : proj.name);
   if(s.note) bits.push(s.note);
   return el("div", {class:"row"}, [
     el("span", {class:"bar", style:"background:" + hobbyInk(s.hobbyId)}),
@@ -1856,7 +1869,10 @@ function viewMilestones(){
 
   if(!all.length){
     add(out, el("section", {class:"card"}, el("div", {class:"card-b tight"}, emptyState(
-      "No milestones yet", "Hours accumulate here: 10, 25, 50, 100 and on up, per hobby. Projects live here too."))));
+      "No hours banked yet", "Hours accumulate here once you log a session: 10, 25, 50, 100 and on up, per hobby."))));
+    /* The reading list and the project board come first for a reason — you
+       line up what you are going to read before you have read any of it. */
+    add(out, projectsCard());
     return out;
   }
 
@@ -1921,8 +1937,9 @@ function projectsCard(){
   all.sort((a, b) => (order[a.p.status] - order[b.p.status]) || a.p.name.localeCompare(b.p.name));
   const list = el("div", {class:"projects"});
   if(!all.length){
-    add(list, emptyState("No projects", "A project is the thing a hobby is currently making — a half-marathon, a novel, a table. Attach sessions to it and the hours add up.",
-      el("button", {class:"btn btn-primary", type:"button", text:"Add a project", onclick:() => editProject(null)})));
+    add(list, emptyState("Nothing on the go",
+      "A project is the thing a hobby is working through — a dinner set, a linen shirt, a book. Books carry an author; everything else carries whoever made the pattern. Attach sessions to one and the hours add up.",
+      el("button", {class:"btn btn-primary", type:"button", text:"Add one", onclick:() => editProject(null)})));
   }
   all.forEach(({h, p}) => {
     const cls = p.status === "done" ? "good" : p.status === "shelved" ? "" : p.status === "idea" ? "" : "accent";
@@ -1930,17 +1947,24 @@ function projectsCard(){
       swatchEl(inkCss(h.ink)),
       el("div", {class:"pn"}, [
         p.name,
-        el("small", {text: h.name + (mins[p.id] ? " · " + fmtHours(mins[p.id]) + " logged" : "") +
-          (p.doneAt ? " · finished " + fmtDate(p.doneAt) : "") + (p.note ? " · " + p.note : "")}),
+        el("small", {text: [
+          p.by, h.name,
+          mins[p.id] ? fmtHours(mins[p.id]) + " logged" : "",
+          p.doneAt ? "finished " + fmtDate(p.doneAt) : "",
+          p.note,
+        ].filter(Boolean).join(" · ")}),
       ]),
-      el("span", {class:"badge " + cls, text: statusLabel(p.status)}),
+      el("span", {class:"badge " + cls, text: statusLabel(p.status, h.cat)}),
       el("button", {class:"btn btn-sm btn-ghost", type:"button", text:"Edit", onclick:() => editProject({h, p})}),
     ]));
   });
+  const books = all.filter(x => x.h.cat === "reading");
+  const onGo = all.filter(x => x.p.status === "making").length;
+  const done = all.filter(x => x.p.status === "done").length;
   return el("section", {class:"card"}, [
-    cardHead("Projects", [
-      el("span", {class:"eyebrow", text: all.filter(x => x.p.status === "making").length + " in progress"}),
-      liveHobbies().length ? el("button", {class:"btn btn-sm", type:"button", text:"Add project",
+    cardHead(books.length ? "Books & projects" : "Projects", [
+      el("span", {class:"eyebrow", text: onGo + " on the go · " + done + " finished"}),
+      liveHobbies().length ? el("button", {class:"btn btn-sm", type:"button", text:"Add",
         onclick:() => editProject(null)}) : null,
     ]),
     el("div", {class:"card-b tight"}, list),
@@ -1949,37 +1973,70 @@ function projectsCard(){
 function editProject(existing){
   const isNew = !existing;
   let hobbyId = existing ? existing.h.id : (liveHobbies()[0] || {}).id || "";
-  const p = existing ? plain(existing.p)
-    : {id: uid(), name: "", status: "making", note: "", createdAt: todayISO(), doneAt: ""};
+  const p = existing ? Object.assign({by: ""}, plain(existing.p))
+    : {id: uid(), name: "", by: "", status: "making", note: "", createdAt: todayISO(), doneAt: ""};
   if(!hobbyId){ toast("Add a hobby first."); return; }
+  let words = projectWords((hobby(hobbyId) || {}).cat);
+
+  const nameLabel = el("label", {for:"pname", text:words.thing});
+  const nameInput = el("input", {type:"text", id:"pname", maxlength:"90", placeholder:words.namePlaceholder,
+    value:p.name, oninput:e => { p.name = e.target.value; }});
+  const byLabel = el("label", {for:"pby", text:words.by});
+  const byInput = el("input", {type:"text", id:"pby", maxlength:"90", placeholder:words.byPlaceholder,
+    value:p.by, oninput:e => { p.by = e.target.value; }});
+  const statusSel = el("select", {id:"pstatus", onchange:e => {
+    p.status = e.target.value;
+    if(p.status === "done" && !p.doneAt) p.doneAt = todayISO();
+    if(p.status !== "done") p.doneAt = "";
+    syncDone();
+  }});
+  const doneInput = el("input", {type:"date", id:"pdone", max:todayISO(), value:p.doneAt,
+    oninput:e => { p.doneAt = e.target.value; }});
+  const doneField = el("div", {class:"field"}, [el("label", {for:"pdone", text:words.doneLabel}), doneInput]);
+
+  function paintStatus(){
+    clear(statusSel);
+    statusList((hobby(hobbyId) || {}).cat).forEach(([v, l]) =>
+      add(statusSel, el("option", {value:v, text:l, selected: v === p.status})));
+  }
+  function syncDone(){
+    doneField.hidden = p.status !== "done";
+    doneInput.value = p.doneAt || "";
+  }
+  function reword(){
+    words = projectWords((hobby(hobbyId) || {}).cat);
+    nameLabel.textContent = words.thing;
+    nameInput.placeholder = words.namePlaceholder;
+    byLabel.textContent = words.by;
+    byInput.placeholder = words.byPlaceholder;
+    const t = $("modaltitle");
+    if(t) t.textContent = (isNew ? "New " : "Edit ") + words.lower;
+    paintStatus();
+    syncDone();
+  }
+  paintStatus();
+  syncDone();
+
   const body = [
-    el("div", {class:"field"}, [
-      el("label", {for:"pname", text:"Project"}),
-      el("input", {type:"text", id:"pname", maxlength:"60", placeholder:"Spring half marathon", value:p.name,
-        oninput:e => { p.name = e.target.value; }}),
-    ]),
+    el("div", {class:"field"}, [nameLabel, nameInput]),
+    el("div", {class:"field"}, [byLabel, byInput]),
     el("div", {class:"form-grid"}, [
       el("div", {class:"field"}, [
         el("label", {for:"phobby", text:"Hobby"}),
-        hobbySelect("phobby", hobbyId, e => { hobbyId = e.target.value; }, {all:true, blank:"Choose a hobby"}),
+        hobbySelect("phobby", hobbyId, e => { hobbyId = e.target.value; reword(); }, {all:true, blank:"Choose a hobby"}),
       ]),
-      el("div", {class:"field"}, [
-        el("label", {for:"pstatus", text:"Status"}),
-        el("select", {id:"pstatus", onchange:e => {
-          p.status = e.target.value;
-          if(p.status === "done" && !p.doneAt) p.doneAt = todayISO();
-          if(p.status !== "done") p.doneAt = "";
-        }}, PROJECT_STATUS.map(([v, l]) => el("option", {value:v, text:l, selected: v === p.status}))),
-      ]),
+      el("div", {class:"field"}, [el("label", {for:"pstatus", text:"Status"}), statusSel]),
+      doneField,
     ]),
     el("div", {class:"field"}, [
       el("label", {for:"pnote", text:"Note (optional)"}),
-      el("input", {type:"text", id:"pnote", maxlength:"120", value:p.note, oninput:e => { p.note = e.target.value; }}),
+      el("input", {type:"text", id:"pnote", maxlength:"120", placeholder:"Where you got to, what you thought",
+        value:p.note, oninput:e => { p.note = e.target.value; }}),
     ]),
   ];
   const foot = [
     !isNew ? el("button", {class:"btn btn-danger", type:"button", text:"Delete", onclick:() => {
-      if(!confirm("Delete the project “" + p.name + "”? Sessions stay, they just stop pointing at it.")) return;
+      if(!confirm("Delete “" + p.name + "”? Sessions stay, they just stop pointing at it.")) return;
       closeModal();
       mutate(() => {
         const h = hobby(existing.h.id);
@@ -1995,9 +2052,10 @@ function editProject(existing){
     }}) : null,
     el("span", {class:"spacer"}),
     el("button", {class:"btn", type:"button", text:"Cancel", onclick:closeModal}),
-    el("button", {class:"btn btn-primary", type:"button", text: isNew ? "Add project" : "Save", onclick:() => {
+    el("button", {class:"btn btn-primary", type:"button", text: isNew ? "Add" : "Save", onclick:() => {
       p.name = (p.name || "").trim();
-      if(!p.name){ toast("Give the project a name."); const f = $("pname"); if(f) f.focus(); return; }
+      p.by = (p.by || "").trim();
+      if(!p.name){ toast("Give the " + words.lower + " a name."); const f = $("pname"); if(f) f.focus(); return; }
       closeModal();
       mutate(() => {
         const keys = [];
@@ -2012,10 +2070,10 @@ function editProject(existing){
         keys.push("hobby|" + target.id);
         return keys;
       });
-      toast(isNew ? "Project added." : "Project saved.");
+      toast(words.thing + (isNew ? " added." : " saved."));
     }}),
   ];
-  openModal(isNew ? "New project" : "Edit project", body, foot);
+  openModal((isNew ? "New " : "Edit ") + words.lower, body, foot);
 }
 
 /* ============================ exports ============================ */
@@ -2054,12 +2112,14 @@ function exportSessions(){
   const rows = allSessions().sort((a,b) => a.date.localeCompare(b.date) || (a.at || "").localeCompare(b.at || ""))
     .map(s => {
       const h = hobby(s.hobbyId);
-      const proj = h && s.projectId ? (h.projects.find(p => p.id === s.projectId) || {}).name : "";
+      const proj = h && s.projectId ? h.projects.find(p => p.id === s.projectId) : null;
       return [s.date, s.at, h ? h.name : "", h ? h.cat : "", s.minutes, r1(s.minutes / 60),
-        s.amount === null ? "" : s.amount, h ? h.unit : "", s.mood || "", moodLabel(s.mood), proj || "", s.note];
+        s.amount === null ? "" : s.amount, h ? h.unit : "", s.mood || "", moodLabel(s.mood),
+        proj ? proj.name : "", proj ? proj.by : "", s.note];
     });
   saveFile("hobby-sessions.csv", toCsv(
-    ["date","started_at","hobby","category","minutes","hours","amount","unit","mood","mood_label","project","note"], rows));
+    ["date","started_at","hobby","category","minutes","hours","amount","unit","mood","mood_label",
+     "project","project_by","note"], rows));
 }
 function exportHobbies(){
   const totals = hobbyTotals();
@@ -2098,6 +2158,28 @@ function exportWeekly(){
     });
   saveFile("hobby-weekly.csv", toCsv(
     ["week_start","week_end","hobby","sessions","minutes","hours","days_active","amount","goal_type","goal_value","goal_met"], rows));
+}
+/* One row per book or project — the reading log as a table. */
+function exportProjects(){
+  const mins = {}, count = {}, first = {}, last = {};
+  allSessions().forEach(s => {
+    if(!s.projectId) return;
+    mins[s.projectId] = (mins[s.projectId] || 0) + s.minutes;
+    count[s.projectId] = (count[s.projectId] || 0) + 1;
+    if(!first[s.projectId] || s.date < first[s.projectId]) first[s.projectId] = s.date;
+    if(!last[s.projectId] || s.date > last[s.projectId]) last[s.projectId] = s.date;
+  });
+  const rows = [];
+  allHobbies().forEach(h => h.projects.forEach(pr => rows.push([
+    pr.name, pr.by, h.name, h.cat, pr.status, statusLabel(pr.status, h.cat),
+    pr.createdAt, pr.doneAt, first[pr.id] || "", last[pr.id] || "",
+    count[pr.id] || 0, mins[pr.id] || 0, r1((mins[pr.id] || 0) / 60), pr.note,
+  ])));
+  if(!rows.length){ toast("No books or projects to export yet."); return; }
+  rows.sort((a, b) => String(b[7] || b[9] || "").localeCompare(String(a[7] || a[9] || "")));
+  saveFile("hobby-projects.csv", toCsv(
+    ["name","by","hobby","category","status","status_label","added","finished",
+     "first_session","last_session","sessions","minutes","hours","note"], rows));
 }
 function exportBackup(){
   saveFile("hobby-ledger-backup.json", JSON.stringify({
@@ -2154,6 +2236,7 @@ function viewSettings(){
         el("button", {class:"btn", type:"button", text:"Sessions CSV", onclick:exportSessions}),
         el("button", {class:"btn", type:"button", text:"Hobby summary CSV", onclick:exportHobbies}),
         el("button", {class:"btn", type:"button", text:"Weekly rollup CSV", onclick:exportWeekly}),
+        el("button", {class:"btn", type:"button", text:"Books & projects CSV", onclick:exportProjects}),
         el("button", {class:"btn", type:"button", text:"JSON backup", onclick:exportBackup}),
       ]),
       el("hr", {class:"rule"}),
