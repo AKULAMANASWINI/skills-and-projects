@@ -44,10 +44,7 @@ If any of those is wrong, fix the `data-veg` attribute on that `<li>` and the ba
 
 ## Still to confirm
 
-1. **The lunch buffet.** Yelp lists a daily buffet; the printed menu card doesn't mention one. The
-   page has a buffet section with no price and no specific times, which is as far as the sources
-   go. Confirm it still runs, then add times and a price — or delete the section.
-2. **Hours.** Mon–Sat 11 am – 10 pm, closed Sunday, per Google and Yelp. The live status pill in
+1. **Hours.** Mon–Sat 11 am – 10 pm, closed Sunday, per Google and Yelp. The live status pill in
    the hero reads from `OPEN_MIN` / `CLOSE_MIN` in the script.
-3. **Two photo captions.** The hero curry and the fried appetizers on the table platter aren't
+2. **Two photo captions.** The hero curry and the fried appetizers on the table platter aren't
    identifiable from the photographs alone — see `img/README.md`.

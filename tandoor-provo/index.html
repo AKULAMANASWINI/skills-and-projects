@@ -370,13 +370,6 @@ a{color:inherit}
   padding:.18rem .5rem;border-radius:999px;white-space:nowrap;
 }
 .course-note{font-size:.85rem;color:var(--ink-2)}
-.pricing{
-  display:flex;flex-wrap:wrap;gap:.4rem .5rem;padding:.75rem .85rem;
-  border:1px dashed var(--line);border-radius:10px;background:var(--ground-2);
-  font-size:.82rem;color:var(--ink-2);font-variant-numeric:tabular-nums;
-}
-.pricing span{white-space:nowrap}
-.pricing b{color:var(--ink);font-weight:650}
 
 .dishes{display:flex;flex-direction:column;gap:1.05rem}
 .dish-top{display:flex;align-items:baseline;gap:.5rem}
@@ -388,22 +381,11 @@ a{color:inherit}
 
 .menu-foot{margin-top:1.5rem;font-size:.85rem;color:var(--ink-3)}
 
-/* ============ buffet ============ */
-.buffet{
-  position:relative;overflow:hidden;border:1px solid var(--line);border-radius:var(--radius);
-  background:var(--ground-3);padding:clamp(1.6rem,4vw,2.75rem);box-shadow:var(--shadow);
-  display:grid;gap:1.5rem clamp(2rem,5vw,3.5rem);grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);align-items:center;
-}
-.buffet::before{content:"";position:absolute;inset:0 auto 0 0;width:3px;
-  background:linear-gradient(180deg,var(--saffron),var(--ember))}
-.buffet h2{font-size:clamp(1.65rem,3.4vw,2.35rem);font-variation-settings:'SOFT' 20,'WONK' 1;margin-bottom:.6rem}
-.buffet p{color:var(--ink-2)}
-.buffet-when{display:grid;gap:.6rem}
-.when-row{display:flex;justify-content:space-between;gap:1rem;padding-bottom:.55rem;border-bottom:1px solid var(--line-soft);font-size:.92rem}
-.when-row:last-child{border-bottom:0;padding-bottom:0}
+.hours-list{display:grid;gap:.6rem}
+.hours-row{display:flex;justify-content:space-between;gap:1rem;padding-bottom:.55rem;border-bottom:1px solid var(--line-soft);font-size:.92rem}
+.hours-row:last-child{border-bottom:0;padding-bottom:0}
 .when-row b{font-weight:650;font-variant-numeric:tabular-nums}
 .when-row .closed{color:var(--ink-3)}
-@media (max-width:760px){.buffet{grid-template-columns:1fr}}
 
 /* ============ story ============ */
 .story-in{display:grid;gap:2rem clamp(2rem,6vw,4.5rem);grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
@@ -465,7 +447,6 @@ a{color:inherit}
     <nav class="nav" aria-label="Main">
       <a href="#menu">Menu</a>
       <a href="#gallery">Gallery</a>
-      <a href="#buffet">Buffet</a>
       <a href="#catering">Catering</a>
       <a href="#story">Our Story</a>
       <a href="#visit">Visit</a>
@@ -495,7 +476,7 @@ a{color:inherit}
         <span class="dot" aria-hidden="true"></span>
         <span>490+ reviews</span>
         <span class="dot" aria-hidden="true"></span>
-        <span>Daily lunch buffet</span>
+        <span>17 vegetarian mains</span>
         <span class="dot" aria-hidden="true"></span>
         <span>Dine in · Takeout · Delivery · Catering</span>
       </div>
@@ -1142,25 +1123,6 @@ a{color:inherit}
 
   <hr class="heatline">
 
-  <!-- ============ BUFFET ============ -->
-  <section class="section" id="buffet">
-    <div class="wrap">
-      <div class="buffet">
-        <div>
-          <p class="eyebrow">Every day we’re open</p>
-          <h2>The lunch buffet</h2>
-          <p>A rotating lunch spread drawn off the same menu — tandoori, curries, dal, rice and fresh naan brought to the table. The line changes daily, so call ahead if you’re coming for something in particular.</p>
-          <p style="margin-top:.9rem"><a class="btn btn-ghost" href="tel:+18019609048">Call for today’s spread</a></p>
-        </div>
-        <div class="buffet-when">
-          <div class="when-row"><span>Monday – Saturday</span><b>11 am – 10 pm</b></div>
-          <div class="when-row"><span class="closed">Sunday</span><b class="closed">Closed</b></div>
-          <div class="when-row"><span>Buffet</span><b>Lunch service</b></div>
-        </div>
-      </div>
-    </div>
-  </section>
-
   <!-- ============ CATERING ============ -->
   <section class="section" id="catering" style="scroll-margin-top:calc(env(safe-area-inset-top,0px) + 76px)">
     <div class="wrap">
@@ -1255,14 +1217,14 @@ a{color:inherit}
 
         <div class="panel">
           <h3>Hours</h3>
-          <div class="buffet-when">
-            <div class="when-row"><span>Monday</span><b>11 am – 10 pm</b></div>
-            <div class="when-row"><span>Tuesday</span><b>11 am – 10 pm</b></div>
-            <div class="when-row"><span>Wednesday</span><b>11 am – 10 pm</b></div>
-            <div class="when-row"><span>Thursday</span><b>11 am – 10 pm</b></div>
-            <div class="when-row"><span>Friday</span><b>11 am – 10 pm</b></div>
-            <div class="when-row"><span>Saturday</span><b>11 am – 10 pm</b></div>
-            <div class="when-row"><span class="closed">Sunday</span><b class="closed">Closed</b></div>
+          <div class="hours-list">
+            <div class="hours-row"><span>Monday</span><b>11 am – 10 pm</b></div>
+            <div class="hours-row"><span>Tuesday</span><b>11 am – 10 pm</b></div>
+            <div class="hours-row"><span>Wednesday</span><b>11 am – 10 pm</b></div>
+            <div class="hours-row"><span>Thursday</span><b>11 am – 10 pm</b></div>
+            <div class="hours-row"><span>Friday</span><b>11 am – 10 pm</b></div>
+            <div class="hours-row"><span>Saturday</span><b>11 am – 10 pm</b></div>
+            <div class="hours-row"><span class="closed">Sunday</span><b class="closed">Closed</b></div>
           </div>
         </div>
 
@@ -1293,7 +1255,6 @@ a{color:inherit}
       <nav class="foot-nav" aria-label="Footer">
         <a href="#menu">Menu</a>
         <a href="#gallery">Gallery</a>
-        <a href="#buffet">Lunch buffet</a>
         <a href="#catering">Catering</a>
         <a href="#story">Our story</a>
         <a href="#visit">Visit</a>

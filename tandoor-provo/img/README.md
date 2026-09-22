@@ -45,8 +45,8 @@ on the page. Worth chasing, roughly best first:
 - **The sizzler being carried**, steam and sparks against a black background — the single best
   shot of the lot, and lit for this site's palette. Hero material.
 - **The bread basket held up**, same dark treatment.
-- **The copper chafing line** — the only photograph of a buffet or catering spread anywhere.
-  Would fill the lunch buffet section, which has no image, or one of the three catering slots.
+- **The copper chafing line** — the only photograph of a catering spread anywhere. Goes straight
+  into one of the three catering slots.
 - **The storefront at night**, lit sign over the door — belongs in Visit; nothing else shows a
   first-timer what to look for from Freedom Boulevard.
 - **The long dosa** with five chutneys — the best argument for the southern half of the menu.
