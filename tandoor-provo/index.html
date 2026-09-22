@@ -344,6 +344,9 @@ a{color:inherit}
 .catering-cta{display:flex;flex-wrap:wrap;gap:.7rem;margin-top:1.15rem}
 @media (max-width:760px){.catering-contact{grid-template-columns:1fr}}
 
+.storefront{aspect-ratio:16/9;margin-bottom:clamp(1.25rem,3vw,1.75rem)}
+@media (max-width:620px){.storefront{aspect-ratio:4/3}}
+
 .credit{margin-top:1.1rem;font-size:.82rem;color:var(--ink-3)}
 .credit a{color:var(--copper);text-decoration:none;font-weight:600}
 .credit a:hover{text-decoration:underline}
@@ -1269,9 +1272,14 @@ a{color:inherit}
         <div>
           <p class="eyebrow">Visit</p>
           <h2>1600 North Freedom Boulevard</h2>
-          <p>Ten minutes from BYU campus, with parking out front. Walk-ins are always welcome; for parties of eight or more, call ahead and we’ll set the table.</p>
+          <p>Look for the lit sign — it is visible from Freedom Boulevard after dark. Parking is out front, with accessible spaces beside the door. Walk-ins are always welcome; for parties of eight or more, call ahead and we’ll set the table.</p>
         </div>
       </div>
+      <figure class="shot storefront">
+        <img src="img/storefront-night.jpg" alt="The lit Tandoor Indian Cuisine sign above the entrance at night" data-slot loading="lazy" decoding="async">
+        <span class="shot-ph" aria-hidden="true"><svg viewBox="0 0 32 32" fill="none" aria-hidden="true"><path d="M11.5 3.5h9l-1.2 3.3c3.9 2 6.2 5.9 6.2 10.4a9.5 9.5 0 0 1-19 0c0-4.5 2.3-8.4 6.2-10.4L11.5 3.5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg><b>The door on Freedom Boulevard</b></span>
+      </figure>
+
       <div class="visit-grid">
 
         <div class="panel">
