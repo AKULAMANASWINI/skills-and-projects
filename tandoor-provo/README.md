@@ -9,7 +9,7 @@ tandoor mark — is inline.
 
 ## What's in it
 
-- Sticky header, hero, the clay-oven section, gallery, full menu, catering, story, visit, footer
+- Sticky header, hero, the clay-oven section, full menu, catering, story, visit, footer
 - **Live open/closed indicator** computed in `America/Denver`, so it's correct for any visitor's
   time zone. Hours live in `OPEN_MIN` / `CLOSE_MIN` at the top of the script.
 - **Dietary filter** (vegetarian / vegan / gluten-free) driven by `data-diet` on each `.dish`.

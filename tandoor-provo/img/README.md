@@ -1,22 +1,26 @@
 # Photography
 
-Twelve photographs on the page, cropped to each slot and exported at JPEG quality 82. About
-1.9 MB for the set.
+Ten photographs on the page, cropped to each slot and exported at JPEG quality 82.
 
-| File                    | Size      | Where it lands            |
-| ----------------------- | --------- | ------------------------- |
-| `hero-curry-naan.jpg`   | 1600×1200 | Gallery, bottom row       |
-| `bhel-puri.jpg`         | 1500×1000 | Gallery, upper left       |
-| `lassi-pair.jpg`        | 900×1350  | Gallery, upper right      |
-| `pani-puri.jpg`         | 1500×1000 | Gallery, middle left      |
-| `mango-lassi.jpg`       | 900×1350  | Gallery, middle right     |
-| `cut-mirchi.jpg`        | 1500×1000 | Gallery, bottom row       |
-| `mint-chutney.jpg`      | 1500×1000 | Gallery, bottom row       |
-| `table-setting.jpg`     | 1500×1000 | Gallery, bottom row       |
-| `catering-line.jpg`     | 1500×1000 | Catering, upper left      |
-| `catering-spread.jpg`   | 900×1400  | Catering, right column    |
-| `catering-labels.jpg`   | 1500×1000 | Catering, lower left      |
-| `storefront-night.jpg`  | 1800×1013 | Visit, above the panels   |
+| File                    | Size      | Where it lands                       |
+| ----------------------- | --------- | ------------------------------------ |
+| `pani-puri.jpg`         | 1500×1000 | Menu, after Appetizers               |
+| `bhel-puri.jpg`         | 1500×1000 | Menu, after Soups & Salads           |
+| `cut-mirchi.jpg`        | 1500×1000 | Menu, after Indo-Chinese             |
+| `hero-curry-naan.jpg`   | 1600×1200 | Menu, before From the Tandoor Oven   |
+| `mint-chutney.jpg`      | 1500×1000 | Menu, after Non-Vegetarian Delights  |
+| `lassi-pair.jpg`        | 900×1350  | Menu, after Naan                     |
+| `catering-line.jpg`     | 1500×1000 | Catering, upper left                 |
+| `catering-spread.jpg`   | 900×1400  | Catering, right column               |
+| `catering-labels.jpg`   | 1500×1000 | Catering, lower left                 |
+| `storefront-night.jpg`  | 1800×1013 | Visit, above the panels              |
+
+`mango-lassi.jpg` and `table-setting.jpg` are kept as spares and are not referenced: the lassi
+pair says the same thing better, and the fried batons on the table platter were never identified.
+
+The six menu photographs are captioned with the dish and its price, so each one is a menu entry as
+well as a picture. To add another, copy a `<figure class="menu-photo">` block into the grid next to
+the section it belongs to.
 
 ## The logo
 
