@@ -314,8 +314,20 @@ a{color:inherit}
 }
 
 /* ============ gallery ============ */
+.gallery{display:grid;grid-template-columns:2fr 1fr;gap:clamp(.55rem,1.3vw,.95rem)}
+.gallery .wide{aspect-ratio:3/2}
+.gallery .tall{height:100%;min-height:0}
+.gallery-row{
+  display:grid;grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:clamp(.55rem,1.3vw,.95rem);margin-top:clamp(.55rem,1.3vw,.95rem);
+}
+.gallery-row{grid-template-columns:repeat(4,minmax(0,1fr))}
+.gallery-row .shot{aspect-ratio:3/2}
 @media (max-width:720px){
-  /* ============ catering ============ */
+  .gallery{grid-template-columns:1fr}
+  .gallery .tall{height:auto;aspect-ratio:3/2}
+}
+/* ============ catering ============ */
 .catering-grid{
   display:grid;grid-template-columns:2fr 1fr;gap:clamp(.55rem,1.3vw,.95rem);
   margin-bottom:clamp(1.25rem,3vw,1.75rem);
@@ -350,34 +362,8 @@ a{color:inherit}
 .storefront{aspect-ratio:16/9;margin-bottom:clamp(1.25rem,3vw,1.75rem)}
 @media (max-width:620px){.storefront{aspect-ratio:4/3}}
 
-
-/* ============ photographs inside the menu ============ */
-.menu-photo{
-  margin:0;overflow:hidden;border:1px solid var(--line);border-radius:var(--radius);
-  background:linear-gradient(155deg,var(--ground-2),var(--ground-3));box-shadow:var(--shadow);
-  display:flex;flex-direction:column;
-}
-.menu-photo img{display:block;width:100%;aspect-ratio:4/3;object-fit:cover}
-.menu-photo figcaption{display:grid;gap:.3rem;padding:.95rem clamp(1rem,2vw,1.2rem) 1.1rem}
-.mp-top{display:flex;align-items:baseline;gap:.5rem}
-.mp-desc{font-size:.84rem;color:var(--ink-2);max-width:40ch}
-
-/* ============ sections that are a price list, not prose ============ */
-.course-compact .dishes{
-  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.6rem 1.5rem;
-}
-.course-compact .dish-desc{font-size:.8rem;margin-top:.1rem}
-@media (max-width:540px){.course-compact .dishes{grid-template-columns:1fr}}
-
-/* ============ the section the restaurant is named for ============ */
-.course-feature{
-  border-color:color-mix(in srgb,var(--ember) 40%,var(--line));
-  background:linear-gradient(180deg,color-mix(in srgb,var(--ember) 7%,var(--ground-3)),var(--ground-3) 55%);
-}
-.course-feature h3{color:var(--ember)}
-.course-feature .region{
-  color:var(--ember);border-color:color-mix(in srgb,var(--ember) 50%,transparent);
-}
+@media (max-width:900px){.gallery-row{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:560px){.gallery-row{grid-template-columns:1fr}}
 
 .credit{margin-top:1.1rem;font-size:.82rem;color:var(--ink-3)}
 .credit a{color:var(--copper);text-decoration:none;font-weight:600}
@@ -550,6 +536,7 @@ a{color:inherit}
     </a>
     <nav class="nav" aria-label="Main">
       <a href="#menu">Menu</a>
+      <a href="#gallery">Gallery</a>
       <a href="#catering">Catering</a>
       <a href="#story">Our Story</a>
       <a href="#visit">Visit</a>
@@ -621,6 +608,58 @@ a{color:inherit}
     </div>
   </section>
 
+
+  <!-- ============ GALLERY ============ -->
+  <section class="section" id="gallery">
+    <div class="wrap">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">The room &amp; the plates</p>
+          <h2>Come see it for yourself</h2>
+          <p>Chaat is where this kitchen shows off — pani puri, bhel puri, cut mirchi, and chutneys ground the same morning.</p>
+        </div>
+      </div>
+      <div class="gallery">
+        <figure class="shot wide">
+          <img src="img/bhel-puri.jpg" alt="Bhel puri on a steel tray with chai, tamarind and mint chutneys" data-slot loading="lazy" decoding="async">
+          <span class="shot-ph" aria-hidden="true"><svg viewBox="0 0 32 32" fill="none" aria-hidden="true"><path d="M11.5 3.5h9l-1.2 3.3c3.9 2 6.2 5.9 6.2 10.4a9.5 9.5 0 0 1-19 0c0-4.5 2.3-8.4 6.2-10.4L11.5 3.5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg><b>Bhel puri</b></span>
+        </figure>
+        <figure class="shot tall">
+          <img src="img/lassi-pair.jpg" alt="A mango lassi and a strawberry lassi side by side" data-slot loading="lazy" decoding="async">
+          <span class="shot-ph" aria-hidden="true"><svg viewBox="0 0 32 32" fill="none" aria-hidden="true"><path d="M11.5 3.5h9l-1.2 3.3c3.9 2 6.2 5.9 6.2 10.4a9.5 9.5 0 0 1-19 0c0-4.5 2.3-8.4 6.2-10.4L11.5 3.5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg><b>Mango and strawberry lassi</b></span>
+        </figure>
+        <figure class="shot wide">
+          <img src="img/pani-puri.jpg" alt="Pani puri shells filled with potato and sev, tamarind chutney alongside" data-slot loading="lazy" decoding="async">
+          <span class="shot-ph" aria-hidden="true"><svg viewBox="0 0 32 32" fill="none" aria-hidden="true"><path d="M11.5 3.5h9l-1.2 3.3c3.9 2 6.2 5.9 6.2 10.4a9.5 9.5 0 0 1-19 0c0-4.5 2.3-8.4 6.2-10.4L11.5 3.5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg><b>Pani puri</b></span>
+        </figure>
+        <figure class="shot tall">
+          <img src="img/mango-lassi.jpg" alt="A tall glass of mango lassi" data-slot loading="lazy" decoding="async">
+          <span class="shot-ph" aria-hidden="true"><svg viewBox="0 0 32 32" fill="none" aria-hidden="true"><path d="M11.5 3.5h9l-1.2 3.3c3.9 2 6.2 5.9 6.2 10.4a9.5 9.5 0 0 1-19 0c0-4.5 2.3-8.4 6.2-10.4L11.5 3.5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg><b>Mango lassi</b></span>
+        </figure>
+      </div>
+      <div class="gallery-row">
+        <figure class="shot ">
+          <img src="img/cut-mirchi.jpg" alt="Cut mirchi — whole chilies in chickpea batter on shredded cabbage" data-slot loading="lazy" decoding="async">
+          <span class="shot-ph" aria-hidden="true"><svg viewBox="0 0 32 32" fill="none" aria-hidden="true"><path d="M11.5 3.5h9l-1.2 3.3c3.9 2 6.2 5.9 6.2 10.4a9.5 9.5 0 0 1-19 0c0-4.5 2.3-8.4 6.2-10.4L11.5 3.5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg><b>Cut mirchi</b></span>
+        </figure>
+        <figure class="shot ">
+          <img src="img/mint-chutney.jpg" alt="Mint chutney in a steel bowl, finished with fresh mint" data-slot loading="lazy" decoding="async">
+          <span class="shot-ph" aria-hidden="true"><svg viewBox="0 0 32 32" fill="none" aria-hidden="true"><path d="M11.5 3.5h9l-1.2 3.3c3.9 2 6.2 5.9 6.2 10.4a9.5 9.5 0 0 1-19 0c0-4.5 2.3-8.4 6.2-10.4L11.5 3.5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg><b>Mint chutney</b></span>
+        </figure>
+        <figure class="shot ">
+          <img src="img/hero-curry-naan.jpg" alt="A bowl of creamy tomato curry with garlic naan alongside" data-slot loading="lazy" decoding="async">
+          <span class="shot-ph" aria-hidden="true"><svg viewBox="0 0 32 32" fill="none" aria-hidden="true"><path d="M11.5 3.5h9l-1.2 3.3c3.9 2 6.2 5.9 6.2 10.4a9.5 9.5 0 0 1-19 0c0-4.5 2.3-8.4 6.2-10.4L11.5 3.5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg><b>Curry and garlic naan</b></span>
+        </figure>
+        <figure class="shot ">
+          <img src="img/table-setting.jpg" alt="Fried appetizers, cut mirchi and a basket of naan on a set table" data-slot loading="lazy" decoding="async">
+          <span class="shot-ph" aria-hidden="true"><svg viewBox="0 0 32 32" fill="none" aria-hidden="true"><path d="M11.5 3.5h9l-1.2 3.3c3.9 2 6.2 5.9 6.2 10.4a9.5 9.5 0 0 1-19 0c0-4.5 2.3-8.4 6.2-10.4L11.5 3.5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg><b>The table</b></span>
+        </figure>
+      </div>
+      <p class="credit">Photography by <a href="https://nickigomezphotography.pixieset.com/tandoorindiancuisine/" target="_blank" rel="noopener">Nicki Gomez Photography</a>.</p>
+    </div>
+  </section>
+
+  <hr class="heatline">
 
   <!-- ============ MENU ============ -->
   <section class="section" id="menu">
@@ -739,14 +778,6 @@ a{color:inherit}
           </ul>
         </section>
 
-        <figure class="menu-photo">
-          <img src="img/pani-puri.jpg" alt="Pani puri shells filled with potato and sev" data-slot loading="lazy" decoding="async">
-          <figcaption>
-            <span class="mp-top"><span class="dish-name">Pani Puri</span><span class="leader" aria-hidden="true"></span><span class="dish-price">6.95</span></span>
-            <span class="mp-desc">Crispy fried puri filled with potatoes and onions</span>
-          </figcaption>
-        </figure>
-
         <section class="course" id="m-soups" aria-labelledby="h-m-soups">
           <div class="course-head">
             <h3 id="h-m-soups">Soups &amp; Salads</h3>
@@ -769,14 +800,6 @@ a{color:inherit}
             </li>
           </ul>
         </section>
-
-        <figure class="menu-photo">
-          <img src="img/bhel-puri.jpg" alt="Bhel puri with chai and chutneys" data-slot loading="lazy" decoding="async">
-          <figcaption>
-            <span class="mp-top"><span class="dish-name">Bhel Puri</span><span class="leader" aria-hidden="true"></span><span class="dish-price">5.95</span></span>
-            <span class="mp-desc">Crispy puffed rice tossed with vegetables, chutneys and spices</span>
-          </figcaption>
-        </figure>
 
         <section class="course" id="m-indochinese" aria-labelledby="h-m-indochinese">
           <div class="course-head">
@@ -807,14 +830,6 @@ a{color:inherit}
             </li>
           </ul>
         </section>
-
-        <figure class="menu-photo">
-          <img src="img/cut-mirchi.jpg" alt="Cut mirchi, whole chilies in chickpea batter" data-slot loading="lazy" decoding="async">
-          <figcaption>
-            <span class="mp-top"><span class="dish-name">Cut Mirchi</span><span class="leader" aria-hidden="true"></span><span class="dish-price">6.95</span></span>
-            <span class="mp-desc">Peppers coated in a seasoned chickpea-flour batter</span>
-          </figcaption>
-        </figure>
 
         <section class="course" id="m-dosa" aria-labelledby="h-m-dosa">
           <div class="course-head">
@@ -932,15 +947,7 @@ a{color:inherit}
           </ul>
         </section>
 
-        <figure class="menu-photo">
-          <img src="img/hero-curry-naan.jpg" alt="A bowl of creamy tomato curry with garlic naan" data-slot loading="lazy" decoding="async">
-          <figcaption>
-            <span class="mp-top"><span class="dish-name">Curry and garlic naan</span></span>
-            <span class="mp-desc">From the curry pages, with bread straight off the oven wall</span>
-          </figcaption>
-        </figure>
-
-        <section class="course course-feature" id="m-tandoor" aria-labelledby="h-m-tandoor">
+        <section class="course" id="m-tandoor" aria-labelledby="h-m-tandoor">
           <div class="course-head">
             <h3 id="h-m-tandoor">From the Tandoor Oven</h3>
             <span class="course-badges"><span class="region">North</span></span>
@@ -1043,14 +1050,6 @@ a{color:inherit}
           </ul>
         </section>
 
-        <figure class="menu-photo">
-          <img src="img/mint-chutney.jpg" alt="Mint chutney in a steel bowl" data-slot loading="lazy" decoding="async">
-          <figcaption>
-            <span class="mp-top"><span class="dish-name">Mint Chutney</span><span class="leader" aria-hidden="true"></span><span class="dish-price">2.95</span></span>
-            <span class="mp-desc">Ground fresh, and the thing to reach for when the heat climbs</span>
-          </figcaption>
-        </figure>
-
         <section class="course" id="m-biryani" aria-labelledby="h-m-biryani">
           <div class="course-head">
             <h3 id="h-m-biryani">Biryani</h3>
@@ -1090,7 +1089,7 @@ a{color:inherit}
           </ul>
         </section>
 
-        <section class="course course-compact" id="m-naan" aria-labelledby="h-m-naan">
+        <section class="course" id="m-naan" aria-labelledby="h-m-naan">
           <div class="course-head">
             <h3 id="h-m-naan">Naan</h3>
             <span class="course-badges"><span class="region region-veg">All vegetarian</span></span>
@@ -1127,15 +1126,7 @@ a{color:inherit}
           </ul>
         </section>
 
-        <figure class="menu-photo">
-          <img src="img/lassi-pair.jpg" alt="A mango lassi and a strawberry lassi side by side" data-slot loading="lazy" decoding="async">
-          <figcaption>
-            <span class="mp-top"><span class="dish-name">Mango &amp; Strawberry Lassi</span><span class="leader" aria-hidden="true"></span><span class="dish-price">3.95</span></span>
-            <span class="mp-desc">Yogurt blended with fruit. Strawberry 3.50</span>
-          </figcaption>
-        </figure>
-
-        <section class="course course-compact" id="m-desserts" aria-labelledby="h-m-desserts">
+        <section class="course" id="m-desserts" aria-labelledby="h-m-desserts">
           <div class="course-head">
             <h3 id="h-m-desserts">Desserts</h3>
             <span class="course-badges"><span class="region region-veg">All vegetarian</span></span>
@@ -1193,7 +1184,7 @@ a{color:inherit}
           </ul>
         </section>
 
-        <section class="course course-compact" id="m-condiments" aria-labelledby="h-m-condiments">
+        <section class="course" id="m-condiments" aria-labelledby="h-m-condiments">
           <div class="course-head">
             <h3 id="h-m-condiments">Condiments</h3>
             <span class="course-badges"><span class="region region-veg">All vegetarian</span></span>
@@ -1219,10 +1210,10 @@ a{color:inherit}
             </li>
           </ul>
         </section>
+
       </div>
 
       <p class="menu-foot" id="menu-empty" hidden>Nothing matches that — clear the search, or call us and we’ll work something out.</p>
-      <p class="credit">Photography by <a href="https://nickigomezphotography.pixieset.com/tandoorindiancuisine/" target="_blank" rel="noopener">Nicki Gomez Photography</a>.</p>
       <p class="menu-foot">Prices in USD and may change; call to confirm. Dine in, takeout, delivery and catering.</p>
     </div>
   </section>
@@ -1366,7 +1357,8 @@ a{color:inherit}
       </div>
       <nav class="foot-nav" aria-label="Footer">
         <a href="#menu">Menu</a>
-          <a href="#catering">Catering</a>
+        <a href="#gallery">Gallery</a>
+        <a href="#catering">Catering</a>
         <a href="#story">Our story</a>
         <a href="#visit">Visit</a>
         <a href="https://www.facebook.com/p/Tandoor-Indian-Cuisine-61559444412325/" target="_blank" rel="noopener">Facebook</a>
@@ -1492,16 +1484,10 @@ a{color:inherit}
   var count = document.getElementById('menu-count');
   var empty = document.getElementById('menu-empty');
 
-  var photoTiles = Array.prototype.slice.call(document.querySelectorAll('.menu-photo'));
-
   function applyMenu() {
     var q = (search && search.value ? search.value : '').trim().toLowerCase();
     var vegOnly = vegBtn && vegBtn.getAttribute('aria-pressed') === 'true';
-    var narrowing = !!q || !!vegOnly;
     var shown = 0;
-
-    // while someone is narrowing the menu, the pictures are in the way
-    photoTiles.forEach(function (p) { p.hidden = narrowing; });
 
     dishes.forEach(function (d) {
       var ok = true;
