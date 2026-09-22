@@ -119,14 +119,6 @@
   --chip:rgba(194,67,26,.08);
 }
 /* the visitor's own choice wins over the host and the OS */
-/* the mark has a light-ground and a dark-ground rendering; only the applied one downloads */
-@media (prefers-color-scheme: dark){
-  :root:not([data-theme="light"]) .logo-plate{background-image:url("img/logo-dark.png")}
-}
-:root[data-theme="dark"] .logo-plate{background-image:url("img/logo-dark.png")}
-:root[data-site-theme="light"] .logo-plate{background-image:url("img/logo-light.png")}
-:root[data-site-theme="dark"] .logo-plate{background-image:url("img/logo-dark.png")}
-
 :root[data-site-theme="dark"]{
   color-scheme:dark;
   --ground:#15100C;
@@ -239,16 +231,19 @@ a{color:inherit}
 .hero-copy{display:grid;gap:1.5rem;min-width:0}
 .hero-plate{
   position:relative;overflow:hidden;aspect-ratio:4/3;border-radius:var(--radius);
-  border:1px solid var(--line);background:linear-gradient(155deg,var(--ground-2),var(--ground-3));
   display:grid;place-items:center;padding:clamp(1.5rem,4vw,2.5rem);
+  /* the card's own black, on either theme, so the mark reads the way it is printed */
+  background:linear-gradient(155deg,#241D17 0%,#12100D 62%,#0D0B09 100%);
+  border:1px solid rgba(244,96,42,.22);
+  box-shadow:0 1px 0 rgba(255,255,255,.04) inset, 0 24px 48px -30px rgba(0,0,0,.85);
 }
 .hero-plate::after{
   content:"";position:absolute;inset:0;pointer-events:none;
-  background:radial-gradient(86% 64% at 50% 118%,var(--glow),transparent 70%);
+  background:radial-gradient(86% 60% at 50% 118%,rgba(244,96,42,.26),transparent 70%);
 }
 .logo-plate{
   position:relative;z-index:1;width:min(82%,380px);aspect-ratio:511/212;
-  background:url("img/logo-light.png") center/contain no-repeat;
+  background:url("img/logo.png") center/contain no-repeat;
 }
 @media (max-width:880px){
   .hero-in{grid-template-columns:1fr;gap:2rem}

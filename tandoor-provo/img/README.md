@@ -20,16 +20,17 @@ Twelve photographs on the page, cropped to each slot and exported at JPEG qualit
 
 ## The logo
 
-`logo-light.png` and `logo-dark.png` (511×212) are the same mark rendered for the two grounds:
-the "INDIAN CUISINE" line and its rules are black on light, cream on dark. The hero plate picks
-one by CSS `background-image`, following the same cascade as the colour tokens, so only the
-applied file is ever downloaded.
+`logo.png` (511×212) is the mark as the gift card prints it: orange wordmark and pot, INDIAN
+CUISINE in white. It was lifted from the printed menu card, the white page unmultiplied out of it
+so it carries real alpha, and the black lettering recoloured to white to match the card.
 
-Both were lifted from the printed menu card and the white page unmultiplied out of them, which
-means they carry real alpha and sit on any ground. **They are 511px wide — enough at the size the
-hero uses, not enough to go bigger.** A vector original (SVG, EPS or AI) would drop straight in:
-replace both files, or point the CSS at a single SVG and drop the theme swap, recolouring the
-wordmark with `currentColor` instead.
+The hero plate keeps the card's black on both themes rather than swapping the artwork per theme,
+so the mark always reads the way the restaurant prints it. That is why there is one file and not
+two.
+
+**It is 511px wide** — enough at the size the hero uses, not enough to go bigger. A vector
+original (SVG, EPS or AI) would drop straight in: replace `logo.png` and point the
+`.logo-plate` background at it.
 
 Landscapes are the photographer's native 3:2, uncropped. The two portraits are native 2:3, cropped
 slightly by `object-fit: cover` where the column stretches them to match the landscape beside them.
