@@ -59,6 +59,9 @@ on the page. Worth chasing, roughly best first:
   spread with palak paneer and chicken lollipop, a booth of three, a guest with a strawberry
   lassi, and several more sizzler frames.
 
+- **The branded gift card** held up in the room. The page now mentions gift cards in the Visit
+  panel on the strength of this photograph; the shot itself would sit well beside that line.
+
 Every shot with recognisable faces needs the shoot's model release checked before it goes up.
 
 ## Catering slots — waiting on files

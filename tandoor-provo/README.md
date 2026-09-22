@@ -46,5 +46,7 @@ If any of those is wrong, fix the `data-veg` attribute on that `<li>` and the ba
 
 1. **Hours.** Mon–Sat 11 am – 10 pm, closed Sunday, per Google and Yelp. The live status pill in
    the hero reads from `OPEN_MIN` / `CLOSE_MIN` in the script.
-2. **Two photo captions.** The hero curry and the fried appetizers on the table platter aren't
+2. **Gift cards.** The Visit panel says "ask in the restaurant", which is as far as the evidence
+   goes — a photograph of a branded card. If they are also sold online or by phone, say so there.
+3. **Two photo captions.** The hero curry and the fried appetizers on the table platter aren't
    identifiable from the photographs alone — see `img/README.md`.
