@@ -14,7 +14,10 @@ tandoor mark — is inline.
   time zone. Hours live in `OPEN_MIN` / `CLOSE_MIN` at the top of the script.
 - **Dietary filter** (vegetarian / vegan / gluten-free) driven by `data-diet` on each `.dish`.
   Add a token to that attribute and the filter picks the dish up — no JS change needed.
-- Light and dark themes, both designed, all colours defined as tokens on `:root`.
+- **Light and dark themes**, both designed, every colour a token on `:root`. A toggle in the
+  header lets the visitor choose; the choice is remembered in `localStorage` and applied by an
+  inline script before the page paints, so a stored preference never flashes the other theme.
+  Until someone chooses, the page follows the operating system and keeps following it live.
 - `Restaurant` JSON-LD in the head for Google's listing panel.
 
 ## Menu source
