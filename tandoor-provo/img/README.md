@@ -53,8 +53,13 @@ on the page. Worth chasing, roughly best first:
 - **A family of four at a table**, and **a couple toasting**. The only shots with people in them;
   check the shoot's model release before either goes up.
 - **The assorted snacks platter** — matches that menu item exactly.
-- Garlic naan (twice), chana masala, samosas, onion bhaji, the rose table setting, a full table
-  spread, three more sizzler frames.
+- **The long communal table**, a dozen people mid-meal — the best proof the room fills up, and
+  the natural companion to the catering section.
+- Garlic naan (twice), chana masala, samosas, onion bhaji, the rose table setting, an overhead
+  spread with palak paneer and chicken lollipop, a booth of three, a guest with a strawberry
+  lassi, and several more sizzler frames.
+
+Every shot with recognisable faces needs the shoot's model release checked before it goes up.
 
 ## Catering slots — waiting on files
 
