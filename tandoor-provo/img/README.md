@@ -5,7 +5,7 @@ Twelve photographs on the page, cropped to each slot and exported at JPEG qualit
 
 | File                    | Size      | Where it lands            |
 | ----------------------- | --------- | ------------------------- |
-| `hero-curry-naan.jpg`   | 1600×1200 | Hero, right column        |
+| `hero-curry-naan.jpg`   | 1600×1200 | Gallery, bottom row       |
 | `bhel-puri.jpg`         | 1500×1000 | Gallery, upper left       |
 | `lassi-pair.jpg`        | 900×1350  | Gallery, upper right      |
 | `pani-puri.jpg`         | 1500×1000 | Gallery, middle left      |
@@ -17,6 +17,19 @@ Twelve photographs on the page, cropped to each slot and exported at JPEG qualit
 | `catering-spread.jpg`   | 900×1400  | Catering, right column    |
 | `catering-labels.jpg`   | 1500×1000 | Catering, lower left      |
 | `storefront-night.jpg`  | 1800×1013 | Visit, above the panels   |
+
+## The logo
+
+`logo-light.png` and `logo-dark.png` (511×212) are the same mark rendered for the two grounds:
+the "INDIAN CUISINE" line and its rules are black on light, cream on dark. The hero plate picks
+one by CSS `background-image`, following the same cascade as the colour tokens, so only the
+applied file is ever downloaded.
+
+Both were lifted from the printed menu card and the white page unmultiplied out of them, which
+means they carry real alpha and sit on any ground. **They are 511px wide — enough at the size the
+hero uses, not enough to go bigger.** A vector original (SVG, EPS or AI) would drop straight in:
+replace both files, or point the CSS at a single SVG and drop the theme swap, recolouring the
+wordmark with `currentColor` instead.
 
 Landscapes are the photographer's native 3:2, uncropped. The two portraits are native 2:3, cropped
 slightly by `object-fit: cover` where the column stretches them to match the landscape beside them.

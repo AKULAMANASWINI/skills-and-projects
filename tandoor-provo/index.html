@@ -119,6 +119,14 @@
   --chip:rgba(194,67,26,.08);
 }
 /* the visitor's own choice wins over the host and the OS */
+/* the mark has a light-ground and a dark-ground rendering; only the applied one downloads */
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]) .logo-plate{background-image:url("img/logo-dark.png")}
+}
+:root[data-theme="dark"] .logo-plate{background-image:url("img/logo-dark.png")}
+:root[data-site-theme="light"] .logo-plate{background-image:url("img/logo-light.png")}
+:root[data-site-theme="dark"] .logo-plate{background-image:url("img/logo-dark.png")}
+
 :root[data-site-theme="dark"]{
   color-scheme:dark;
   --ground:#15100C;
@@ -229,11 +237,23 @@ a{color:inherit}
 .hero-in{position:relative;display:grid;gap:clamp(2rem,5vw,3.5rem);align-items:center;
   grid-template-columns:minmax(0,1.06fr) minmax(0,.94fr)}
 .hero-copy{display:grid;gap:1.5rem;min-width:0}
-.hero-shot{aspect-ratio:4/3}
+.hero-plate{
+  position:relative;overflow:hidden;aspect-ratio:4/3;border-radius:var(--radius);
+  border:1px solid var(--line);background:linear-gradient(155deg,var(--ground-2),var(--ground-3));
+  display:grid;place-items:center;padding:clamp(1.5rem,4vw,2.5rem);
+}
+.hero-plate::after{
+  content:"";position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(86% 64% at 50% 118%,var(--glow),transparent 70%);
+}
+.logo-plate{
+  position:relative;z-index:1;width:min(82%,380px);aspect-ratio:511/212;
+  background:url("img/logo-light.png") center/contain no-repeat;
+}
 @media (max-width:880px){
   .hero-in{grid-template-columns:1fr;gap:2rem}
   .hero-copy{order:1}
-  .hero-shot{order:2;aspect-ratio:3/2}
+  .hero-plate{order:2;aspect-ratio:2/1}
 }
 .h1{display:flex;flex-direction:column;gap:.85rem}
 .h1-name{
@@ -306,11 +326,11 @@ a{color:inherit}
   display:grid;grid-template-columns:repeat(3,minmax(0,1fr));
   gap:clamp(.55rem,1.3vw,.95rem);margin-top:clamp(.55rem,1.3vw,.95rem);
 }
+.gallery-row{grid-template-columns:repeat(4,minmax(0,1fr))}
 .gallery-row .shot{aspect-ratio:3/2}
 @media (max-width:720px){
   .gallery{grid-template-columns:1fr}
   .gallery .tall{height:auto;aspect-ratio:3/2}
-  .gallery-row{grid-template-columns:1fr}
 }
 /* ============ catering ============ */
 .catering-grid{
@@ -346,6 +366,9 @@ a{color:inherit}
 
 .storefront{aspect-ratio:16/9;margin-bottom:clamp(1.25rem,3vw,1.75rem)}
 @media (max-width:620px){.storefront{aspect-ratio:4/3}}
+
+@media (max-width:900px){.gallery-row{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:560px){.gallery-row{grid-template-columns:1fr}}
 
 .credit{margin-top:1.1rem;font-size:.82rem;color:var(--ink-3)}
 .credit a{color:var(--copper);text-decoration:none;font-weight:600}
@@ -568,10 +591,9 @@ a{color:inherit}
       </div>
       </div>
 
-      <figure class="shot hero-shot">
-          <img src="img/hero-curry-naan.jpg" alt="A bowl of creamy tomato curry with garlic naan alongside" data-slot loading="eager" decoding="async">
-          <span class="shot-ph" aria-hidden="true"><svg viewBox="0 0 32 32" fill="none" aria-hidden="true"><path d="M11.5 3.5h9l-1.2 3.3c3.9 2 6.2 5.9 6.2 10.4a9.5 9.5 0 0 1-19 0c0-4.5 2.3-8.4 6.2-10.4L11.5 3.5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg><b>Curry and garlic naan</b></span>
-        </figure>
+      <div class="hero-plate">
+        <span class="logo-plate" role="img" aria-label="Tandoor Indian Cuisine"></span>
+      </div>
     </div>
   </section>
 
@@ -628,6 +650,10 @@ a{color:inherit}
         <figure class="shot ">
           <img src="img/mint-chutney.jpg" alt="Mint chutney in a steel bowl, finished with fresh mint" data-slot loading="lazy" decoding="async">
           <span class="shot-ph" aria-hidden="true"><svg viewBox="0 0 32 32" fill="none" aria-hidden="true"><path d="M11.5 3.5h9l-1.2 3.3c3.9 2 6.2 5.9 6.2 10.4a9.5 9.5 0 0 1-19 0c0-4.5 2.3-8.4 6.2-10.4L11.5 3.5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg><b>Mint chutney</b></span>
+        </figure>
+        <figure class="shot ">
+          <img src="img/hero-curry-naan.jpg" alt="A bowl of creamy tomato curry with garlic naan alongside" data-slot loading="lazy" decoding="async">
+          <span class="shot-ph" aria-hidden="true"><svg viewBox="0 0 32 32" fill="none" aria-hidden="true"><path d="M11.5 3.5h9l-1.2 3.3c3.9 2 6.2 5.9 6.2 10.4a9.5 9.5 0 0 1-19 0c0-4.5 2.3-8.4 6.2-10.4L11.5 3.5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg><b>Curry and garlic naan</b></span>
         </figure>
         <figure class="shot ">
           <img src="img/table-setting.jpg" alt="Fried appetizers, cut mirchi and a basket of naan on a set table" data-slot loading="lazy" decoding="async">
