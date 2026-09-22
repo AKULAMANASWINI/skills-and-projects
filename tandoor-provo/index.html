@@ -249,9 +249,15 @@ a{color:inherit}
 .gallery{display:grid;grid-template-columns:2fr 1fr;gap:clamp(.55rem,1.3vw,.95rem)}
 .gallery .wide{aspect-ratio:3/2}
 .gallery .tall{height:100%;min-height:0}
+.gallery-row{
+  display:grid;grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:clamp(.55rem,1.3vw,.95rem);margin-top:clamp(.55rem,1.3vw,.95rem);
+}
+.gallery-row .shot{aspect-ratio:3/2}
 @media (max-width:720px){
   .gallery{grid-template-columns:1fr}
   .gallery .tall{height:auto;aspect-ratio:3/2}
+  .gallery-row{grid-template-columns:1fr}
 }
 /* ============ catering ============ */
 .catering-grid{
@@ -536,25 +542,39 @@ a{color:inherit}
         <div>
           <p class="eyebrow">The room &amp; the plates</p>
           <h2>Come see it for yourself</h2>
-          <p>Shot in the dining room on a normal service — the plates, the glasses and the tables as they come.</p>
+          <p>Chaat is where this kitchen shows off — pani puri, bhel puri, cut mirchi, and chutneys ground the same morning.</p>
         </div>
       </div>
       <div class="gallery">
         <figure class="shot wide">
-          <img src="img/table-setting.jpg" alt="Fried appetizers, cut mirchi and a basket of naan on a set table" data-slot loading="lazy" decoding="async">
-          <span class="shot-ph" aria-hidden="true"><svg viewBox="0 0 32 32" fill="none" aria-hidden="true"><path d="M11.5 3.5h9l-1.2 3.3c3.9 2 6.2 5.9 6.2 10.4a9.5 9.5 0 0 1-19 0c0-4.5 2.3-8.4 6.2-10.4L11.5 3.5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg><b>The table</b></span>
+          <img src="img/bhel-puri.jpg" alt="Bhel puri on a steel tray with chai, tamarind and mint chutneys" data-slot loading="lazy" decoding="async">
+          <span class="shot-ph" aria-hidden="true"><svg viewBox="0 0 32 32" fill="none" aria-hidden="true"><path d="M11.5 3.5h9l-1.2 3.3c3.9 2 6.2 5.9 6.2 10.4a9.5 9.5 0 0 1-19 0c0-4.5 2.3-8.4 6.2-10.4L11.5 3.5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg><b>Bhel puri</b></span>
         </figure>
         <figure class="shot tall">
           <img src="img/lassi-pair.jpg" alt="A mango lassi and a strawberry lassi side by side" data-slot loading="lazy" decoding="async">
           <span class="shot-ph" aria-hidden="true"><svg viewBox="0 0 32 32" fill="none" aria-hidden="true"><path d="M11.5 3.5h9l-1.2 3.3c3.9 2 6.2 5.9 6.2 10.4a9.5 9.5 0 0 1-19 0c0-4.5 2.3-8.4 6.2-10.4L11.5 3.5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg><b>Mango and strawberry lassi</b></span>
         </figure>
         <figure class="shot wide">
-          <img src="img/cut-mirchi.jpg" alt="Cut mirchi — whole chilies in chickpea batter on shredded cabbage" data-slot loading="lazy" decoding="async">
-          <span class="shot-ph" aria-hidden="true"><svg viewBox="0 0 32 32" fill="none" aria-hidden="true"><path d="M11.5 3.5h9l-1.2 3.3c3.9 2 6.2 5.9 6.2 10.4a9.5 9.5 0 0 1-19 0c0-4.5 2.3-8.4 6.2-10.4L11.5 3.5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg><b>Cut mirchi</b></span>
+          <img src="img/pani-puri.jpg" alt="Pani puri shells filled with potato and sev, tamarind chutney alongside" data-slot loading="lazy" decoding="async">
+          <span class="shot-ph" aria-hidden="true"><svg viewBox="0 0 32 32" fill="none" aria-hidden="true"><path d="M11.5 3.5h9l-1.2 3.3c3.9 2 6.2 5.9 6.2 10.4a9.5 9.5 0 0 1-19 0c0-4.5 2.3-8.4 6.2-10.4L11.5 3.5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg><b>Pani puri</b></span>
         </figure>
         <figure class="shot tall">
           <img src="img/mango-lassi.jpg" alt="A tall glass of mango lassi" data-slot loading="lazy" decoding="async">
           <span class="shot-ph" aria-hidden="true"><svg viewBox="0 0 32 32" fill="none" aria-hidden="true"><path d="M11.5 3.5h9l-1.2 3.3c3.9 2 6.2 5.9 6.2 10.4a9.5 9.5 0 0 1-19 0c0-4.5 2.3-8.4 6.2-10.4L11.5 3.5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg><b>Mango lassi</b></span>
+        </figure>
+      </div>
+      <div class="gallery-row">
+        <figure class="shot ">
+          <img src="img/cut-mirchi.jpg" alt="Cut mirchi — whole chilies in chickpea batter on shredded cabbage" data-slot loading="lazy" decoding="async">
+          <span class="shot-ph" aria-hidden="true"><svg viewBox="0 0 32 32" fill="none" aria-hidden="true"><path d="M11.5 3.5h9l-1.2 3.3c3.9 2 6.2 5.9 6.2 10.4a9.5 9.5 0 0 1-19 0c0-4.5 2.3-8.4 6.2-10.4L11.5 3.5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg><b>Cut mirchi</b></span>
+        </figure>
+        <figure class="shot ">
+          <img src="img/mint-chutney.jpg" alt="Mint chutney in a steel bowl, finished with fresh mint" data-slot loading="lazy" decoding="async">
+          <span class="shot-ph" aria-hidden="true"><svg viewBox="0 0 32 32" fill="none" aria-hidden="true"><path d="M11.5 3.5h9l-1.2 3.3c3.9 2 6.2 5.9 6.2 10.4a9.5 9.5 0 0 1-19 0c0-4.5 2.3-8.4 6.2-10.4L11.5 3.5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg><b>Mint chutney</b></span>
+        </figure>
+        <figure class="shot ">
+          <img src="img/table-setting.jpg" alt="Fried appetizers, cut mirchi and a basket of naan on a set table" data-slot loading="lazy" decoding="async">
+          <span class="shot-ph" aria-hidden="true"><svg viewBox="0 0 32 32" fill="none" aria-hidden="true"><path d="M11.5 3.5h9l-1.2 3.3c3.9 2 6.2 5.9 6.2 10.4a9.5 9.5 0 0 1-19 0c0-4.5 2.3-8.4 6.2-10.4L11.5 3.5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg><b>The table</b></span>
         </figure>
       </div>
       <p class="credit">Photography by <a href="https://nickigomezphotography.pixieset.com/tandoorindiancuisine/" target="_blank" rel="noopener">Nicki Gomez Photography</a>.</p>
