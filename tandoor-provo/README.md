@@ -17,29 +17,36 @@ tandoor mark — is inline.
 - Light and dark themes, both designed, all colours defined as tokens on `:root`.
 - `Restaurant` JSON-LD in the head for Google's listing panel.
 
-## Verified against public sources
+## Menu source
 
-Address, phone, email, hours, the daily buffet, the 4.6-star average, the ordering and catering
-links, and the restaurant's own "symphony of spices" line all come from the live site, Yelp,
-ezCater and Google.
+Every dish, price and description is transcribed from the restaurant's own printed menu card
+(three pages: appetizers/soups/Indo-Chinese, dosa/biryani/naan/vegetarian/tandoor, and
+non-vegetarian/desserts/beverages/condiments). 98 dishes across 12 sections. The menu data is
+plain HTML in `index.html` — each dish is an `<li class="dish">` carrying `data-veg` and
+`data-search`, so the search box and the vegetarian toggle pick up any dish you add without a
+code change.
 
-## Needs confirming before this goes live
+## Dietary marks
 
-The per-dish prices and descriptions are reconstructed, not copied — the live site was not
-reachable from the build environment, so only the section price *ranges* were available
-(appetizers $6.95–$16.95 across 9 items; tandoori $14.95–$22.95 across 8 items, both honoured
-here). Known-real dishes are in: samosa, vegetable pakora, cut mirchi, Chicken 65, pepper
-calamari, tikka masala, saag, coconut korma, vindaloo, aloo gobi, garlic naan, dosas, biryani and
-the Tandoor's Mixed Grill.
+The printed card marks vegetarian with a green leaf and gluten-free with a crossed-wheat icon.
+Those are transcribed as `V` and `GF` badges. Two departures, both deliberate:
 
-Before publishing, check against the real menu:
+- **`GF` appears on exactly two items** — Kachumber and Butternut Squash Soup — because those are
+  the only two the card marks. Nothing else is claimed gluten-free, even where it plainly is.
+  Allergen claims the restaurant hasn't made itself don't belong on its website.
+- **`V` is applied a little more widely than the card's leaf icons**, which are inconsistent: the
+  Vegetarian Delights, Naan, Desserts, Beverages, Condiments and Soups sections are marked
+  wholesale (the card's own section headings and item names establish it), and Chilli Paneer,
+  Paneer Tikka Kebab and the paneer/vegetable dosas and biryanis carry a leaf the card omits.
+  Egg Biryani is deliberately **not** marked vegetarian.
 
-1. Every price and dish description.
-2. The lunch buffet price — deliberately left off the page rather than guessed. Add it in the
-   `#buffet` section.
-3. Buffet hours. The page splits lunch (11–3) from dinner (3–10); the source only confirms
-   11 am – 10 pm overall.
-4. The oven specs in the `.oven` section (480°C, 24-hour marinade, 90-second naan) — typical for
-   a tandoor, but they should be the kitchen's own numbers.
-5. Photography. The design works without it; if photos are added, the menu cards and hero are
-   where they'd go.
+If any of those is wrong, fix the `data-veg` attribute on that `<li>` and the badge beside it.
+
+## Still to confirm
+
+1. **The lunch buffet.** Yelp lists a daily buffet; the printed menu card doesn't mention one. The
+   page has a buffet section with no price and no specific times, which is as far as the sources
+   go. Confirm it still runs, then add times and a price — or delete the section.
+2. **Hours.** Mon–Sat 11 am – 10 pm, closed Sunday, per Google and Yelp. The live status pill in
+   the hero reads from `OPEN_MIN` / `CLOSE_MIN` in the script.
+3. **Photography.** See `img/README.md`.
