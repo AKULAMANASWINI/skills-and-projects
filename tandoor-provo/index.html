@@ -173,7 +173,15 @@ a{color:inherit}
 @keyframes breathe{0%,100%{opacity:.75;transform:scaleY(1)}50%{opacity:1;transform:scaleY(1.09)}}
 @media (prefers-reduced-motion:reduce){.ember-glow{animation:none}}
 
-.hero-in{position:relative;display:grid;gap:1.6rem;max-width:56rem}
+.hero-in{position:relative;display:grid;gap:clamp(2rem,5vw,3.5rem);align-items:center;
+  grid-template-columns:minmax(0,1.06fr) minmax(0,.94fr)}
+.hero-copy{display:grid;gap:1.5rem;min-width:0}
+.hero-shot{aspect-ratio:4/5}
+@media (max-width:880px){
+  .hero-in{grid-template-columns:1fr;gap:2rem}
+  .hero-copy{order:1}
+  .hero-shot{order:2;aspect-ratio:16/10}
+}
 .h1{display:flex;flex-direction:column;gap:.85rem}
 .h1-name{
   font-family:var(--font-body);font-size:.72rem;font-weight:700;
@@ -216,6 +224,37 @@ a{color:inherit}
 .spec-l{display:block;font-size:.68rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;
   color:var(--ink-3);margin-top:.5rem}
 @media (max-width:760px){.oven-in{grid-template-columns:1fr}}
+
+
+/* ============ photography slots ============ */
+.shot{
+  position:relative;overflow:hidden;border-radius:var(--radius);margin:0;isolation:isolate;
+  background:linear-gradient(155deg,var(--ground-2) 0%,var(--ground-3) 100%);
+  border:1px solid var(--line);max-width:100%;
+}
+.shot::after{
+  content:"";position:absolute;inset:0;z-index:2;pointer-events:none;
+  background:radial-gradient(86% 64% at 50% 112%,var(--glow),transparent 72%);
+}
+.shot img{position:relative;z-index:1;display:block;width:100%;height:100%;object-fit:cover}
+.shot-ph{
+  position:absolute;inset:0;z-index:0;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:.65rem;text-align:center;padding:1.25rem;
+}
+.shot-ph svg{width:32px;height:32px;color:var(--copper);opacity:.5;flex:none}
+.shot-ph b{
+  font-size:.66rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;
+  color:var(--ink-3);max-width:20ch;line-height:1.5;
+}
+
+/* ============ gallery ============ */
+.gallery{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:clamp(.55rem,1.3vw,.95rem)}
+.gallery .shot{aspect-ratio:1/1}
+.gallery .shot.feature{grid-column:span 2;grid-row:span 2}
+@media (max-width:820px){.gallery{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.credit{margin-top:1.1rem;font-size:.82rem;color:var(--ink-3)}
+.credit a{color:var(--copper);text-decoration:none;font-weight:600}
+.credit a:hover{text-decoration:underline}
 
 /* ============ sections ============ */
 .section{padding-block:clamp(3.25rem,7vw,5.5rem)}
@@ -301,6 +340,7 @@ a{color:inherit}
 .when-row:last-child{border-bottom:0;padding-bottom:0}
 .when-row b{font-weight:650;font-variant-numeric:tabular-nums}
 .when-row .closed{color:var(--ink-3)}
+.buffet-shot{aspect-ratio:4/3;margin-top:1.1rem}
 @media (max-width:760px){.buffet{grid-template-columns:1fr}}
 
 /* ============ story ============ */
@@ -312,6 +352,7 @@ a{color:inherit}
   font-variation-settings:'SOFT' 40,'WONK' 1;
 }
 .story-body{display:flex;flex-direction:column;gap:1rem;color:var(--ink-2)}
+.story-shot{aspect-ratio:5/4;margin-top:1.6rem}
 @media (max-width:760px){.story-in{grid-template-columns:1fr}}
 
 /* ============ visit ============ */
@@ -362,6 +403,7 @@ a{color:inherit}
     </a>
     <nav class="nav" aria-label="Main">
       <a href="#menu">Menu</a>
+      <a href="#gallery">Gallery</a>
       <a href="#buffet">Lunch Buffet</a>
       <a href="#story">Our Story</a>
       <a href="#visit">Visit</a>
@@ -379,6 +421,7 @@ a{color:inherit}
   <section class="hero">
     <div class="ember-glow" aria-hidden="true"></div>
     <div class="wrap hero-in">
+      <div class="hero-copy">
       <h1 class="h1">
         <span class="h1-name">North &amp; South Indian · Provo, Utah</span>
         <span class="h1-lede">A symphony of spices, out of one <em>900°</em> clay oven.</span>
@@ -404,6 +447,12 @@ a{color:inherit}
         <a class="btn btn-solid btn-lg" href="#menu">See the menu</a>
         <a class="btn btn-ghost btn-lg" href="tel:+18019609048">Call (801) 960-9048</a>
       </div>
+      </div>
+
+      <figure class="shot hero-shot">
+          <img src="img/hero-tandoori-platter.jpg" alt="A tandoori mixed grill arriving on a sizzling platter of onions" data-slot loading="eager" decoding="async">
+          <span class="shot-ph" aria-hidden="true"><svg viewBox="0 0 32 32" fill="none" aria-hidden="true"><path d="M11.5 3.5h9l-1.2 3.3c3.9 2 6.2 5.9 6.2 10.4a9.5 9.5 0 0 1-19 0c0-4.5 2.3-8.4 6.2-10.4L11.5 3.5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg><b>Tandoori mixed grill</b></span>
+        </figure>
     </div>
   </section>
 
@@ -422,6 +471,45 @@ a{color:inherit}
       </div>
     </div>
   </section>
+
+
+  <!-- ============ GALLERY ============ -->
+  <section class="section" id="gallery">
+    <div class="wrap">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">The room &amp; the plates</p>
+          <h2>Come see it for yourself</h2>
+          <p>Shot on a normal service, at the tables we actually seat people at.</p>
+        </div>
+      </div>
+      <div class="gallery">
+        <figure class="shot feature">
+          <img src="img/dining-room.jpg" alt="The dining room at Tandoor Indian Cuisine" data-slot loading="lazy" decoding="async">
+          <span class="shot-ph" aria-hidden="true"><svg viewBox="0 0 32 32" fill="none" aria-hidden="true"><path d="M11.5 3.5h9l-1.2 3.3c3.9 2 6.2 5.9 6.2 10.4a9.5 9.5 0 0 1-19 0c0-4.5 2.3-8.4 6.2-10.4L11.5 3.5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg><b>The dining room</b></span>
+        </figure>
+        <figure class="shot ">
+          <img src="img/clay-oven.jpg" alt="The charcoal-fired clay oven with skewers going in" data-slot loading="lazy" decoding="async">
+          <span class="shot-ph" aria-hidden="true"><svg viewBox="0 0 32 32" fill="none" aria-hidden="true"><path d="M11.5 3.5h9l-1.2 3.3c3.9 2 6.2 5.9 6.2 10.4a9.5 9.5 0 0 1-19 0c0-4.5 2.3-8.4 6.2-10.4L11.5 3.5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg><b>The clay oven</b></span>
+        </figure>
+        <figure class="shot ">
+          <img src="img/garlic-naan.jpg" alt="Garlic naan fresh from the oven wall" data-slot loading="lazy" decoding="async">
+          <span class="shot-ph" aria-hidden="true"><svg viewBox="0 0 32 32" fill="none" aria-hidden="true"><path d="M11.5 3.5h9l-1.2 3.3c3.9 2 6.2 5.9 6.2 10.4a9.5 9.5 0 0 1-19 0c0-4.5 2.3-8.4 6.2-10.4L11.5 3.5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg><b>Garlic naan</b></span>
+        </figure>
+        <figure class="shot ">
+          <img src="img/masala-dosa.jpg" alt="A masala dosa with sambar and coconut chutney" data-slot loading="lazy" decoding="async">
+          <span class="shot-ph" aria-hidden="true"><svg viewBox="0 0 32 32" fill="none" aria-hidden="true"><path d="M11.5 3.5h9l-1.2 3.3c3.9 2 6.2 5.9 6.2 10.4a9.5 9.5 0 0 1-19 0c0-4.5 2.3-8.4 6.2-10.4L11.5 3.5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg><b>Masala dosa</b></span>
+        </figure>
+        <figure class="shot ">
+          <img src="img/tikka-masala.jpg" alt="Chicken tikka masala in a copper handi" data-slot loading="lazy" decoding="async">
+          <span class="shot-ph" aria-hidden="true"><svg viewBox="0 0 32 32" fill="none" aria-hidden="true"><path d="M11.5 3.5h9l-1.2 3.3c3.9 2 6.2 5.9 6.2 10.4a9.5 9.5 0 0 1-19 0c0-4.5 2.3-8.4 6.2-10.4L11.5 3.5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg><b>Tikka masala</b></span>
+        </figure>
+      </div>
+      <p class="credit">Photography by <a href="https://nickigomezphotography.pixieset.com/tandoorindiancuisine/" target="_blank" rel="noopener">Nicki Gomez Photography</a>.</p>
+    </div>
+  </section>
+
+  <hr class="heatline">
 
   <!-- ============ MENU ============ -->
   <section class="section" id="menu">
@@ -808,6 +896,10 @@ a{color:inherit}
           <h2>The lunch buffet</h2>
           <p>A rotating spread — two tandoori items, four or five curries, dal, rice, salad and fresh naan brought to the table, with dessert at the end. The line changes daily, so the regulars come back on different days for different reasons.</p>
           <p style="margin-top:.9rem"><a class="btn btn-ghost" href="tel:+18019609048">Call for today’s spread</a></p>
+          <figure class="shot buffet-shot">
+          <img src="img/lunch-buffet.jpg" alt="The lunch buffet line" data-slot loading="lazy" decoding="async">
+          <span class="shot-ph" aria-hidden="true"><svg viewBox="0 0 32 32" fill="none" aria-hidden="true"><path d="M11.5 3.5h9l-1.2 3.3c3.9 2 6.2 5.9 6.2 10.4a9.5 9.5 0 0 1-19 0c0-4.5 2.3-8.4 6.2-10.4L11.5 3.5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg><b>The buffet line</b></span>
+        </figure>
         </div>
         <div class="buffet-when">
           <div class="when-row"><span>Monday – Friday</span><b>11:00 am – 3:00 pm</b></div>
@@ -826,6 +918,10 @@ a{color:inherit}
         <p class="eyebrow">Our story</p>
         <h2>Cooked the way it’s cooked at home.</h2>
         <p class="pull">“A symphony of spices, where every dish is a celebration of authentic flavors and aromas.”</p>
+        <figure class="shot story-shot">
+          <img src="img/kitchen.jpg" alt="Spices being bloomed in oil in the kitchen" data-slot loading="lazy" decoding="async">
+          <span class="shot-ph" aria-hidden="true"><svg viewBox="0 0 32 32" fill="none" aria-hidden="true"><path d="M11.5 3.5h9l-1.2 3.3c3.9 2 6.2 5.9 6.2 10.4a9.5 9.5 0 0 1-19 0c0-4.5 2.3-8.4 6.2-10.4L11.5 3.5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg><b>In the kitchen</b></span>
+        </figure>
       </div>
       <div class="story-body">
         <p>Most Indian restaurants in the United States pick a side. The north gets the tandoor, the cream and the wheat breads; the south gets rice, coconut and curry leaf. We never wanted to choose, so the menu carries both — a masala dosa fermented overnight can land on the same table as lamb chops off the charcoal.</p>
@@ -896,10 +992,12 @@ a{color:inherit}
     <div class="wrap foot-in">
       <div>
         <strong style="font-family:var(--font-display);color:var(--ink);font-size:1rem">Tandoor Indian Cuisine</strong><br>
-        1600 N Freedom Blvd, Provo, UT 84604 · (801) 960-9048
+        1600 N Freedom Blvd, Provo, UT 84604 · (801) 960-9048<br>
+        Photography by <a href="https://nickigomezphotography.pixieset.com/tandoorindiancuisine/" target="_blank" rel="noopener" style="color:var(--copper);text-decoration:none">Nicki Gomez Photography</a>
       </div>
       <nav class="foot-nav" aria-label="Footer">
         <a href="#menu">Menu</a>
+        <a href="#gallery">Gallery</a>
         <a href="#buffet">Lunch buffet</a>
         <a href="#story">Our story</a>
         <a href="#visit">Visit</a>
@@ -970,6 +1068,13 @@ a{color:inherit}
 
   paintStatus();
   setInterval(paintStatus, 60000);
+
+  /* ---------- photo slots: fall back to the styled panel ---------- */
+  Array.prototype.forEach.call(document.querySelectorAll('img[data-slot]'), function (img) {
+    var drop = function () { img.hidden = true; };
+    img.addEventListener('error', drop);
+    if (img.complete && img.naturalWidth === 0) drop();
+  });
 
   /* ---------- dietary filter ---------- */
   var chips = Array.prototype.slice.call(document.querySelectorAll('.chip'));
