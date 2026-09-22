@@ -1,35 +1,48 @@
 # Photography
 
-Drop the eight images below into this folder, at these exact filenames, and the page picks them
-up with no code change. Until a file is present, its slot renders as a clay-gradient panel with
-the tandoor mark and a caption naming the shot it's waiting for — so the page looks finished
-either way, and the gaps are self-documenting.
+Five photographs from the restaurant's shoot, cropped to the ratio each slot uses and exported at
+JPEG quality 82. 583 KB for the set.
 
-| Filename                      | Where it lands        | Crop  | What it should show                          |
-| ----------------------------- | --------------------- | ----- | -------------------------------------------- |
-| `hero-tandoori-platter.jpg`   | Hero, right column    | 4:5   | The mixed grill on sizzling onions           |
-| `dining-room.jpg`             | Gallery, large tile   | 1:1   | The room, ideally with people in it          |
-| `clay-oven.jpg`               | Gallery               | 1:1   | The tandoor itself, skewers going in         |
-| `garlic-naan.jpg`             | Gallery               | 1:1   | Naan off the oven wall, blistered            |
-| `masala-dosa.jpg`             | Gallery               | 1:1   | A dosa with sambar and chutney               |
-| `tikka-masala.jpg`            | Gallery               | 1:1   | Curry in a copper handi                      |
-| `kitchen.jpg`                 | Our Story             | 5:4   | Spices in the pan, hands working             |
-| `lunch-buffet.jpg`            | Lunch Buffet          | 4:3   | The buffet line, full                        |
+| File                    | Size      | Where it lands          |
+| ----------------------- | --------- | ----------------------- |
+| `hero-curry-naan.jpg`   | 1600×1200 | Hero, right column      |
+| `table-setting.jpg`     | 1500×1000 | Gallery, upper left     |
+| `lassi-pair.jpg`        | 900×1350  | Gallery, upper right    |
+| `cut-mirchi.jpg`        | 1500×1000 | Gallery, lower left     |
+| `mango-lassi.jpg`       | 900×1350  | Gallery, lower right    |
 
-## Before exporting
+The two landscapes are the photographer's native 3:2, uncropped. The two portraits are native 2:3
+and are cropped a little top and bottom by `object-fit: cover` when the column stretches them to
+match the landscape beside them. The hero is the only hard crop: 3:2 down to 4:3, which takes a
+slice off each side and keeps the full height.
 
-- **Crop to the ratio in the table.** The slots use `object-fit: cover`, so an off-ratio image
-  won't break the layout, but it will lose the edges.
-- **Export at roughly 2× the display size** — 1600px on the long edge is plenty for every slot
-  except the hero, which is worth 2000px. Save as JPEG at quality 80.
-- Keep the whole folder under about 2 MB total or the page gets slow on phones.
+## Captions
 
-Swapping a shot means changing the `src` on that `<figure class="shot">` in `index.html`.
-Adding one means copying an existing `<figure>` block.
+The visible page shows the photographs alone. The captions in each `<figure>` are the fallback
+that appears only if an image fails to load, and the `alt` text describes the shot for screen
+readers and search engines. Both deliberately avoid naming a dish where the photograph alone
+doesn't settle it:
+
+- `hero-curry-naan.jpg` is "curry and garlic naan" — it reads as butter chicken or chicken tikka
+  masala, and those are different items at different prices on the menu.
+- `table-setting.jpg` is "the table" — the crumbed batons on the triangular platter could be the
+  fish pakora or the paneer pakora.
+
+Name those two and the `alt` and caption can say so.
+
+`cut-mirchi.jpg`, `mango-lassi.jpg` and `lassi-pair.jpg` are named from the menu with no ambiguity.
+
+## Adding more
+
+Copy a `<figure class="shot …">` block in `index.html` and point its `src` at the new file. A slot
+whose image is missing falls back to a clay-gradient panel with the tandoor mark, so the page never
+shows a broken image. Gallery tiles take `wide` (3:2) or `tall` (2:3, stretches to its row).
+
+Keep the folder under about 2 MB total so the page stays quick on phones.
 
 ## Rights
 
-These come from the restaurant's gallery at
+From the shoot at
 [nickigomezphotography.pixieset.com](https://nickigomezphotography.pixieset.com/tandoorindiancuisine/).
-Confirm the shoot's licence covers web use before publishing, and keep the photographer credit
-that's in the gallery section and the footer.
+Confirm the licence covers web use, and keep the photographer credit in the gallery section and
+the footer.

@@ -176,11 +176,11 @@ a{color:inherit}
 .hero-in{position:relative;display:grid;gap:clamp(2rem,5vw,3.5rem);align-items:center;
   grid-template-columns:minmax(0,1.06fr) minmax(0,.94fr)}
 .hero-copy{display:grid;gap:1.5rem;min-width:0}
-.hero-shot{aspect-ratio:4/5}
+.hero-shot{aspect-ratio:4/3}
 @media (max-width:880px){
   .hero-in{grid-template-columns:1fr;gap:2rem}
   .hero-copy{order:1}
-  .hero-shot{order:2;aspect-ratio:16/10}
+  .hero-shot{order:2;aspect-ratio:3/2}
 }
 .h1{display:flex;flex-direction:column;gap:.85rem}
 .h1-name{
@@ -232,13 +232,11 @@ a{color:inherit}
   background:linear-gradient(155deg,var(--ground-2) 0%,var(--ground-3) 100%);
   border:1px solid var(--line);max-width:100%;
 }
-.shot::after{
-  content:"";position:absolute;inset:0;z-index:2;pointer-events:none;
-  background:radial-gradient(86% 64% at 50% 112%,var(--glow),transparent 72%);
-}
 .shot img{position:relative;z-index:1;display:block;width:100%;height:100%;object-fit:cover}
 .shot-ph{
-  position:absolute;inset:0;z-index:0;display:flex;flex-direction:column;
+  position:absolute;inset:0;z-index:0;
+  background:radial-gradient(86% 64% at 50% 112%,var(--glow),transparent 72%);
+  display:flex;flex-direction:column;
   align-items:center;justify-content:center;gap:.65rem;text-align:center;padding:1.25rem;
 }
 .shot-ph svg{width:32px;height:32px;color:var(--copper);opacity:.5;flex:none}
@@ -248,10 +246,13 @@ a{color:inherit}
 }
 
 /* ============ gallery ============ */
-.gallery{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:clamp(.55rem,1.3vw,.95rem)}
-.gallery .shot{aspect-ratio:1/1}
-.gallery .shot.feature{grid-column:span 2;grid-row:span 2}
-@media (max-width:820px){.gallery{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.gallery{display:grid;grid-template-columns:2fr 1fr;gap:clamp(.55rem,1.3vw,.95rem)}
+.gallery .wide{aspect-ratio:3/2}
+.gallery .tall{height:100%;min-height:0}
+@media (max-width:720px){
+  .gallery{grid-template-columns:1fr}
+  .gallery .tall{height:auto;aspect-ratio:3/2}
+}
 .credit{margin-top:1.1rem;font-size:.82rem;color:var(--ink-3)}
 .credit a{color:var(--copper);text-decoration:none;font-weight:600}
 .credit a:hover{text-decoration:underline}
@@ -368,7 +369,6 @@ a{color:inherit}
 .when-row:last-child{border-bottom:0;padding-bottom:0}
 .when-row b{font-weight:650;font-variant-numeric:tabular-nums}
 .when-row .closed{color:var(--ink-3)}
-.buffet-shot{aspect-ratio:4/3;margin-top:1.1rem}
 @media (max-width:760px){.buffet{grid-template-columns:1fr}}
 
 /* ============ story ============ */
@@ -380,7 +380,6 @@ a{color:inherit}
   font-variation-settings:'SOFT' 40,'WONK' 1;
 }
 .story-body{display:flex;flex-direction:column;gap:1rem;color:var(--ink-2)}
-.story-shot{aspect-ratio:5/4;margin-top:1.6rem}
 @media (max-width:760px){.story-in{grid-template-columns:1fr}}
 
 /* ============ visit ============ */
@@ -478,8 +477,8 @@ a{color:inherit}
       </div>
 
       <figure class="shot hero-shot">
-          <img src="img/hero-tandoori-platter.jpg" alt="A tandoori mixed grill arriving on a sizzling platter of onions" data-slot loading="eager" decoding="async">
-          <span class="shot-ph" aria-hidden="true"><svg viewBox="0 0 32 32" fill="none" aria-hidden="true"><path d="M11.5 3.5h9l-1.2 3.3c3.9 2 6.2 5.9 6.2 10.4a9.5 9.5 0 0 1-19 0c0-4.5 2.3-8.4 6.2-10.4L11.5 3.5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg><b>Tandoori mixed grill</b></span>
+          <img src="img/hero-curry-naan.jpg" alt="A bowl of creamy tomato curry with garlic naan alongside" data-slot loading="eager" decoding="async">
+          <span class="shot-ph" aria-hidden="true"><svg viewBox="0 0 32 32" fill="none" aria-hidden="true"><path d="M11.5 3.5h9l-1.2 3.3c3.9 2 6.2 5.9 6.2 10.4a9.5 9.5 0 0 1-19 0c0-4.5 2.3-8.4 6.2-10.4L11.5 3.5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg><b>Curry and garlic naan</b></span>
         </figure>
     </div>
   </section>
@@ -508,29 +507,25 @@ a{color:inherit}
         <div>
           <p class="eyebrow">The room &amp; the plates</p>
           <h2>Come see it for yourself</h2>
-          <p>Shot on a normal service, at the tables we actually seat people at.</p>
+          <p>Shot in the dining room on a normal service — the plates, the glasses and the tables as they come.</p>
         </div>
       </div>
       <div class="gallery">
-        <figure class="shot feature">
-          <img src="img/dining-room.jpg" alt="The dining room at Tandoor Indian Cuisine" data-slot loading="lazy" decoding="async">
-          <span class="shot-ph" aria-hidden="true"><svg viewBox="0 0 32 32" fill="none" aria-hidden="true"><path d="M11.5 3.5h9l-1.2 3.3c3.9 2 6.2 5.9 6.2 10.4a9.5 9.5 0 0 1-19 0c0-4.5 2.3-8.4 6.2-10.4L11.5 3.5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg><b>The dining room</b></span>
+        <figure class="shot wide">
+          <img src="img/table-setting.jpg" alt="Fried appetizers, cut mirchi and a basket of naan on a set table" data-slot loading="lazy" decoding="async">
+          <span class="shot-ph" aria-hidden="true"><svg viewBox="0 0 32 32" fill="none" aria-hidden="true"><path d="M11.5 3.5h9l-1.2 3.3c3.9 2 6.2 5.9 6.2 10.4a9.5 9.5 0 0 1-19 0c0-4.5 2.3-8.4 6.2-10.4L11.5 3.5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg><b>The table</b></span>
         </figure>
-        <figure class="shot ">
-          <img src="img/clay-oven.jpg" alt="The charcoal-fired clay oven with skewers going in" data-slot loading="lazy" decoding="async">
-          <span class="shot-ph" aria-hidden="true"><svg viewBox="0 0 32 32" fill="none" aria-hidden="true"><path d="M11.5 3.5h9l-1.2 3.3c3.9 2 6.2 5.9 6.2 10.4a9.5 9.5 0 0 1-19 0c0-4.5 2.3-8.4 6.2-10.4L11.5 3.5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg><b>The clay oven</b></span>
+        <figure class="shot tall">
+          <img src="img/lassi-pair.jpg" alt="A mango lassi and a strawberry lassi side by side" data-slot loading="lazy" decoding="async">
+          <span class="shot-ph" aria-hidden="true"><svg viewBox="0 0 32 32" fill="none" aria-hidden="true"><path d="M11.5 3.5h9l-1.2 3.3c3.9 2 6.2 5.9 6.2 10.4a9.5 9.5 0 0 1-19 0c0-4.5 2.3-8.4 6.2-10.4L11.5 3.5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg><b>Mango and strawberry lassi</b></span>
         </figure>
-        <figure class="shot ">
-          <img src="img/garlic-naan.jpg" alt="Garlic naan fresh from the oven wall" data-slot loading="lazy" decoding="async">
-          <span class="shot-ph" aria-hidden="true"><svg viewBox="0 0 32 32" fill="none" aria-hidden="true"><path d="M11.5 3.5h9l-1.2 3.3c3.9 2 6.2 5.9 6.2 10.4a9.5 9.5 0 0 1-19 0c0-4.5 2.3-8.4 6.2-10.4L11.5 3.5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg><b>Garlic naan</b></span>
+        <figure class="shot wide">
+          <img src="img/cut-mirchi.jpg" alt="Cut mirchi — whole chilies in chickpea batter on shredded cabbage" data-slot loading="lazy" decoding="async">
+          <span class="shot-ph" aria-hidden="true"><svg viewBox="0 0 32 32" fill="none" aria-hidden="true"><path d="M11.5 3.5h9l-1.2 3.3c3.9 2 6.2 5.9 6.2 10.4a9.5 9.5 0 0 1-19 0c0-4.5 2.3-8.4 6.2-10.4L11.5 3.5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg><b>Cut mirchi</b></span>
         </figure>
-        <figure class="shot ">
-          <img src="img/masala-dosa.jpg" alt="A masala dosa with sambar and coconut chutney" data-slot loading="lazy" decoding="async">
-          <span class="shot-ph" aria-hidden="true"><svg viewBox="0 0 32 32" fill="none" aria-hidden="true"><path d="M11.5 3.5h9l-1.2 3.3c3.9 2 6.2 5.9 6.2 10.4a9.5 9.5 0 0 1-19 0c0-4.5 2.3-8.4 6.2-10.4L11.5 3.5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg><b>Masala dosa</b></span>
-        </figure>
-        <figure class="shot ">
-          <img src="img/tikka-masala.jpg" alt="Chicken tikka masala in a copper handi" data-slot loading="lazy" decoding="async">
-          <span class="shot-ph" aria-hidden="true"><svg viewBox="0 0 32 32" fill="none" aria-hidden="true"><path d="M11.5 3.5h9l-1.2 3.3c3.9 2 6.2 5.9 6.2 10.4a9.5 9.5 0 0 1-19 0c0-4.5 2.3-8.4 6.2-10.4L11.5 3.5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg><b>Tikka masala</b></span>
+        <figure class="shot tall">
+          <img src="img/mango-lassi.jpg" alt="A tall glass of mango lassi" data-slot loading="lazy" decoding="async">
+          <span class="shot-ph" aria-hidden="true"><svg viewBox="0 0 32 32" fill="none" aria-hidden="true"><path d="M11.5 3.5h9l-1.2 3.3c3.9 2 6.2 5.9 6.2 10.4a9.5 9.5 0 0 1-19 0c0-4.5 2.3-8.4 6.2-10.4L11.5 3.5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg><b>Mango lassi</b></span>
         </figure>
       </div>
       <p class="credit">Photography by <a href="https://nickigomezphotography.pixieset.com/tandoorindiancuisine/" target="_blank" rel="noopener">Nicki Gomez Photography</a>.</p>
@@ -1107,10 +1102,6 @@ a{color:inherit}
           <h2>The lunch buffet</h2>
           <p>A rotating lunch spread drawn off the same menu — tandoori, curries, dal, rice and fresh naan brought to the table. The line changes daily, so call ahead if you’re coming for something in particular.</p>
           <p style="margin-top:.9rem"><a class="btn btn-ghost" href="tel:+18019609048">Call for today’s spread</a></p>
-          <figure class="shot buffet-shot">
-          <img src="img/lunch-buffet.jpg" alt="The lunch buffet line" data-slot loading="lazy" decoding="async">
-          <span class="shot-ph" aria-hidden="true"><svg viewBox="0 0 32 32" fill="none" aria-hidden="true"><path d="M11.5 3.5h9l-1.2 3.3c3.9 2 6.2 5.9 6.2 10.4a9.5 9.5 0 0 1-19 0c0-4.5 2.3-8.4 6.2-10.4L11.5 3.5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg><b>The buffet line</b></span>
-        </figure>
         </div>
         <div class="buffet-when">
           <div class="when-row"><span>Monday – Saturday</span><b>11 am – 10 pm</b></div>
@@ -1128,10 +1119,6 @@ a{color:inherit}
         <p class="eyebrow">Our story</p>
         <h2>Cooked the way it’s cooked at home.</h2>
         <p class="pull">“A symphony of spices, where every dish is a celebration of authentic flavors and aromas.”</p>
-        <figure class="shot story-shot">
-          <img src="img/kitchen.jpg" alt="Spices being bloomed in oil in the kitchen" data-slot loading="lazy" decoding="async">
-          <span class="shot-ph" aria-hidden="true"><svg viewBox="0 0 32 32" fill="none" aria-hidden="true"><path d="M11.5 3.5h9l-1.2 3.3c3.9 2 6.2 5.9 6.2 10.4a9.5 9.5 0 0 1-19 0c0-4.5 2.3-8.4 6.2-10.4L11.5 3.5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg><b>In the kitchen</b></span>
-        </figure>
       </div>
       <div class="story-body">
         <p>Most Indian restaurants in the United States pick a side. The north gets the tandoor, the cream and the wheat breads; the south gets rice, coconut and curry leaf. We never wanted to choose, so the menu carries both — a Mysore masala dosa can land on the same table as a lamb boti kebab off the skewer.</p>

@@ -49,4 +49,5 @@ If any of those is wrong, fix the `data-veg` attribute on that `<li>` and the ba
    go. Confirm it still runs, then add times and a price — or delete the section.
 2. **Hours.** Mon–Sat 11 am – 10 pm, closed Sunday, per Google and Yelp. The live status pill in
    the hero reads from `OPEN_MIN` / `CLOSE_MIN` in the script.
-3. **Photography.** See `img/README.md`.
+3. **Two photo captions.** The hero curry and the fried appetizers on the table platter aren't
+   identifiable from the photographs alone — see `img/README.md`.
