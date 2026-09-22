@@ -46,3 +46,30 @@ From the shoot at
 [nickigomezphotography.pixieset.com](https://nickigomezphotography.pixieset.com/tandoorindiancuisine/).
 Confirm the licence covers web use, and keep the photographer credit in the gallery section and
 the footer.
+
+## Catering slots — waiting on files
+
+The catering section carries three empty slots. Drop these in and they appear, no code change:
+
+| Filename                | Crop | Caption shown while empty |
+| ----------------------- | ---- | ------------------------- |
+| `catering-trays.jpg`    | 3:2  | Trays ready to go         |
+| `catering-spread.jpg`   | 3:2  | A spread laid out         |
+| `catering-event.jpg`    | 3:2  | On the day                |
+
+## Photographs seen but not yet on file
+
+A further batch came through in conversation without reaching the filesystem, so none of it is on
+the page yet. Worth placing when the files arrive:
+
+- **The storefront at night**, lit sign over the door — belongs in the Visit section; nothing else
+  shows a first-time visitor what to look for from Freedom Boulevard.
+- **The sizzling platter**, three frames of it — belongs in the tandoor band beside the oven copy.
+- **The long dosa** with its five chutneys — the best argument on the page for the South Indian
+  half of the menu.
+- **The dining room with guests**, two people toasting — the only shot with people in it. Check
+  the shoot's model release before this one goes up.
+- **Assorted snacks platter**, samosa, onion bhaji, potato bhajji and cut mirchi together —
+  matches the menu item of that name exactly.
+- **Garlic naan** close up, and again beside a lassi; **chana masala** with naan and rice;
+  **samosas** with the two chutneys; **onion bhaji**; **the table setting** with the rose.

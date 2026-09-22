@@ -253,6 +253,34 @@ a{color:inherit}
   .gallery{grid-template-columns:1fr}
   .gallery .tall{height:auto;aspect-ratio:3/2}
 }
+/* ============ catering ============ */
+.catering-grid{
+  display:grid;grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:clamp(.55rem,1.3vw,.95rem);margin-bottom:clamp(1.25rem,3vw,1.75rem);
+}
+.catering-grid .shot{aspect-ratio:3/2}
+@media (max-width:720px){.catering-grid{grid-template-columns:1fr}}
+
+.catering-contact{
+  position:relative;overflow:hidden;display:grid;align-items:center;
+  grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:1.5rem clamp(2rem,5vw,3.5rem);
+  border:1px solid var(--line);border-radius:var(--radius);background:var(--ground-3);
+  padding:clamp(1.5rem,3.5vw,2.25rem);box-shadow:var(--shadow);
+}
+.catering-contact::before{content:"";position:absolute;inset:0 auto 0 0;width:3px;
+  background:linear-gradient(180deg,var(--ember),var(--saffron))}
+.catering-contact h3{font-size:1.3rem;font-variation-settings:'SOFT' 18,'WONK' 1;margin-bottom:.55rem}
+.catering-lines{display:grid;gap:.65rem}
+.catering-line{display:flex;align-items:baseline;gap:.9rem;font-size:.95rem}
+.catering-line .k{
+  flex:none;width:4.6rem;font-size:.64rem;font-weight:700;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--ink-3);
+}
+.catering-line a,.catering-line b{color:var(--ink);font-weight:650;text-decoration:none}
+.catering-line a:hover{color:var(--ember);text-decoration:underline}
+.catering-cta{display:flex;flex-wrap:wrap;gap:.7rem;margin-top:1.15rem}
+@media (max-width:760px){.catering-contact{grid-template-columns:1fr}}
+
 .credit{margin-top:1.1rem;font-size:.82rem;color:var(--ink-3)}
 .credit a{color:var(--copper);text-decoration:none;font-weight:600}
 .credit a:hover{text-decoration:underline}
@@ -431,7 +459,8 @@ a{color:inherit}
     <nav class="nav" aria-label="Main">
       <a href="#menu">Menu</a>
       <a href="#gallery">Gallery</a>
-      <a href="#buffet">Lunch Buffet</a>
+      <a href="#buffet">Buffet</a>
+      <a href="#catering">Catering</a>
       <a href="#story">Our Story</a>
       <a href="#visit">Visit</a>
     </nav>
@@ -1112,6 +1141,55 @@ a{color:inherit}
     </div>
   </section>
 
+  <!-- ============ CATERING ============ -->
+  <section class="section" id="catering" style="scroll-margin-top:calc(env(safe-area-inset-top,0px) + 76px)">
+    <div class="wrap">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">Catering</p>
+          <h2>The whole menu travels</h2>
+          <p>Curries and biryani by the tray, tandoori platters, naan by the basket — the same kitchen that feeds the dining room, packed hot for offices, receptions and parties. Tell us the date, the headcount and roughly what people eat, and we’ll put the spread together. Seventeen vegetarian mains means a vegetarian table is never an afterthought.</p>
+        </div>
+      </div>
+
+      <div class="catering-grid">
+        <figure class="shot ">
+          <img src="img/catering-trays.jpg" alt="Catering trays packed and ready to go" data-slot loading="lazy" decoding="async">
+          <span class="shot-ph" aria-hidden="true"><svg viewBox="0 0 32 32" fill="none" aria-hidden="true"><path d="M11.5 3.5h9l-1.2 3.3c3.9 2 6.2 5.9 6.2 10.4a9.5 9.5 0 0 1-19 0c0-4.5 2.3-8.4 6.2-10.4L11.5 3.5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg><b>Trays ready to go</b></span>
+        </figure>
+        <figure class="shot ">
+          <img src="img/catering-spread.jpg" alt="A catered spread laid out for a party" data-slot loading="lazy" decoding="async">
+          <span class="shot-ph" aria-hidden="true"><svg viewBox="0 0 32 32" fill="none" aria-hidden="true"><path d="M11.5 3.5h9l-1.2 3.3c3.9 2 6.2 5.9 6.2 10.4a9.5 9.5 0 0 1-19 0c0-4.5 2.3-8.4 6.2-10.4L11.5 3.5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg><b>A spread laid out</b></span>
+        </figure>
+        <figure class="shot ">
+          <img src="img/catering-event.jpg" alt="Guests served at a catered event" data-slot loading="lazy" decoding="async">
+          <span class="shot-ph" aria-hidden="true"><svg viewBox="0 0 32 32" fill="none" aria-hidden="true"><path d="M11.5 3.5h9l-1.2 3.3c3.9 2 6.2 5.9 6.2 10.4a9.5 9.5 0 0 1-19 0c0-4.5 2.3-8.4 6.2-10.4L11.5 3.5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg><b>On the day</b></span>
+        </figure>
+      </div>
+
+      <div class="catering-contact">
+        <div>
+          <h3>Talk to us about a date</h3>
+          <p class="course-note">Call the restaurant for anything built to order — that goes straight to the kitchen, and it’s the fastest way to work out quantities. For standard trays with a delivery window, book through ezCater.</p>
+        </div>
+        <div>
+          <div class="catering-lines">
+            <div class="catering-line"><span class="k">Phone</span><a href="tel:+18019609048">(801) 960-9048</a></div>
+            <div class="catering-line"><span class="k">Email</span><a href="mailto:tandoorslc@gmail.com">tandoorslc@gmail.com</a></div>
+            <div class="catering-line"><span class="k">Hours</span><b>Mon–Sat, 11 am – 10 pm</b></div>
+            <div class="catering-line"><span class="k">Pickup</span><b>1600 N Freedom Blvd, Provo</b></div>
+          </div>
+          <div class="catering-cta">
+            <a class="btn btn-solid" href="tel:+18019609048">Call (801) 960-9048</a>
+            <a class="btn btn-ghost" href="https://www.ezcater.com/catering/tandoor-indian-grill-provo" target="_blank" rel="noopener">Book on ezCater</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="heatline">
+
   <!-- ============ STORY ============ -->
   <section class="section" id="story">
     <div class="wrap story-in">
@@ -1196,6 +1274,7 @@ a{color:inherit}
         <a href="#menu">Menu</a>
         <a href="#gallery">Gallery</a>
         <a href="#buffet">Lunch buffet</a>
+        <a href="#catering">Catering</a>
         <a href="#story">Our story</a>
         <a href="#visit">Visit</a>
         <a href="https://www.facebook.com/p/Tandoor-Indian-Cuisine-61559444412325/" target="_blank" rel="noopener">Facebook</a>
