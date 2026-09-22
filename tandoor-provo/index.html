@@ -261,11 +261,15 @@ a{color:inherit}
 }
 /* ============ catering ============ */
 .catering-grid{
-  display:grid;grid-template-columns:repeat(3,minmax(0,1fr));
-  gap:clamp(.55rem,1.3vw,.95rem);margin-bottom:clamp(1.25rem,3vw,1.75rem);
+  display:grid;grid-template-columns:2fr 1fr;gap:clamp(.55rem,1.3vw,.95rem);
+  margin-bottom:clamp(1.25rem,3vw,1.75rem);
 }
-.catering-grid .shot{aspect-ratio:3/2}
-@media (max-width:720px){.catering-grid{grid-template-columns:1fr}}
+.catering-grid .wide{aspect-ratio:3/2}
+.catering-grid .tall{grid-row:span 2;height:100%;min-height:0}
+@media (max-width:720px){
+  .catering-grid{grid-template-columns:1fr}
+  .catering-grid .tall{grid-row:auto;height:auto;aspect-ratio:3/4}
+}
 
 .catering-contact{
   position:relative;overflow:hidden;display:grid;align-items:center;
@@ -1130,22 +1134,22 @@ a{color:inherit}
         <div>
           <p class="eyebrow">Catering</p>
           <h2>The whole menu travels</h2>
-          <p>Curries and biryani by the tray, tandoori platters, naan by the basket — the same kitchen that feeds the dining room, packed hot for offices, receptions and parties. Tell us the date, the headcount and roughly what people eat, and we’ll put the spread together. Seventeen vegetarian mains means a vegetarian table is never an afterthought.</p>
+          <p>Curries and biryani by the tray, tandoori platters, naan by the basket — the same kitchen that feeds the dining room, held hot in copper chafing dishes and labelled one by one, so nobody has to ask what they’re eating. Tell us the date, the headcount and roughly what people eat, and we’ll put the spread together. Seventeen vegetarian mains means a vegetarian table is never an afterthought.</p>
         </div>
       </div>
 
       <div class="catering-grid">
-        <figure class="shot ">
-          <img src="img/catering-trays.jpg" alt="Catering trays packed and ready to go" data-slot loading="lazy" decoding="async">
-          <span class="shot-ph" aria-hidden="true"><svg viewBox="0 0 32 32" fill="none" aria-hidden="true"><path d="M11.5 3.5h9l-1.2 3.3c3.9 2 6.2 5.9 6.2 10.4a9.5 9.5 0 0 1-19 0c0-4.5 2.3-8.4 6.2-10.4L11.5 3.5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg><b>Trays ready to go</b></span>
+        <figure class="shot wide">
+          <img src="img/catering-line.jpg" alt="A row of copper chafing dishes set up for service" data-slot loading="lazy" decoding="async">
+          <span class="shot-ph" aria-hidden="true"><svg viewBox="0 0 32 32" fill="none" aria-hidden="true"><path d="M11.5 3.5h9l-1.2 3.3c3.9 2 6.2 5.9 6.2 10.4a9.5 9.5 0 0 1-19 0c0-4.5 2.3-8.4 6.2-10.4L11.5 3.5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg><b>The line, set up</b></span>
         </figure>
-        <figure class="shot ">
-          <img src="img/catering-spread.jpg" alt="A catered spread laid out for a party" data-slot loading="lazy" decoding="async">
+        <figure class="shot tall">
+          <img src="img/catering-spread.jpg" alt="An overhead spread of chicken lollipop, palak paneer, naan and rice" data-slot loading="lazy" decoding="async">
           <span class="shot-ph" aria-hidden="true"><svg viewBox="0 0 32 32" fill="none" aria-hidden="true"><path d="M11.5 3.5h9l-1.2 3.3c3.9 2 6.2 5.9 6.2 10.4a9.5 9.5 0 0 1-19 0c0-4.5 2.3-8.4 6.2-10.4L11.5 3.5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg><b>A spread laid out</b></span>
         </figure>
-        <figure class="shot ">
-          <img src="img/catering-event.jpg" alt="Guests served at a catered event" data-slot loading="lazy" decoding="async">
-          <span class="shot-ph" aria-hidden="true"><svg viewBox="0 0 32 32" fill="none" aria-hidden="true"><path d="M11.5 3.5h9l-1.2 3.3c3.9 2 6.2 5.9 6.2 10.4a9.5 9.5 0 0 1-19 0c0-4.5 2.3-8.4 6.2-10.4L11.5 3.5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg><b>On the day</b></span>
+        <figure class="shot wide">
+          <img src="img/catering-labels.jpg" alt="Copper chafing dishes with handwritten name cards for each dish" data-slot loading="lazy" decoding="async">
+          <span class="shot-ph" aria-hidden="true"><svg viewBox="0 0 32 32" fill="none" aria-hidden="true"><path d="M11.5 3.5h9l-1.2 3.3c3.9 2 6.2 5.9 6.2 10.4a9.5 9.5 0 0 1-19 0c0-4.5 2.3-8.4 6.2-10.4L11.5 3.5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg><b>Every dish labelled</b></span>
         </figure>
       </div>
 

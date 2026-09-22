@@ -1,7 +1,7 @@
 # Photography
 
-Eight photographs on the page, cropped to each slot and exported at JPEG quality 82. About 1 MB
-for the set.
+Eleven photographs on the page, cropped to each slot and exported at JPEG quality 82. About
+1.6 MB for the set.
 
 | File                    | Size      | Where it lands            |
 | ----------------------- | --------- | ------------------------- |
@@ -13,6 +13,9 @@ for the set.
 | `cut-mirchi.jpg`        | 1500×1000 | Gallery, bottom row       |
 | `mint-chutney.jpg`      | 1500×1000 | Gallery, bottom row       |
 | `table-setting.jpg`     | 1500×1000 | Gallery, bottom row       |
+| `catering-line.jpg`     | 1500×1000 | Catering, upper left      |
+| `catering-spread.jpg`   | 900×1400  | Catering, right column    |
+| `catering-labels.jpg`   | 1500×1000 | Catering, lower left      |
 
 Landscapes are the photographer's native 3:2, uncropped. The two portraits are native 2:3, cropped
 slightly by `object-fit: cover` where the column stretches them to match the landscape beside them.
@@ -45,8 +48,6 @@ on the page. Worth chasing, roughly best first:
 - **The sizzler being carried**, steam and sparks against a black background — the single best
   shot of the lot, and lit for this site's palette. Hero material.
 - **The bread basket held up**, same dark treatment.
-- **The copper chafing line** — the only photograph of a catering spread anywhere. Goes straight
-  into one of the three catering slots.
 - **The storefront at night**, lit sign over the door — belongs in Visit; nothing else shows a
   first-timer what to look for from Freedom Boulevard.
 - **The long dosa** with five chutneys — the best argument for the southern half of the menu.
@@ -63,14 +64,6 @@ on the page. Worth chasing, roughly best first:
   panel on the strength of this photograph; the shot itself would sit well beside that line.
 
 Every shot with recognisable faces needs the shoot's model release checked before it goes up.
-
-## Catering slots — waiting on files
-
-| Filename                | Crop | Caption while empty |
-| ----------------------- | ---- | ------------------- |
-| `catering-trays.jpg`    | 3:2  | Trays ready to go   |
-| `catering-spread.jpg`   | 3:2  | A spread laid out   |
-| `catering-event.jpg`    | 3:2  | On the day          |
 
 ## Rights
 
