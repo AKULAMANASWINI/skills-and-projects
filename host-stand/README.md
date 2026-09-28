@@ -7,8 +7,10 @@ book. It is standalone: it does not connect to Toast or any POS. One file,
 ## What it does
 
 **Floor**: a drawn floor plan of the restaurant, traced from its architectural
-layout: outer walls, the enclosed booths with their benches and doors, chairs
-around the open tables, the buffet room and the entrance. It shows as drawn
+layout: outer walls, the 100s and 200s booths with their benches and doors,
+the 312–316 row (tables along one long wall couch, two chairs facing each), the
+round tables (2, 307, 308, 310 small, 309 a little bigger), the buffet room and
+the entrance. It shows as drawn
 (entrance at the bottom). Setup → *Show the floor* can turn it sideways for a
 landscape screen. Every table shows its state
 at a glance:
@@ -54,8 +56,8 @@ The house seating rules are built into the table list:
 | 312–316 | push together (group `300s wall`) for parties over 6 |
 | Buffet A + B | buffet room: 8 seats each normally, 12 and 13 with added chairs (25 together); only suggested for parties of 8 or more, and first choice for 13+ |
 
-309 is the long 12-seat table. Seat counts for the booths are 2, except 104,
-204 and 312–316 at 4. Correct any of them in Setup.
+312–316 seat 4 each: 2 on the couch and 2 chairs. 309 seats 6. Booth seat
+counts are 2, except 104 and 204 at 4. Correct any of them in Setup.
 
 **Your data**: export the full history as CSV, or take a JSON backup and
 restore it on another device.
@@ -83,7 +85,8 @@ Three collections, the same shape in both backends and in the JSON backup:
   `join` the push-together group. `shape` is `booth`, `round` or `rect`. `x`/`y` is
   the table's centre and `w`/`h` its size, both in plan units (the walls and booth
   rooms are the `ROOM` constant in the same units). `benches` names the booth
-  sides that have a bench (`t`, `b`, `l`, `r`).
+  sides that have a bench (`t`, `b`, `l`, `r`). `couch` is how many of a
+  table's seats are on a shared couch, and `sides` which sides get chairs.
 - `parties/<id>`: one row per reservation or walk-in:
 
 | Field | |

@@ -402,13 +402,12 @@ const ORIENTS = [["drawn", "As drawn, entrance at the bottom"], ["turned", "Turn
    positions are in plan units (the layout drawing's pixels): the building is
    about 510 wide and 750 deep, entrance at the bottom. */
 const PLAN = { x: 40, y: 30, w: 540, h: 815 };
-const LAYOUT_VERSION = 2;
+const LAYOUT_VERSION = 3;
 const ROOM = {
   // outer wall, clockwise from the top-left corner of booth 316
   outline: "M205,45 H300 V112 H440 V72 H490 Q512,72 512,94 V118 L565,788 H52 V468 H142 V417 H205 Z",
   // enclosed booths: x, y, w, h, and which wall the door is on
   booths: [
-    [205, 47, 95, 63, "r"], [205, 110, 95, 62, "r"], [205, 172, 95, 64, "r"], [205, 236, 95, 62, "r"], [205, 298, 95, 62, "r"],
     [220, 362, 80, 75, "b"], [332, 362, 68, 75, "b"],
     [143, 417, 82, 60, "b"], [147, 477, 78, 75, "b"], [147, 552, 78, 98, "t"],
     [227, 485, 60, 80, "b"], [227, 567, 60, 80, "b"],
@@ -416,6 +415,8 @@ const ROOM = {
     [239, 700, 61, 86, "t"], [346, 715, 68, 71, "t"],
     [52, 470, 70, 55, "r"], [52, 525, 70, 55, "r"], [52, 580, 70, 75, "r"],
   ],
+  // the couch along the left wall that seats one side of 312-316
+  couches: [[209, 52, 13, 306]],
   // the buffet room: its top wall, and the partition down its left side
   walls: ["M400,412 H537", "M405,412 V470 M405,488 V700"],
   entrance: { x: 325, y: 788 },
@@ -428,8 +429,10 @@ const ROOM = {
    join: tables that push together. */
 const TABLE_RULES = {
   "307": { max: 5 }, "308": { max: 5 }, "310": { max: 5 },
-  "312": { join: "300s wall" }, "313": { join: "300s wall" }, "314": { join: "300s wall" },
-  "315": { join: "300s wall" }, "316": { join: "300s wall" },
+  // two seats on the wall couch, two chairs on the room side
+  "312": { join: "300s wall", couch: 2, sides: "r" }, "313": { join: "300s wall", couch: 2, sides: "r" },
+  "314": { join: "300s wall", couch: 2, sides: "r" }, "315": { join: "300s wall", couch: 2, sides: "r" },
+  "316": { join: "300s wall", couch: 2, sides: "r" },
   // the buffet room takes 8 to 25 with added chairs, across both tables
   "Buffet A": { min: 8, max: 12, join: "Buffet room" }, "Buffet B": { min: 8, max: 13, join: "Buffet room" },
 };
@@ -437,12 +440,13 @@ const TABLE_RULES = {
 function starterTables(){
   // label, seats, section, shape, x, y, w, h, benches (booths only)
   return [
-    ["316", 4, "300s", "booth", 257, 78, 36, 30, "lr"], ["315", 4, "300s", "booth", 257, 140, 36, 30, "lr"],
-    ["314", 4, "300s", "booth", 257, 203, 36, 30, "lr"], ["313", 4, "300s", "booth", 257, 266, 36, 30, "lr"],
-    ["312", 4, "300s", "booth", 257, 329, 36, 30, "lr"],
-    ["2", 6, "300s", "round", 474, 98, 26, 26], ["307", 4, "300s", "round", 455, 158, 34, 34],
-    ["308", 4, "300s", "round", 459, 214, 34, 34], ["309", 12, "300s", "rect", 456, 299, 40, 92],
-    ["310", 4, "300s", "round", 464, 376, 34, 34],
+    // 312-316: tables along the wall couch, two chairs facing each
+    ["316", 4, "300s", "rect", 244, 80, 34, 42], ["315", 4, "300s", "rect", 244, 142, 34, 42],
+    ["314", 4, "300s", "rect", 244, 204, 34, 42], ["313", 4, "300s", "rect", 244, 266, 34, 42],
+    ["312", 4, "300s", "rect", 244, 328, 34, 42],
+    ["2", 6, "300s", "round", 474, 98, 26, 26], ["307", 4, "300s", "round", 455, 160, 30, 30],
+    ["308", 4, "300s", "round", 458, 222, 30, 30], ["309", 6, "300s", "round", 460, 298, 42, 42],
+    ["310", 4, "300s", "round", 464, 376, 30, 30],
     ["106", 2, "100s", "booth", 186, 446, 36, 24, "lr"], ["105", 2, "100s", "booth", 188, 520, 36, 30, "tlr"],
     ["104", 4, "100s", "booth", 188, 598, 38, 40, "tblr"],
     ["103", 2, "100s", "booth", 90, 497, 24, 18, "lr"], ["102", 2, "100s", "booth", 90, 552, 24, 18, "lr"],
@@ -615,9 +619,12 @@ function seatsSvg(t){
     }
     return out;
   }
-  // long table: chairs down both long sides, extras at the ends first
-  const vertical = h >= w, len = vertical ? h : w, side = Math.ceil(Math.min(all, n) / 2);
-  const perSide = [side, Math.min(all, n) - side];
+  // long table: chairs down both long sides (or only the sides named in
+  // t.sides, when the rest of the seats are on a couch), extras at the ends
+  const vertical = h >= w, len = vertical ? h : w;
+  const chairs = Math.max(0, Math.min(all, n) - (+t.couch || 0)), side = Math.ceil(chairs / 2);
+  let perSide = [side, chairs - side];
+  if (t.sides) perSide = [/[lt]/.test(t.sides) ? chairs : 0, /[rb]/.test(t.sides) ? chairs : 0];
   [-1, 1].forEach((sgn, k) => {
     const m = perSide[k];
     for (let i = 0; i < m; i++) {
@@ -654,6 +661,7 @@ function roomSvg(){
     if (rgt) out += `<path class="door" d="M${x + w},${cyR} h${gap} a${gap},${gap} 0 0 1 ${-gap},${gap}"/>`;
   });
   ROOM.walls.forEach(d => { out += `<path class="plan-thin" d="${d}"/>`; });
+  (ROOM.couches || []).forEach(([x, y, w, h]) => { out += `<rect class="bench" x="${x}" y="${y}" width="${w}" height="${h}" rx="4"/>`; });
   ROOM.plants.forEach(([x, y]) => { out += `<circle class="plant" cx="${x}" cy="${y}" r="4.5"/>`; });
   out += `<path class="plan-wall" d="${ROOM.outline}"/>`;
   const e = ROOM.entrance;
