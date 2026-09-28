@@ -10,27 +10,27 @@ book. It is standalone: it does not connect to Toast or any POS. One file,
 layout: outer walls, the 100s and 200s booths with their benches and doors,
 the 312–316 row (tables along one long wall couch, two chairs facing each), the
 round tables (2, 307, 308, 310 small, 309 a little bigger), the buffet room and
-the entrance. It shows as drawn
-(entrance at the bottom). Setup → *Show the floor* can turn it sideways for a
-landscape screen. Every table shows its state
+the entrance. On a landscape screen (a laptop, or an iPad held sideways) the
+plan turns sideways to fill the space, entrance on the right. On a portrait
+screen it shows as drawn, entrance at the bottom. Setup → *Show the floor* can
+fix either one. Every table shows its state
 at a glance:
 
-| Table top | Meaning |
+| Table | Meaning |
 |---|---|
-| Wood, green outline | Open |
-| Amber, dashed | Held: a reservation assigned to it is due within the hold window (30 min by default) |
+| White | Available |
+| Amber | Reservation due: one assigned to it arrives within the hold window (30 min by default) |
 | Blue | Seated: guests and minutes at the table |
 | Red | Seated past turn time (90 min by default) |
 
-Dashed chairs are the extra chairs a table can take (307, 308, 310, the buffet
-tables).
+A table that takes extra chairs shows its range, e.g. `4–5`.
 
-The right-hand rail is the working list for the shift:
+The panel beside the plan is the working list for the shift, in three tabs:
 
+- **Upcoming**: today's reservations in time order, flagged `late 12m` when they
+  are overdue. Buttons for **Seat**, **Arrived** and **No-show**.
 - **Waiting**: walk-ins and arrived reservations, with minutes waited against the
   quoted time. The time turns red once they've waited past the quote.
-- **Arriving**: today's reservations in time order, flagged `late 12m` when they
-  are overdue. Buttons for **Arrived**, **Seat** and **No-show**.
 - **Seated**: who is in the house and for how long. **Clear table** when they
   leave, **Move** to change tables.
 
@@ -40,7 +40,7 @@ tap tables yourself, then **Seat here**. The banner says whether the pick fits,
 needs added chairs, or is short. Tapping an open table directly
 lets you seat a walk-in there in two taps.
 
-**Book**: the day's page from the book: every reservation and walk-in with time,
+**Reservations**: the day's page from the book: every reservation and walk-in with time,
 guests, phone, table, status and notes. A covers-per-half-hour strip shows where
 the rush is. Use the arrows at the top to go to any date and take bookings for
 next week.
