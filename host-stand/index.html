@@ -18,6 +18,9 @@
   --held:#8A5800; --held-bg:#FAEDCF;
   --late:#B2362A; --late-bg:#F7DEDA;
   --shadow:0 1px 2px rgba(20,28,36,.08),0 4px 14px rgba(20,28,36,.06);
+  --ground:#E4E6E1; --plan-floor:#F1EDE6; --booth-floor:#E6DCCD; --plan-wall:#24272B;
+  --wood:#E3C9A0; --wood-ink:#3A2915; --chair:#CFB28A; --chair-edge:#8C7152; --bench:#DCC7A6;
+  --plant:#6E9A57; --on-status:#FFFFFF;
   --f-ui:"Public Sans",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
   --f-num:"Barlow Semi Condensed","Arial Narrow",system-ui,sans-serif;
 }
@@ -32,6 +35,9 @@
     --held:#E6B656; --held-bg:#3A2E14;
     --late:#F08A7E; --late-bg:#40201C;
     --shadow:0 1px 2px rgba(0,0,0,.4),0 4px 14px rgba(0,0,0,.25);
+    --ground:#0D1115; --plan-floor:#1D232A; --booth-floor:#252B31; --plan-wall:#8B96A3;
+    --wood:#5B4731; --wood-ink:#F4E7D3; --chair:#6E5A43; --chair-edge:#A38B6C; --bench:#5E4E3B;
+    --plant:#5C8A4A; --on-status:#0D1620;
   }
 }
 :root[data-theme="dark"]{
@@ -44,6 +50,9 @@
   --held:#E6B656; --held-bg:#3A2E14;
   --late:#F08A7E; --late-bg:#40201C;
   --shadow:0 1px 2px rgba(0,0,0,.4),0 4px 14px rgba(0,0,0,.25);
+  --ground:#0D1115; --plan-floor:#1D232A; --booth-floor:#252B31; --plan-wall:#8B96A3;
+  --wood:#5B4731; --wood-ink:#F4E7D3; --chair:#6E5A43; --chair-edge:#A38B6C; --bench:#5E4E3B;
+  --plant:#5C8A4A; --on-status:#0D1620;
 }
 *{box-sizing:border-box}
 html,body{height:100%}
@@ -77,33 +86,39 @@ main{flex:1;padding-block:16px;padding-inline:16px}
 .floorview{display:grid;grid-template-columns:minmax(0,1fr) 360px;gap:16px;align-items:start}
 @media (max-width:980px){.floorview{grid-template-columns:minmax(0,1fr)}}
 
-.floorwrap{overflow-x:auto;border-radius:12px;border:1px solid var(--line);background:var(--floor)}
-.floor{position:relative;min-width:620px;aspect-ratio:var(--ar,16/10);container-type:inline-size;margin-inline:auto;
-  background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:5% 8%}
-.tbl{position:absolute;transform:translate(-50%,-50%);border:2px solid var(--open);background:var(--tbl);border-radius:10px;
-  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;padding:2px;cursor:pointer;text-align:center;overflow:hidden;
-  box-shadow:var(--shadow);transition:transform .12s ease,box-shadow .12s ease}
-.tbl.round{border-radius:50%}
-.tbl .l{font:700 clamp(13px,2.1cqw,24px)/1 var(--f-num)}
-.tbl .s{font:500 clamp(10px,1.25cqw,14px)/1.1 var(--f-num);color:var(--muted);max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding-inline:2px}
-.tbl.open{border-color:var(--open)}
-.tbl.open .l{color:var(--open)}
-.tbl.seated{border-color:var(--seated);background:var(--seated-bg)}
-.tbl.late{border-color:var(--late);background:var(--late-bg)}
-.tbl.late .s{color:var(--late);font-weight:700}
-.tbl.held{border-color:var(--held);background:var(--held-bg);border-style:dashed}
-.tbl.held .s{color:var(--held)}
-.tbl:hover{transform:translate(-50%,-50%) scale(1.04)}
-.floor.portrait{min-width:340px;width:min(100%,calc((100dvh - 200px) * var(--arn,1)))}
-.floor.portrait .tbl .l{font-size:clamp(12px,3.6cqw,22px)}
-.floor.portrait .tbl .s{font-size:clamp(9px,2.2cqw,13px)}
+.floorwrap{position:relative;border-radius:12px;border:1px solid var(--line);background:var(--ground);overflow:hidden}
+.floor{position:relative}
+.floor svg{display:block;width:100%;height:auto;max-height:max(560px,calc(100dvh - 180px));margin-inline:auto;user-select:none;-webkit-user-select:none}
+.plan-floor{fill:var(--plan-floor)}
+.plan-wall{fill:none;stroke:var(--plan-wall);stroke-width:5;stroke-linejoin:round;stroke-linecap:square}
+.plan-thin{fill:none;stroke:var(--plan-wall);stroke-width:2.5}
+.booth-floor{fill:var(--booth-floor)}
+.door{fill:none;stroke:var(--plan-wall);stroke-width:1.2;opacity:.55}
+.plant{fill:var(--plant)}
+.plan-label{font:700 9px var(--f-ui);letter-spacing:.18em;fill:var(--muted)}
+.entrance{fill:var(--ink);font:700 10px var(--f-ui);letter-spacing:.14em}
+.seat{fill:var(--chair);stroke:var(--chair-edge);stroke-width:.8}
+.seat.extra{fill:none;stroke:var(--chair-edge);stroke-dasharray:2 1.5}
+.bench{fill:var(--bench);stroke:var(--chair-edge);stroke-width:.8}
+.tbl{cursor:pointer}
+.tbl .hit{fill:transparent}
+.tbl .top{fill:var(--wood);stroke:var(--open);stroke-width:2.5}
+.tbl .tl{font:700 12px var(--f-num);fill:var(--wood-ink);text-anchor:middle;dominant-baseline:central;pointer-events:none}
+.tbl .ts{font:600 7px var(--f-num);fill:var(--wood-ink);text-anchor:middle;dominant-baseline:central;pointer-events:none;opacity:.85}
+.tbl.held .top{fill:var(--held-bg);stroke:var(--held);stroke-dasharray:5 3}
+.tbl.seated .top{fill:var(--seated);stroke:var(--seated)}
+.tbl.late .top{fill:var(--late);stroke:var(--late)}
+.tbl.seated .tl,.tbl.seated .ts,.tbl.late .tl,.tbl.late .ts{fill:var(--on-status)}
+.tbl.held .tl,.tbl.held .ts{fill:var(--held)}
+.tbl:hover .top{filter:brightness(1.06)}
+.tbl.picked .top{stroke:var(--accent);stroke-width:4.5;stroke-dasharray:none}
+.tbl.picked .hit{fill:var(--accent);opacity:.18}
 .floor.picking .tbl.seated,.floor.picking .tbl.late{opacity:.35;cursor:not-allowed}
-.tbl.picked{outline:3px solid var(--accent);outline-offset:3px;background:var(--accent-soft)}
-.floor.editing .tbl{cursor:grab;touch-action:none;border-style:dashed}
-.floor.editing .tbl:active{cursor:grabbing}
+.floor.editing .tbl{cursor:grab;touch-action:none}
+.floor.editing .tbl .top{stroke-dasharray:4 3}
 .legend{display:flex;flex-wrap:wrap;gap:6px 16px;margin-top:10px;font-size:12px;color:var(--muted)}
-.legend i{display:inline-block;width:12px;height:12px;border-radius:3px;border:2px solid;vertical-align:-2px;margin-right:6px}
-.empty-floor{position:absolute;inset:0;display:grid;place-items:center;text-align:center;padding:24px}
+.legend i{display:inline-block;width:14px;height:12px;border-radius:3px;border:2px solid;vertical-align:-2px;margin-right:6px}
+.empty-floor{position:absolute;inset:0;display:grid;place-items:center;text-align:center;padding:24px;background:color-mix(in srgb,var(--bg) 70%,transparent)}
 
 .banner{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;padding:12px 14px;border-radius:10px;background:var(--accent-soft);border:1px solid var(--accent);margin-bottom:12px}
 .banner p{margin:0;flex:1 1 220px}
@@ -237,10 +252,11 @@ dialog h3{margin:0;font:700 22px/1.15 var(--f-num)}
           <div id="floorBanner"></div>
           <div class="floorwrap"><div class="floor" id="floor"></div></div>
           <div class="legend">
-            <span><i style="border-color:var(--open);background:var(--tbl)"></i>Open</span>
+            <span><i style="border-color:var(--open);background:var(--wood)"></i>Open</span>
             <span><i style="border-color:var(--held);background:var(--held-bg);border-style:dashed"></i>Held for a reservation</span>
-            <span><i style="border-color:var(--seated);background:var(--seated-bg)"></i>Seated · minutes at table</span>
-            <span><i style="border-color:var(--late);background:var(--late-bg)"></i>Past turn time</span>
+            <span><i style="border-color:var(--seated);background:var(--seated)"></i>Seated · guests and minutes</span>
+            <span><i style="border-color:var(--late);background:var(--late)"></i>Past turn time</span>
+            <span><i style="border-color:var(--chair-edge);background:transparent;border-style:dashed;border-radius:50%"></i>Chair you can add</span>
           </div>
         </div>
         <aside class="rail">
@@ -279,10 +295,6 @@ dialog h3{margin:0;font:700 22px/1.15 var(--f-num)}
             <div class="grid2">
               <div class="field"><label for="setTurn">Turn time (min)</label><input id="setTurn" type="number" min="15" max="300" step="5"></div>
               <div class="field"><label for="setHold">Hold table before res (min)</label><input id="setHold" type="number" min="0" max="180" step="5"></div>
-            </div>
-            <div class="grid2">
-              <div class="field"><label for="setAspect">Floor shape</label><select id="setAspect"></select></div>
-              <div class="field"><label for="setScale">Table size (%)</label><input id="setScale" type="number" min="50" max="250" step="10"></div>
             </div>
             <div class="field"><label for="setOrient">Show the floor</label><select id="setOrient"></select></div>
             <p class="hint">Turn time turns a table red once a party has been seated that long. Hold time marks a table as held when a reservation assigned to it is that close.</p>
@@ -383,13 +395,35 @@ function nextQuarter(){
 const TAGS = ["Birthday", "Anniversary", "Allergy", "High chair", "Wheelchair", "Regular", "VIP", "Patio"];
 const STATUS = { booked: "Booked", waiting: "Waiting", seated: "Seated", done: "Done", noshow: "No-show", cancelled: "Cancelled", left: "Left" };
 const LIVE = new Set(["booked", "waiting", "seated"]);
-const DEFAULT_SETTINGS = { name: "Host Stand", turn: 90, hold: 30, aspect: "2/3", scale: 110, orient: "auto" };
-const ORIENTS = [["auto", "Fit the screen"], ["drawn", "As drawn"], ["turned", "Turned sideways"]];
-const ASPECTS = [["16/10", "Wide (landscape)"], ["1/1", "Square"], ["3/4", "Tall"], ["2/3", "Taller (portrait)"]];
+const DEFAULT_SETTINGS = { name: "Host Stand", turn: 90, hold: 30, orient: "drawn" };
+const ORIENTS = [["drawn", "As drawn, entrance at the bottom"], ["turned", "Turned sideways, entrance on the right"], ["auto", "Turn sideways on landscape screens"]];
 
-/* The restaurant's own floor, traced from the hand-drawn plan. Positions are
-   pixel centres on that sketch (about 960 x 1470 of drawing area), turned
-   into percentages of the floor so the room keeps its shape at any size. */
+/* The restaurant's floor plan, traced from the architectural layout. All
+   positions are in plan units (the layout drawing's pixels): the building is
+   about 510 wide and 750 deep, entrance at the bottom. */
+const PLAN = { x: 40, y: 30, w: 540, h: 815 };
+const LAYOUT_VERSION = 2;
+const ROOM = {
+  // outer wall, clockwise from the top-left corner of booth 316
+  outline: "M205,45 H300 V112 H440 V72 H490 Q512,72 512,94 V118 L565,788 H52 V468 H142 V417 H205 Z",
+  // enclosed booths: x, y, w, h, and which wall the door is on
+  booths: [
+    [205, 47, 95, 63, "r"], [205, 110, 95, 62, "r"], [205, 172, 95, 64, "r"], [205, 236, 95, 62, "r"], [205, 298, 95, 62, "r"],
+    [220, 362, 80, 75, "b"], [332, 362, 68, 75, "b"],
+    [143, 417, 82, 60, "b"], [147, 477, 78, 75, "b"], [147, 552, 78, 98, "t"],
+    [227, 485, 60, 80, "b"], [227, 567, 60, 80, "b"],
+    [342, 472, 58, 75, "b"], [342, 567, 58, 78, "b"],
+    [239, 700, 61, 86, "t"], [346, 715, 68, 71, "t"],
+    [52, 470, 70, 55, "r"], [52, 525, 70, 55, "r"], [52, 580, 70, 75, "r"],
+  ],
+  // the buffet room: its top wall, and the partition down its left side
+  walls: ["M400,412 H537", "M405,412 V470 M405,488 V700"],
+  entrance: { x: 325, y: 788 },
+  plants: [[502, 128], [506, 175], [510, 225], [514, 275], [518, 325], [522, 372], [522, 420], [528, 460], [532, 510],
+           [536, 560], [540, 610], [544, 660], [548, 710], [552, 760], [398, 395], [432, 418]],
+  labels: [{ text: "BUFFET ROOM", x: 426, y: 560, rotate: -90 }],
+};
+
 /* max: most guests with an extra chair. min: smallest party it is for.
    join: tables that push together. */
 const TABLE_RULES = {
@@ -401,26 +435,26 @@ const TABLE_RULES = {
 };
 
 function starterTables(){
-  const X0 = 100, W = 960, Y0 = 50, H = 1470;
-  const r = v => Math.round(v * 2) / 2;
+  // label, seats, section, shape, x, y, w, h, benches (booths only)
   return [
-    // 300s: the five four-tops along the top-left wall, and the rounds on the right
-    ["316", 4, "300s", "rect", 458, 178], ["315", 4, "300s", "rect", 470, 292], ["314", 4, "300s", "rect", 485, 398],
-    ["313", 4, "300s", "rect", 505, 487], ["312", 4, "300s", "rect", 525, 568],
-    ["2", 6, "300s", "round", 822, 195], ["307", 4, "300s", "round", 805, 280], ["308", 4, "300s", "round", 815, 358],
-    ["309", 6, "300s", "round", 822, 450], ["310", 4, "300s", "round", 860, 552],
-    // 100s: booths on the left
-    ["106", 2, "100s", "square", 375, 785], ["103", 2, "100s", "square", 203, 872], ["102", 2, "100s", "square", 205, 975],
-    ["101", 2, "100s", "square", 205, 1100], ["105", 2, "100s", "square", 378, 885], ["104", 4, "100s", "tall", 395, 1055],
-    // 200s: the middle run
-    ["204", 4, "200s", "tall", 488, 705], ["208", 2, "200s", "square", 652, 680], ["203", 2, "200s", "square", 490, 890],
-    ["202", 2, "200s", "square", 505, 1058], ["207", 2, "200s", "square", 678, 855], ["206", 2, "200s", "square", 695, 1020],
-    ["201", 2, "200s", "square", 560, 1345], ["205", 2, "200s", "square", 733, 1310],
-    // the buffet room: the two long unnumbered tables on the right
-    ["Buffet A", 8, "Buffet room", "tall", 838, 805], ["Buffet B", 8, "Buffet room", "tall", 888, 1165],
-  ].map(([label, seats, section, shape, x, y]) => ({
-    id: "t_" + label.toLowerCase().replace(/[^a-z0-9]+/g, "-"), label, seats, section, shape,
-    x: r((x - X0) / W * 100), y: r((y - Y0) / H * 100), ...(TABLE_RULES[label] || {}),
+    ["316", 4, "300s", "booth", 257, 78, 36, 30, "lr"], ["315", 4, "300s", "booth", 257, 140, 36, 30, "lr"],
+    ["314", 4, "300s", "booth", 257, 203, 36, 30, "lr"], ["313", 4, "300s", "booth", 257, 266, 36, 30, "lr"],
+    ["312", 4, "300s", "booth", 257, 329, 36, 30, "lr"],
+    ["2", 6, "300s", "round", 474, 98, 26, 26], ["307", 4, "300s", "round", 455, 158, 34, 34],
+    ["308", 4, "300s", "round", 459, 214, 34, 34], ["309", 12, "300s", "rect", 456, 299, 40, 92],
+    ["310", 4, "300s", "round", 464, 376, 34, 34],
+    ["106", 2, "100s", "booth", 186, 446, 36, 24, "lr"], ["105", 2, "100s", "booth", 188, 520, 36, 30, "tlr"],
+    ["104", 4, "100s", "booth", 188, 598, 38, 40, "tblr"],
+    ["103", 2, "100s", "booth", 90, 497, 24, 18, "lr"], ["102", 2, "100s", "booth", 90, 552, 24, 18, "lr"],
+    ["101", 2, "100s", "booth", 90, 615, 24, 18, "lr"],
+    ["204", 4, "200s", "booth", 260, 403, 34, 30, "tlr"], ["208", 2, "200s", "booth", 366, 403, 30, 30, "tlr"],
+    ["203", 2, "200s", "booth", 257, 528, 30, 30, "tlr"], ["202", 2, "200s", "booth", 257, 610, 30, 30, "tlr"],
+    ["207", 2, "200s", "booth", 373, 512, 28, 28, "tl"], ["206", 2, "200s", "booth", 373, 609, 28, 28, "tl"],
+    ["201", 2, "200s", "booth", 270, 750, 30, 28, "lr"], ["205", 2, "200s", "booth", 380, 752, 30, 28, "lr"],
+    ["Buffet A", 8, "Buffet room", "rect", 484, 497, 42, 124], ["Buffet B", 8, "Buffet room", "rect", 488, 670, 44, 134],
+  ].map(([label, seats, section, shape, x, y, w, h, benches]) => ({
+    id: "t_" + label.toLowerCase().replace(/[^a-z0-9]+/g, "-"), label, seats, section, shape, x, y, w, h,
+    ...(benches ? { benches } : {}), ...(TABLE_RULES[label] || {}),
   }));
 }
 
@@ -453,7 +487,7 @@ function localStore(){
   let d = read() || {};
   d.parties = d.parties || {};
   let fresh = false;
-  if (!Array.isArray(d.tables)) { d.tables = starterTables(); fresh = true; }
+  if (!Array.isArray(d.tables) || d.layout !== LAYOUT_VERSION) { d.tables = starterTables(); d.layout = LAYOUT_VERSION; fresh = true; }
   const subs = new Set();
   const fire = () => subs.forEach(f => f());
   let warned = false;
@@ -543,18 +577,92 @@ function tableState(t){
   if (soon) return { kind: "held", party: soon.p, d: soon.d };
   return { kind: "open", next: booked.find(x => x.d > 0) };
 }
-/* The floor can be shown turned a quarter-turn anticlockwise, so a tall room
-   fills a landscape iPad: the top of the drawing goes to the left. Stored
-   positions always stay as drawn; only the display is turned. */
-function floorView(){
-  const [aw, ah] = (S.settings.aspect || "16/10").split("/").map(Number);
-  const o = S.settings.orient || "auto";
-  const turned = o === "turned" || (o === "auto" && aw / ah < 1 && innerWidth > innerHeight && innerWidth > 700);
-  return turned ? { turned, aw: ah, ah: aw } : { turned, aw, ah };
+/* The plan can be shown turned a quarter-turn anticlockwise (entrance on the
+   right) so it fills a landscape screen. Positions are always stored as drawn. */
+function isTurned(){
+  const o = S.settings.orient || "drawn";
+  return o === "turned" || (o === "auto" && innerWidth > innerHeight && innerWidth > 700);
 }
-const toView = (t, v) => v.turned ? { x: t.y, y: 100 - t.x } : { x: t.x, y: t.y };
-const fromView = (x, y, v) => v.turned ? { x: 100 - y, y: x } : { x, y };
-const viewShape = (shape, v) => !v.turned ? shape : shape === "rect" ? "tall" : shape === "tall" ? "rect" : shape;
+const SHAPE_ALIAS = { square: "rect", tall: "rect" };
+const shapeOf = t => SHAPE_ALIAS[t.shape] || t.shape || "rect";
+function dims(t){
+  if (t.w && t.h) return { w: t.w, h: t.h };
+  const n = Math.max(t.seats || 2, 2), sh = shapeOf(t);
+  if (sh === "round") { const d = 18 + n * 3.5; return { w: d, h: d }; }
+  if (sh === "booth") return { w: 32, h: 28 };
+  return n <= 4 ? { w: 30, h: 30 } : { w: 30, h: 12 + Math.ceil(n / 2) * 13 };
+}
+
+/* Chairs and benches for one table, centred on 0,0. Chairs you can add
+   (up to the table's max) are drawn dashed. */
+function seatsSvg(t){
+  const { w, h } = dims(t), sh = shapeOf(t), n = t.seats || 0, all = maxOf(t);
+  const chair = (x, y, rot, extra) => `<rect class="seat${extra ? " extra" : ""}" x="-5" y="-4" width="10" height="8" rx="2.5" transform="translate(${x.toFixed(1)} ${y.toFixed(1)}) rotate(${rot.toFixed(0)})"/>`;
+  let out = "";
+  if (sh === "booth") {
+    const b = t.benches || "lr", g = 3, d = 7;
+    if (b.includes("l")) out += `<rect class="bench" x="${-w / 2 - g - d}" y="${-h / 2}" width="${d}" height="${h}" rx="2"/>`;
+    if (b.includes("r")) out += `<rect class="bench" x="${w / 2 + g}" y="${-h / 2}" width="${d}" height="${h}" rx="2"/>`;
+    if (b.includes("t")) out += `<rect class="bench" x="${-w / 2}" y="${-h / 2 - g - d}" width="${w}" height="${d}" rx="2"/>`;
+    if (b.includes("b")) out += `<rect class="bench" x="${-w / 2}" y="${h / 2 + g}" width="${w}" height="${d}" rx="2"/>`;
+    return out;
+  }
+  if (sh === "round") {
+    const r = w / 2 + 7;
+    for (let i = 0; i < all; i++) {
+      const a = -Math.PI / 2 + i * 2 * Math.PI / all;
+      out += chair(Math.cos(a) * r, Math.sin(a) * r, a * 180 / Math.PI + 90, i >= n);
+    }
+    return out;
+  }
+  // long table: chairs down both long sides, extras at the ends first
+  const vertical = h >= w, len = vertical ? h : w, side = Math.ceil(Math.min(all, n) / 2);
+  const perSide = [side, Math.min(all, n) - side];
+  [-1, 1].forEach((sgn, k) => {
+    const m = perSide[k];
+    for (let i = 0; i < m; i++) {
+      const along = -len / 2 + (i + 0.5) * len / m;
+      out += vertical ? chair(sgn * (w / 2 + 7), along, sgn * 90, false) : chair(along, sgn * (h / 2 + 7), sgn > 0 ? 180 : 0, false);
+    }
+  });
+  const extra = all - n;
+  for (let i = 0; i < extra; i++) {
+    // alternate ends, then add along the sides as a second row outside
+    const end = i % 2 ? 1 : -1, slot = Math.floor(i / 2);
+    const off = (slot - (Math.ceil(extra / 2) - 1) / 2) * 12;
+    out += vertical ? chair(off, end * (h / 2 + 7), end > 0 ? 180 : 0, true) : chair(end * (w / 2 + 7), off, end * 90, true);
+  }
+  return out;
+}
+
+function roomSvg(){
+  let out = `<path class="plan-floor" d="${ROOM.outline}"/>`;
+  ROOM.booths.forEach(([x, y, w, h, door]) => {
+    out += `<rect class="booth-floor" x="${x}" y="${y}" width="${w}" height="${h}"/>`;
+    // walls with a doorway gap; the door swings in as a quarter circle
+    const gap = 16, d = door;
+    const seg = [];
+    const top = d === "t", bot = d === "b", lft = d === "l", rgt = d === "r";
+    const cxT = x + w - 22, cyR = y + h - 22;
+    seg.push(top ? `M${x},${y} H${cxT} M${cxT + gap},${y} H${x + w}` : `M${x},${y} H${x + w}`);
+    seg.push(rgt ? `M${x + w},${y} V${cyR} M${x + w},${cyR + gap} V${y + h}` : `M${x + w},${y} V${y + h}`);
+    seg.push(bot ? `M${x + w},${y + h} H${cxT + gap} M${cxT},${y + h} H${x}` : `M${x + w},${y + h} H${x}`);
+    seg.push(lft ? `M${x},${y + h} V${cyR + gap} M${x},${cyR} V${y}` : `M${x},${y + h} V${y}`);
+    out += `<path class="plan-thin" d="${seg.join(" ")}"/>`;
+    if (top) out += `<path class="door" d="M${cxT},${y} v${gap} a${gap},${gap} 0 0 0 ${gap},${-gap}"/>`;
+    if (bot) out += `<path class="door" d="M${cxT},${y + h} v${-gap} a${gap},${gap} 0 0 1 ${gap},${gap}"/>`;
+    if (rgt) out += `<path class="door" d="M${x + w},${cyR} h${gap} a${gap},${gap} 0 0 1 ${-gap},${gap}"/>`;
+  });
+  ROOM.walls.forEach(d => { out += `<path class="plan-thin" d="${d}"/>`; });
+  ROOM.plants.forEach(([x, y]) => { out += `<circle class="plant" cx="${x}" cy="${y}" r="4.5"/>`; });
+  out += `<path class="plan-wall" d="${ROOM.outline}"/>`;
+  const e = ROOM.entrance;
+  out += `<rect x="${e.x - 16}" y="${e.y - 4}" width="32" height="8" fill="var(--plan-floor)"/>`;
+  out += `<path class="door" d="M${e.x - 16},${e.y} l14,-12 M${e.x + 16},${e.y} l-14,-12"/>`;
+  out += `<g transform="translate(${e.x} ${e.y + 20})${isTurned() ? " rotate(90)" : ""}"><path d="M0,-12 V2 M-4,-8 L0,-13 L4,-8" stroke="var(--ink)" stroke-width="1.8" fill="none"/><text class="entrance" y="14" text-anchor="middle">ENTRANCE</text></g>`;
+  ROOM.labels.forEach(l => { out += `<text class="plan-label" text-anchor="middle" transform="translate(${l.x} ${l.y}) rotate(${(l.rotate || 0) + (isTurned() ? 90 : 0)})">${esc(l.text)}</text>`; });
+  return out;
+}
 
 const maxOf = t => Math.max(t.seats || 0, +t.max || 0);
 const seatText = t => maxOf(t) > t.seats ? `${t.seats}–${maxOf(t)} seats` : `${t.seats} seats`;
@@ -586,13 +694,6 @@ function suggestTables(p){
   // and a private room 4 unless the party is too big for the dining room anyway
   const score = o => (o.seats >= size ? o.seats - size : (size - o.seats) * 1.5) + (o.ids.length - 1) * 2.5 + (o.room && size < 13 ? 4 : 0);
   return out.sort((a, b) => score(a) - score(b)).slice(0, 4);
-}
-
-function tableSize(t){
-  const base = { 1: 6.5, 2: 8, 3: 8.5, 4: 9.5, 5: 10.5, 6: 11.5, 7: 12.5, 8: 13.5 }[Math.min(8, t.seats)] || 13.5 + (t.seats - 8);
-  const k = (+S.settings.scale || 100) / 100;
-  if (t.shape === "tall") return { w: base * k * 0.65, ratio: 1 / 1.6 };
-  return { w: base * k, ratio: t.shape === "rect" ? 1.4 : 1 };
 }
 
 /* ------------------------------------------------------------ render */
@@ -632,9 +733,6 @@ function renderFloor(){
   const floor = $("#floor");
   floor.classList.toggle("picking", !!S.seating);
   floor.classList.toggle("editing", S.editLayout);
-  const V = floorView();
-  floor.style.setProperty("--ar", V.aw + "/" + V.ah); floor.style.setProperty("--arn", String(V.aw / V.ah));
-  floor.classList.toggle("portrait", V.aw / V.ah < 1.2);
   const banner = $("#floorBanner");
   if (S.seating) {
     const p = partyById(S.seating);
@@ -657,26 +755,33 @@ function renderFloor(){
       <button class="btn primary" data-act="doneLayout">Done</button></div>`;
   } else banner.innerHTML = "";
 
-  if (!S.tables.length) {
-    floor.innerHTML = `<div class="empty-floor"><div><p><b>No tables yet.</b></p><p class="hint">Load the restaurant's floor plan, or add tables one by one in Setup.</p>
-      <div class="btnrow" style="justify-content:center"><button class="btn primary" data-act="starter">Load our floor plan</button><button class="btn" data-act="goSetup">Go to Setup</button></div></div></div>`;
-    return;
-  }
-  const html = S.tables.map(t => {
-    const st = tableState(t);
-    const sz = tableSize({ ...t, shape: viewShape(t.shape, V) });
-    // sizes are a share of the room's drawn width; turned, the floor is wider
-    const w = V.turned ? sz.w * V.ah / V.aw : sz.w, ratio = sz.ratio;
-    const at = toView(t, V);
-    let sub = seatText(t);
-    if (st.kind === "seated" || st.kind === "late") sub = `${esc(st.party.name)} ${st.party.size} · ${st.m}m`;
-    else if (st.kind === "held") sub = `${fmtTime(st.party.time)} ${esc(st.party.name)}`;
-    else if (st.next) sub = `${maxOf(t) > t.seats ? t.seats + "–" + maxOf(t) : t.seats} · next ${fmtTime(st.next.p.time)}`;
-    const cls = ["tbl", st.kind, t.shape === "round" ? "round" : "", S.pick.has(t.id) ? "picked" : ""].join(" ");
-    return `<button class="${cls}" data-id="${esc(t.id)}" style="left:${at.x}%;top:${at.y}%;width:${w}%;aspect-ratio:${ratio}" aria-label="Table ${esc(t.label)}, ${st.kind}">
-      <span class="l">${esc(t.label)}</span><span class="s">${sub}</span></button>`;
+  const turned = isTurned();
+  const vb = turned ? [PLAN.y, -(PLAN.x + PLAN.w), PLAN.h, PLAN.w] : [PLAN.x, PLAN.y, PLAN.w, PLAN.h];
+  const tables = S.tables.map(t => {
+    const st = tableState(t), { w, h } = dims(t), round = shapeOf(t) === "round";
+    let sub = seatText(t).replace(" seats", "");
+    if (st.kind === "seated" || st.kind === "late") sub = `${st.party.size}p · ${st.m}m`;
+    else if (st.kind === "held") sub = fmtTime(st.party.time);
+    const top = round ? `<circle class="top" r="${w / 2}"/>` : `<rect class="top" x="${-w / 2}" y="${-h / 2}" width="${w}" height="${h}" rx="3"/>`;
+    const small = Math.min(w, h) < 24;
+    // fit the name across the table as it appears on screen
+    const across = (turned ? h : w) - 5;
+    const fs = Math.min(small ? 9 : 12, across / (Math.max(t.label.length, 2) * 0.56));
+    const fsSub = Math.min(7, across / (Math.max(sub.length, 3) * 0.5));
+    const cls = ["tbl", st.kind, S.pick.has(t.id) ? "picked" : ""].join(" ");
+    const who = st.party ? `, ${st.party.name}` : "";
+    return `<g class="${cls}" data-id="${esc(t.id)}" transform="translate(${t.x} ${t.y})" role="button" aria-label="Table ${esc(t.label)}, ${st.kind}${esc(who)}">
+      <rect class="hit" x="${-w / 2 - 12}" y="${-h / 2 - 12}" width="${w + 24}" height="${h + 24}" rx="6"/>
+      ${seatsSvg(t)}${top}
+      <g${turned ? ' transform="rotate(90)"' : ""}>
+        <text class="tl" y="${small ? 0 : -4}" style="font-size:${fs.toFixed(1)}px">${esc(t.label)}</text>
+        ${small ? "" : `<text class="ts" y="7" style="font-size:${fsSub.toFixed(1)}px">${esc(sub)}</text>`}
+      </g><title>${esc(t.label)} · ${esc(seatText(t))}${st.party ? " · " + esc(st.party.name) : ""}</title></g>`;
   }).join("");
-  floor.innerHTML = html;
+  floor.innerHTML = `<svg viewBox="${vb.join(" ")}" role="img" aria-label="Floor plan">
+    <g id="planLayer"${turned ? ' transform="rotate(-90)"' : ""}>${roomSvg()}${tables}</g></svg>` +
+    (S.tables.length ? "" : `<div class="empty-floor"><div><p><b>No tables yet.</b></p><p class="hint">Load the restaurant's tables onto the plan, or add them one by one in Setup.</p>
+      <div class="btnrow" style="justify-content:center"><button class="btn primary" data-act="starter">Load our tables</button><button class="btn" data-act="goSetup">Go to Setup</button></div></div></div>`);
 }
 
 function partyRow(p, acts, when){
@@ -763,19 +868,16 @@ function renderBook(){
     : `<tr><td colspan="7" class="none">Nothing in the book for this day${S.bookFilter !== "all" ? " with that status" : ""}.</td></tr>`;
 }
 
-const SHAPES = [["square", "Square"], ["round", "Round"], ["rect", "Long, across"], ["tall", "Long, up/down"]];
-const shapeOptions = cur => SHAPES.map(([v, l]) => `<option ${cur === v ? "selected" : ""} value="${v}">${l}</option>`).join("");
+const SHAPES = [["booth", "Booth"], ["round", "Round"], ["rect", "Table"]];
+const shapeOptions = cur => SHAPES.map(([v, l]) => `<option ${(SHAPE_ALIAS[cur] || cur) === v ? "selected" : ""} value="${v}">${l}</option>`).join("");
 
 function renderSetup(){
   if ($("#view-setup").contains(document.activeElement) && document.activeElement !== document.body) return;
   $("#setName").value = S.settings.name || "";
   $("#setTurn").value = S.settings.turn;
   $("#setHold").value = S.settings.hold;
-  $("#setAspect").innerHTML = ASPECTS.map(([v, l]) => `<option value="${v}">${l}</option>`).join("");
-  $("#setAspect").value = S.settings.aspect || "16/10";
-  $("#setScale").value = S.settings.scale || 100;
   $("#setOrient").innerHTML = ORIENTS.map(([v, l]) => `<option value="${v}">${l}</option>`).join("");
-  $("#setOrient").value = S.settings.orient || "auto";
+  $("#setOrient").value = S.settings.orient || "drawn";
   $("#storageNote").textContent = !S.store ? "" : S.store.mode === "shared"
     ? "This book is shared. Every device signed in to this page sees the same reservations and floor, live."
     : "This book is saved in this browser on this device. Take a backup before clearing browser data or switching devices.";
@@ -1016,20 +1118,21 @@ $("#floor").addEventListener("pointerdown", e => {
   const el = e.target.closest(".tbl"); if (!el) return;
   const t = tableById(el.dataset.id); if (!t) return;
   e.preventDefault();
-  const floor = $("#floor"), rect = floor.getBoundingClientRect();
+  const layer = $("#planLayer"), svg = layer.ownerSVGElement;
+  const toPlan = ev => { const pt = svg.createSVGPoint(); pt.x = ev.clientX; pt.y = ev.clientY; return pt.matrixTransform(layer.getScreenCTM().inverse()); };
+  const start = toPlan(e), ox = t.x - start.x, oy = t.y - start.y;
   const sx = e.clientX, sy = e.clientY; let moved = false;
   el.setPointerCapture(e.pointerId);
   const move = ev => {
     if (!moved && Math.abs(ev.clientX - sx) + Math.abs(ev.clientY - sy) < 5) return;
     moved = true;
-    const vx = clamp((ev.clientX - rect.left) / rect.width * 100, 3, 97);
-    const vy = clamp((ev.clientY - rect.top) / rect.height * 100, 3, 97);
-    Object.assign(t, fromView(vx, vy, floorView()));
-    el.style.left = vx + "%"; el.style.top = vy + "%";
+    const q = toPlan(ev);
+    t.x = clamp(q.x + ox, PLAN.x, PLAN.x + PLAN.w); t.y = clamp(q.y + oy, PLAN.y, PLAN.y + PLAN.h);
+    el.setAttribute("transform", `translate(${t.x} ${t.y})`);
   };
   const up = () => {
     el.removeEventListener("pointermove", move); el.removeEventListener("pointerup", up); el.removeEventListener("pointercancel", up);
-    if (moved) { t.x = Math.round(t.x * 2) / 2; t.y = Math.round(t.y * 2) / 2; saveTableNow({ ...t }); }
+    if (moved) { t.x = Math.round(t.x); t.y = Math.round(t.y); saveTableNow({ ...t }); }
     else openTableEdit(t);
   };
   el.addEventListener("pointermove", move); el.addEventListener("pointerup", up); el.addEventListener("pointercancel", up);
@@ -1051,7 +1154,8 @@ function saveTableFromDlg(id){
   const label = $("#teLabel").value.trim();
   if (!label) return toast("Give the table a name.");
   saveTableNow({ ...t, label, seats: clamp(+$("#teSeats").value || t.seats, 1, 40), max: +$("#teMax").value > 0 ? clamp(+$("#teMax").value, 1, 60) : 0, min: +$("#teMin").value > 0 ? clamp(+$("#teMin").value, 1, 60) : 0,
-    join: $("#teJoin").value.trim(), section: $("#teSection").value.trim() || "Main", shape: $("#teShape").value });
+    join: $("#teJoin").value.trim(), section: $("#teSection").value.trim() || "Main", shape: $("#teShape").value,
+    ...($("#teShape").value !== shapeOf(t) ? { w: 0, h: 0 } : {}) });
   $("#tableDlg").close();
 }
 $("#tableDlg").addEventListener("click", e => { if (e.target === e.currentTarget) e.currentTarget.close(); });
@@ -1062,15 +1166,14 @@ function saveSettingsSoon(){
   clearTimeout(saveSettingsSoon.t);
   saveSettingsSoon.t = setTimeout(async () => {
     const s = { name: $("#setName").value.trim() || "Host Stand", turn: clamp(+$("#setTurn").value || 90, 15, 300), hold: clamp(+$("#setHold").value || 0, 0, 180),
-      aspect: $("#setAspect").value || "16/10", scale: clamp(+$("#setScale").value || 100, 50, 250), orient: $("#setOrient").value || "auto" };
+      orient: $("#setOrient").value || "drawn" };
     S.settings = s; render();
     try { await S.store.saveSettings(s); } catch (e) { toast("Could not save settings."); }
   }, 500);
 }
-["#setName", "#setTurn", "#setHold", "#setScale"].forEach(id => $(id).addEventListener("input", saveSettingsSoon));
-$("#setAspect").addEventListener("change", saveSettingsSoon);
+["#setName", "#setTurn", "#setHold"].forEach(id => $(id).addEventListener("input", saveSettingsSoon));
 $("#setOrient").addEventListener("change", saveSettingsSoon);
-let resizeT; addEventListener("resize", () => { clearTimeout(resizeT); resizeT = setTimeout(() => { if (S.view === "floor") renderFloor(); }, 150); });
+let resizeT; addEventListener("resize", () => { clearTimeout(resizeT); resizeT = setTimeout(() => { if (S.view === "floor" && S.settings.orient === "auto") renderFloor(); }, 150); });
 $("#tableRows").addEventListener("change", e => {
   const row = e.target.closest("[data-tid]"); if (!row) return;
   const t = tableById(row.dataset.tid); if (!t) return;
@@ -1078,11 +1181,13 @@ $("#tableRows").addEventListener("change", e => {
   if (k === "seats") v = clamp(+v || t.seats, 1, 40);
   if (k === "max") v = +v > 0 ? clamp(+v, 1, 60) : 0;
   if (k === "label" && !v.trim()) { e.target.value = t.label; return; }
-  saveTableNow({ ...t, [k]: typeof v === "string" ? v.trim() : v });
+  const n = { ...t, [k]: typeof v === "string" ? v.trim() : v };
+  if (k === "shape" || (k === "seats" && shapeOf(t) !== "booth")) { delete n.w; delete n.h; }
+  saveTableNow(n);
 });
 $("#addTable").addEventListener("click", () => {
   const n = S.tables.length + 1;
-  saveTableNow({ id: uid("t_"), label: String(n), seats: 4, section: "Main", shape: "square", x: 50, y: 50 });
+  saveTableNow({ id: uid("t_"), label: String(n), seats: 4, section: "Main", shape: "rect", x: 320, y: 250 });
   toast(`Table ${n} added to the middle of the floor. Use Arrange floor to place it.`);
 });
 $("#arrange").addEventListener("click", () => { S.view = "floor"; S.editLayout = true; S.seating = null; render(); });

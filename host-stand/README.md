@@ -6,19 +6,22 @@ book. It is standalone: it does not connect to Toast or any POS. One file,
 
 ## What it does
 
-**Floor**: the restaurant's own room, traced from the hand-drawn plan: booths
-101–106, the 200s run, the 300s wall (312–316), the rounds (2, 307–310) and the
-buffet room's two long tables. On a landscape screen the plan turns sideways to
-fill it (the top of the drawing goes to the left). On a portrait screen it shows
-as drawn. Setup → *Show the floor* fixes either one. Every table shows its state
+**Floor**: a drawn floor plan of the restaurant, traced from its architectural
+layout: outer walls, the enclosed booths with their benches and doors, chairs
+around the open tables, the buffet room and the entrance. It shows as drawn
+(entrance at the bottom). Setup → *Show the floor* can turn it sideways for a
+landscape screen. Every table shows its state
 at a glance:
 
-| Colour | Meaning |
+| Table top | Meaning |
 |---|---|
-| Green outline | Open |
+| Wood, green outline | Open |
 | Amber, dashed | Held: a reservation assigned to it is due within the hold window (30 min by default) |
-| Blue | Seated: party name, size and minutes at the table |
+| Blue | Seated: guests and minutes at the table |
 | Red | Seated past turn time (90 min by default) |
+
+Dashed chairs are the extra chairs a table can take (307, 308, 310, the buffet
+tables).
 
 The right-hand rail is the working list for the shift:
 
@@ -51,8 +54,8 @@ The house seating rules are built into the table list:
 | 312–316 | push together (group `300s wall`) for parties over 6 |
 | Buffet A + B | buffet room: 8 seats each normally, 12 and 13 with added chairs (25 together); only suggested for parties of 8 or more, and first choice for 13+ |
 
-Seat counts for the other tables were read off the sketch (2 for the small
-booths, 4 for 104 and 204, 6 for tables 2 and 309). Correct any of them in Setup.
+309 is the long 12-seat table. Seat counts for the booths are 2, except 104,
+204 and 312–316 at 4. Correct any of them in Setup.
 
 **Your data**: export the full history as CSV, or take a JSON backup and
 restore it on another device.
@@ -74,10 +77,13 @@ data deletes the book.
 
 Three collections, the same shape in both backends and in the JSON backup:
 
-- `config/settings`: `{ name, turn, hold, aspect, scale, orient }`
-- `tables/<id>`: `{ id, label, seats, max, min, join, section, shape, x, y }`:
+- `config/settings`: `{ name, turn, hold, orient }`
+- `tables/<id>`: `{ id, label, seats, max, min, join, section, shape, x, y, w, h, benches }`:
   `max` is capacity with added chairs, `min` the smallest party it is offered to,
-  `join` the push-together group, and `x`/`y` a percentage of the floor as drawn
+  `join` the push-together group. `shape` is `booth`, `round` or `rect`. `x`/`y` is
+  the table's centre and `w`/`h` its size, both in plan units (the walls and booth
+  rooms are the `ROOM` constant in the same units). `benches` names the booth
+  sides that have a bench (`t`, `b`, `l`, `r`).
 - `parties/<id>`: one row per reservation or walk-in:
 
 | Field | |
