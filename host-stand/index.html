@@ -422,13 +422,13 @@ const TAGS = ["Birthday", "Anniversary", "Allergy", "High chair", "Wheelchair", 
 const STATUS = { booked: "Booked", waiting: "Waiting", seated: "Seated", done: "Done", noshow: "No-show", cancelled: "Cancelled", left: "Left" };
 const LIVE = new Set(["booked", "waiting", "seated"]);
 const DEFAULT_SETTINGS = { name: "Host Stand", turn: 90, hold: 30, orient: "auto" };
-const ORIENTS = [["auto", "Fit the screen (sideways on landscape)"], ["drawn", "As drawn, entrance at the bottom"], ["turned", "Turned sideways, entrance on the right"]];
+const ORIENTS = [["auto", "Fit the screen (sideways on landscape)"], ["drawn", "As drawn (tall)"], ["turned", "Turned sideways (wide)"]];
 
 /* The restaurant's floor plan, traced from the architectural layout. All
    positions are in plan units (the layout drawing's pixels): the building is
-   about 510 wide and 750 deep, entrance at the bottom. */
-const PLAN = { x: 40, y: 30, w: 540, h: 815 };
-const LAYOUT_VERSION = 3;
+   about 510 wide and 750 deep, front door in the left wall by 101. */
+const PLAN = { x: 12, y: 30, w: 568, h: 772 };
+const LAYOUT_VERSION = 4;
 const ROOM = {
   // outer wall, clockwise from the top-left corner of booth 316
   outline: "M205,45 H300 V112 H440 V72 H490 Q512,72 512,94 V118 L565,788 H52 V468 H142 V417 H205 Z",
@@ -445,7 +445,8 @@ const ROOM = {
   couches: [[209, 52, 13, 306]],
   // the buffet room: its top wall, and the partition down its left side
   walls: ["M400,412 H537", "M405,412 V470 M405,488 V700"],
-  entrance: { x: 325, y: 788 },
+  // the front door: in the left outer wall, just past booth 101
+  entrance: { x: 52, y: 722, side: "l" },
   labels: [{ text: "BUFFET ROOM", x: 426, y: 560, rotate: -90 }],
 };
 
@@ -457,6 +458,8 @@ const TABLE_RULES = {
   "312": { join: "300s wall", couch: 2, sides: "r" }, "313": { join: "300s wall", couch: 2, sides: "r" },
   "314": { join: "300s wall", couch: 2, sides: "r" }, "315": { join: "300s wall", couch: 2, sides: "r" },
   "316": { join: "300s wall", couch: 2, sides: "r" },
+  // every 100s and 200s booth: 2 seats, 4 when it's busy
+  ...Object.fromEntries(["101", "102", "103", "104", "105", "106", "201", "202", "203", "204", "205", "206", "207", "208"].map(l => [l, { max: 4 }])),
   // the buffet room takes 8 to 25 with added chairs, across both tables
   "Buffet A": { min: 8, max: 12, join: "Buffet room" }, "Buffet B": { min: 8, max: 13, join: "Buffet room" },
 };
@@ -472,10 +475,10 @@ function starterTables(){
     ["308", 4, "300s", "round", 458, 222, 30, 30], ["309", 6, "300s", "round", 460, 298, 42, 42],
     ["310", 4, "300s", "round", 464, 376, 30, 30],
     ["106", 2, "100s", "booth", 186, 446, 36, 24, "lr"], ["105", 2, "100s", "booth", 188, 520, 36, 30, "tlr"],
-    ["104", 4, "100s", "booth", 188, 598, 38, 40, "tblr"],
+    ["104", 2, "100s", "booth", 188, 598, 38, 40, "tblr"],
     ["103", 2, "100s", "booth", 90, 497, 24, 18, "lr"], ["102", 2, "100s", "booth", 90, 552, 24, 18, "lr"],
     ["101", 2, "100s", "booth", 90, 615, 24, 18, "lr"],
-    ["204", 4, "200s", "booth", 260, 403, 34, 30, "tlr"], ["208", 2, "200s", "booth", 366, 403, 30, 30, "tlr"],
+    ["204", 2, "200s", "booth", 260, 403, 34, 30, "tlr"], ["208", 2, "200s", "booth", 366, 403, 30, 30, "tlr"],
     ["203", 2, "200s", "booth", 257, 528, 30, 30, "tlr"], ["202", 2, "200s", "booth", 257, 610, 30, 30, "tlr"],
     ["207", 2, "200s", "booth", 373, 512, 28, 28, "tl"], ["206", 2, "200s", "booth", 373, 609, 28, 28, "tl"],
     ["201", 2, "200s", "booth", 270, 750, 30, 28, "lr"], ["205", 2, "200s", "booth", 380, 752, 30, 28, "lr"],
@@ -684,8 +687,13 @@ function roomSvg(){
   (ROOM.couches || []).forEach(([x, y, w, h]) => { out += `<rect class="bench" x="${x + 2}" y="${y}" width="${w - 4}" height="${h}" rx="3"/>`; });
   out += `<path class="plan-wall" d="${ROOM.outline}"/>`;
   const e = ROOM.entrance;
-  out += `<rect x="${e.x - 15}" y="${e.y - 3}" width="30" height="6" fill="var(--room)"/>`;
-  out += `<g transform="translate(${e.x} ${e.y + 16})${isTurned() ? " rotate(90)" : ""}"><text class="entrance" text-anchor="middle" dominant-baseline="central">ENTRANCE</text></g>`;
+  const side = e.side === "l";
+  out += side ? `<rect x="${e.x - 3}" y="${e.y - 16}" width="6" height="32" fill="var(--room)"/>`
+              : `<rect x="${e.x - 16}" y="${e.y - 3}" width="32" height="6" fill="var(--room)"/>`;
+  // label sits outside the wall and always reads left to right on screen
+  const lx = side ? e.x - 16 : e.x, ly = side ? e.y : e.y + 16;
+  const rot = isTurned() ? 90 : side ? -90 : 0;
+  out += `<g transform="translate(${lx} ${ly}) rotate(${rot})"><text class="entrance" text-anchor="middle" dominant-baseline="central">ENTRANCE</text></g>`;
   ROOM.labels.forEach(l => { out += `<text class="plan-label" text-anchor="middle" transform="translate(${l.x} ${l.y}) rotate(${isTurned() ? 90 : (l.rotate || 0)})">${esc(l.text)}</text>`; });
   return out;
 }

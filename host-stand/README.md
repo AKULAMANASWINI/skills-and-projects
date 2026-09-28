@@ -11,8 +11,8 @@ layout: outer walls, the 100s and 200s booths with their benches and doors,
 the 312–316 row (tables along one long wall couch, two chairs facing each), the
 round tables (2, 307, 308, 310 small, 309 a little bigger), the buffet room and
 the entrance. On a landscape screen (a laptop, or an iPad held sideways) the
-plan turns sideways to fill the space, entrance on the right. On a portrait
-screen it shows as drawn, entrance at the bottom. Setup → *Show the floor* can
+plan turns sideways to fill the space. On a portrait
+screen it shows as drawn. Setup → *Show the floor* can
 fix either one. Every table shows its state
 at a glance:
 
@@ -52,12 +52,13 @@ The house seating rules are built into the table list:
 
 | Tables | Rule |
 |---|---|
+| 100s and 200s booths | 2 seats, up to 4 when it's busy |
 | 307, 308, 310 | 4 seats, up to 5 with an added chair |
 | 312–316 | push together (group `300s wall`) for parties over 6 |
 | Buffet A + B | buffet room: 8 seats each normally, 12 and 13 with added chairs (25 together); only suggested for parties of 8 or more, and first choice for 13+ |
 
-312–316 seat 4 each: 2 on the couch and 2 chairs. 309 seats 6. Booth seat
-counts are 2, except 104 and 204 at 4. Correct any of them in Setup.
+312–316 seat 4 each: 2 on the couch and 2 chairs. 309 seats 6. The front door
+is in the left outer wall, just past booth 101. Correct any seat count in Setup.
 
 **Your data**: export the full history as CSV, or take a JSON backup and
 restore it on another device.
