@@ -1,0 +1,1064 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Host Stand</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@500;600;700&family=Public+Sans:wght@400;500;600&display=swap">
+<style>
+:root{
+  color-scheme:light;
+  --bg:#F2F3F0; --surface:#FFFFFF; --surface-2:#E8EAE5; --ink:#1B2126; --muted:#5B656D; --line:#D2D6D0;
+  --floor:#E6E8E2; --grid:rgba(27,33,38,.06); --tbl:#FFFFFF;
+  --accent:#1E5AA8; --accent-ink:#FFFFFF; --accent-soft:#DCE6F4;
+  --open:#2D7550; --open-bg:#E1F0E6;
+  --seated:#1E5AA8; --seated-bg:#DCE6F4;
+  --held:#8A5800; --held-bg:#FAEDCF;
+  --late:#B2362A; --late-bg:#F7DEDA;
+  --shadow:0 1px 2px rgba(20,28,36,.08),0 4px 14px rgba(20,28,36,.06);
+  --f-ui:"Public Sans",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --f-num:"Barlow Semi Condensed","Arial Narrow",system-ui,sans-serif;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --bg:#11161B; --surface:#1A2027; --surface-2:#232B33; --ink:#E5E9EC; --muted:#9AA5AE; --line:#2F3942;
+    --floor:#161C22; --grid:rgba(229,233,236,.05); --tbl:#212932;
+    --accent:#6FA3E8; --accent-ink:#0D1620; --accent-soft:#1D3048;
+    --open:#6CC596; --open-bg:#173127;
+    --seated:#6FA3E8; --seated-bg:#1D3048;
+    --held:#E6B656; --held-bg:#3A2E14;
+    --late:#F08A7E; --late-bg:#40201C;
+    --shadow:0 1px 2px rgba(0,0,0,.4),0 4px 14px rgba(0,0,0,.25);
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#11161B; --surface:#1A2027; --surface-2:#232B33; --ink:#E5E9EC; --muted:#9AA5AE; --line:#2F3942;
+  --floor:#161C22; --grid:rgba(229,233,236,.05); --tbl:#212932;
+  --accent:#6FA3E8; --accent-ink:#0D1620; --accent-soft:#1D3048;
+  --open:#6CC596; --open-bg:#173127;
+  --seated:#6FA3E8; --seated-bg:#1D3048;
+  --held:#E6B656; --held-bg:#3A2E14;
+  --late:#F08A7E; --late-bg:#40201C;
+  --shadow:0 1px 2px rgba(0,0,0,.4),0 4px 14px rgba(0,0,0,.25);
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.45 var(--f-ui);-webkit-font-smoothing:antialiased}
+button,input,select,textarea{font:inherit;color:inherit}
+[hidden]{display:none!important}
+.num{font-family:var(--f-num);font-variant-numeric:tabular-nums}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+.app{min-height:100%;display:flex;flex-direction:column}
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--surface);border-bottom:1px solid var(--line);
+  padding-block:10px;padding-inline:16px;display:flex;flex-wrap:wrap;align-items:center;gap:10px 20px}
+.brand{display:flex;flex-direction:column;line-height:1.1;min-width:0}
+.brand b{font:700 20px/1.1 var(--f-num);letter-spacing:.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.brand span{font-size:11px;letter-spacing:.09em;text-transform:uppercase;color:var(--muted)}
+.datebar{display:flex;align-items:center;gap:4px}
+.datebar .d{font:600 18px/1 var(--f-num);min-width:10.5ch;text-align:center}
+.iconbtn{border:1px solid var(--line);background:var(--surface);border-radius:8px;width:36px;height:36px;cursor:pointer;display:grid;place-items:center;font-size:18px;line-height:1}
+.iconbtn:hover{background:var(--surface-2)}
+.tabs{display:flex;gap:2px;background:var(--surface-2);padding:3px;border-radius:10px;margin-left:auto}
+.tabs button{border:0;background:transparent;padding:7px 14px;border-radius:8px;cursor:pointer;font-weight:600;font-size:14px;color:var(--muted)}
+.tabs button[aria-selected="true"]{background:var(--surface);color:var(--ink);box-shadow:var(--shadow)}
+
+.stats{display:flex;flex-wrap:wrap;gap:6px 22px;padding-block:10px;padding-inline:16px;border-bottom:1px solid var(--line);background:var(--bg)}
+.stat{display:flex;align-items:baseline;gap:6px}
+.stat b{font:700 22px/1 var(--f-num);font-variant-numeric:tabular-nums}
+.stat span{font-size:12px;color:var(--muted);letter-spacing:.04em;text-transform:uppercase}
+.mode{margin-left:auto;font-size:12px;color:var(--muted);align-self:center}
+
+main{flex:1;padding-block:16px;padding-inline:16px}
+.floorview{display:grid;grid-template-columns:minmax(0,1fr) 360px;gap:16px;align-items:start}
+@media (max-width:980px){.floorview{grid-template-columns:minmax(0,1fr)}}
+
+.floorwrap{overflow-x:auto;border-radius:12px;border:1px solid var(--line);background:var(--floor)}
+.floor{position:relative;min-width:620px;aspect-ratio:16/10;container-type:inline-size;
+  background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:5% 8%}
+.zone{position:absolute;font:600 11px/1 var(--f-ui);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);pointer-events:none}
+.tbl{position:absolute;transform:translate(-50%,-50%);border:2px solid var(--open);background:var(--tbl);border-radius:10px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;padding:2px;cursor:pointer;text-align:center;overflow:hidden;
+  box-shadow:var(--shadow);transition:transform .12s ease,box-shadow .12s ease}
+.tbl.round{border-radius:50%}
+.tbl .l{font:700 clamp(13px,2.1cqw,24px)/1 var(--f-num)}
+.tbl .s{font:500 clamp(10px,1.25cqw,14px)/1.1 var(--f-num);color:var(--muted);max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding-inline:2px}
+.tbl.open{border-color:var(--open)}
+.tbl.open .l{color:var(--open)}
+.tbl.seated{border-color:var(--seated);background:var(--seated-bg)}
+.tbl.late{border-color:var(--late);background:var(--late-bg)}
+.tbl.late .s{color:var(--late);font-weight:700}
+.tbl.held{border-color:var(--held);background:var(--held-bg);border-style:dashed}
+.tbl.held .s{color:var(--held)}
+.tbl:hover{transform:translate(-50%,-50%) scale(1.04)}
+.floor.picking .tbl.seated,.floor.picking .tbl.late{opacity:.35;cursor:not-allowed}
+.tbl.picked{outline:3px solid var(--accent);outline-offset:3px;background:var(--accent-soft)}
+.floor.editing .tbl{cursor:grab;touch-action:none;border-style:dashed}
+.floor.editing .tbl:active{cursor:grabbing}
+.legend{display:flex;flex-wrap:wrap;gap:6px 16px;margin-top:10px;font-size:12px;color:var(--muted)}
+.legend i{display:inline-block;width:12px;height:12px;border-radius:3px;border:2px solid;vertical-align:-2px;margin-right:6px}
+.empty-floor{position:absolute;inset:0;display:grid;place-items:center;text-align:center;padding:24px}
+
+.banner{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;padding:12px 14px;border-radius:10px;background:var(--accent-soft);border:1px solid var(--accent);margin-bottom:12px}
+.banner p{margin:0;flex:1 1 220px}
+.banner.edit{background:var(--held-bg);border-color:var(--held)}
+
+.rail{display:flex;flex-direction:column;gap:16px}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.panel h2{display:flex;align-items:center;gap:8px;margin:0;padding:12px 14px;font:700 15px/1.2 var(--f-ui);border-bottom:1px solid var(--line)}
+.panel h2 .count{font:600 13px/1 var(--f-num);background:var(--surface-2);border-radius:999px;padding:3px 8px;color:var(--muted)}
+.panel h2 .btn{margin-left:auto}
+.list{list-style:none;margin:0;padding:0}
+.row{display:grid;grid-template-columns:62px minmax(0,1fr);gap:4px 10px;padding:10px 14px;border-bottom:1px solid var(--line);cursor:pointer}
+.row:last-child{border-bottom:0}
+.row:hover{background:var(--surface-2)}
+.row .t{font:700 18px/1.15 var(--f-num);font-variant-numeric:tabular-nums}
+.row .t small{display:block;font:600 12px/1.2 var(--f-num);color:var(--muted)}
+.row .t small.bad{color:var(--late)}
+.row .who{min-width:0}
+.row .who b{font-weight:600}
+.row .who .meta{font-size:12.5px;color:var(--muted)}
+.row .acts{grid-column:2;display:flex;flex-wrap:wrap;gap:6px}
+.none{padding:14px;color:var(--muted);font-size:14px}
+
+.chip{display:inline-block;font-size:11px;font-weight:600;letter-spacing:.02em;padding:2px 7px;border-radius:999px;background:var(--surface-2);color:var(--muted);margin-right:4px;vertical-align:1px}
+.chip.warn{background:var(--late-bg);color:var(--late)}
+.chip.st-booked{background:var(--held-bg);color:var(--held)}
+.chip.st-waiting{background:var(--accent-soft);color:var(--accent)}
+.chip.st-seated{background:var(--seated-bg);color:var(--seated)}
+.chip.st-done{background:var(--open-bg);color:var(--open)}
+.chip.st-noshow,.chip.st-cancelled,.chip.st-left{background:var(--late-bg);color:var(--late)}
+
+.btn{border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:6px 12px;font-size:13.5px;font-weight:600;cursor:pointer;white-space:nowrap}
+.btn:hover{background:var(--surface-2)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.btn.primary:hover{filter:brightness(1.08)}
+.btn.danger{color:var(--late);border-color:var(--late)}
+.btn.small{padding:4px 9px;font-size:12.5px}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+
+/* Book */
+.bookhead{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-bottom:12px}
+.bookhead h1{margin:0;font:700 24px/1.1 var(--f-num);text-wrap:balance}
+.filters{display:flex;flex-wrap:wrap;gap:6px}
+.filters button{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:5px 12px;font-size:13px;cursor:pointer}
+.filters button[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.slots{display:flex;align-items:flex-end;justify-content:center;gap:3px;height:74px;padding:8px 10px 0;background:var(--surface);border:1px solid var(--line);border-radius:12px;margin-bottom:14px;overflow-x:auto}
+.slot{flex:1 0 26px;max-width:56px;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;gap:2px}
+.slot i{display:block;width:100%;background:var(--accent);border-radius:3px 3px 0 0;opacity:.85}
+.slot b{font:600 11px/1 var(--f-num);color:var(--ink)}
+.slot span{font:500 10px/1.3 var(--f-num);color:var(--muted);padding-bottom:4px}
+.tablewrap{overflow-x:auto;background:var(--surface);border:1px solid var(--line);border-radius:12px}
+table.book{width:100%;border-collapse:collapse;font-size:14px;min-width:760px}
+.book th{text-align:left;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600;padding:10px 12px;border-bottom:1px solid var(--line);background:var(--surface-2)}
+.book td{padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+.book tr:last-child td{border-bottom:0}
+.book tbody tr{cursor:pointer}
+.book tbody tr:hover{background:var(--surface-2)}
+.book td.tm{font:700 17px/1.2 var(--f-num);font-variant-numeric:tabular-nums;white-space:nowrap}
+.book td.notes{color:var(--muted);max-width:260px}
+.book tr.gone td{opacity:.55}
+
+/* Setup */
+.setup{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr));gap:16px;align-items:start}
+.setup .panel .body{padding:14px;display:flex;flex-direction:column;gap:12px}
+.field{display:flex;flex-direction:column;gap:4px}
+.field label,.lbl{font-size:12px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--muted)}
+.field input,.field select,.field textarea{border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:8px 10px;min-width:0;width:100%}
+.field textarea{resize:vertical;min-height:60px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.trow{display:grid;grid-template-columns:minmax(0,1.1fr) 70px minmax(0,1fr) minmax(0,1fr) 36px;gap:6px;align-items:center}
+.trow input,.trow select{border:1px solid var(--line);background:var(--surface);border-radius:6px;padding:6px 8px;width:100%;min-width:0}
+.hint{font-size:13px;color:var(--muted);margin:0}
+.btnrow{display:flex;flex-wrap:wrap;gap:8px}
+
+/* Dialog */
+dialog{border:1px solid var(--line);border-radius:14px;padding:0;background:var(--surface);color:var(--ink);width:min(560px,calc(100vw - 32px));box-shadow:0 20px 50px rgba(0,0,0,.25)}
+dialog::backdrop{background:rgba(10,14,18,.45)}
+dialog form,dialog .dbody{padding:18px;display:flex;flex-direction:column;gap:12px}
+dialog h3{margin:0;font:700 22px/1.15 var(--f-num)}
+.seg{display:inline-flex;background:var(--surface-2);border-radius:9px;padding:3px;gap:2px}
+.seg button{border:0;background:transparent;padding:6px 14px;border-radius:7px;font-weight:600;cursor:pointer;color:var(--muted)}
+.seg button[aria-pressed="true"]{background:var(--surface);color:var(--ink);box-shadow:var(--shadow)}
+.sizes{display:flex;flex-wrap:wrap;gap:5px}
+.sizes button{width:40px;height:40px;border:1px solid var(--line);background:var(--surface);border-radius:8px;font:700 17px/1 var(--f-num);cursor:pointer}
+.sizes button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.sizes input{width:64px;height:40px;border:1px solid var(--line);border-radius:8px;padding:0 8px;background:var(--surface)}
+.tags{display:flex;flex-wrap:wrap;gap:6px}
+.tags label{display:inline-flex;align-items:center;gap:5px;border:1px solid var(--line);border-radius:999px;padding:4px 10px;font-size:13px;cursor:pointer}
+.tags input{margin:0}
+.dfoot{display:flex;flex-wrap:wrap;gap:8px;justify-content:flex-end;padding-top:4px}
+.dfoot .left{margin-right:auto}
+.kv{display:grid;grid-template-columns:auto 1fr;gap:4px 14px;font-size:14px}
+.kv dt{color:var(--muted)}
+.kv dd{margin:0}
+
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:10px;font-weight:600;font-size:14px;z-index:50;box-shadow:var(--shadow);max-width:calc(100vw - 32px)}
+@media (max-width:640px){
+  .tabs{margin-left:0;width:100%}
+  .tabs button{flex:1}
+  .mode{margin-left:0;width:100%}
+  .grid3{grid-template-columns:1fr 1fr}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="top">
+    <div class="brand"><b id="rname">Host Stand</b><span>Reservations &amp; seating</span></div>
+    <div class="datebar">
+      <button class="iconbtn" id="prevDay" aria-label="Previous day">‹</button>
+      <div class="d" id="dateLabel"></div>
+      <button class="iconbtn" id="nextDay" aria-label="Next day">›</button>
+      <button class="btn small" id="todayBtn">Today</button>
+    </div>
+    <nav class="tabs" role="tablist">
+      <button role="tab" data-view="floor" aria-selected="true">Floor</button>
+      <button role="tab" data-view="book" aria-selected="false">Book</button>
+      <button role="tab" data-view="setup" aria-selected="false">Setup</button>
+    </nav>
+  </header>
+  <div class="stats" id="stats"></div>
+
+  <main>
+    <section id="view-floor">
+      <div class="floorview">
+        <div>
+          <div id="floorBanner"></div>
+          <div class="floorwrap"><div class="floor" id="floor"></div></div>
+          <div class="legend">
+            <span><i style="border-color:var(--open);background:var(--tbl)"></i>Open</span>
+            <span><i style="border-color:var(--held);background:var(--held-bg);border-style:dashed"></i>Held for a reservation</span>
+            <span><i style="border-color:var(--seated);background:var(--seated-bg)"></i>Seated · minutes at table</span>
+            <span><i style="border-color:var(--late);background:var(--late-bg)"></i>Past turn time</span>
+          </div>
+        </div>
+        <aside class="rail">
+          <div class="btnrow">
+            <button class="btn primary" id="addWalkin">+ Walk-in</button>
+            <button class="btn" id="addRes">+ Reservation</button>
+          </div>
+          <div class="panel"><h2>Waiting <span class="count" id="waitCount">0</span></h2><ul class="list" id="waitList"></ul></div>
+          <div class="panel"><h2>Arriving <span class="count" id="arrCount">0</span></h2><ul class="list" id="arrList"></ul></div>
+          <div class="panel"><h2>Seated <span class="count" id="seatCount">0</span></h2><ul class="list" id="seatList"></ul></div>
+        </aside>
+      </div>
+    </section>
+
+    <section id="view-book" hidden>
+      <div class="bookhead">
+        <h1 id="bookTitle">Reservations</h1>
+        <div class="filters" id="filters"></div>
+        <button class="btn primary" id="addRes2" style="margin-left:auto">+ Reservation</button>
+      </div>
+      <div class="slots" id="slots" aria-label="Covers booked per half hour"></div>
+      <div class="tablewrap">
+        <table class="book">
+          <thead><tr><th>Time</th><th>Name</th><th>Guests</th><th>Phone</th><th>Table</th><th>Status</th><th>Notes</th></tr></thead>
+          <tbody id="bookBody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="view-setup" hidden>
+      <div class="setup">
+        <div class="panel">
+          <h2>Restaurant</h2>
+          <div class="body">
+            <div class="field"><label for="setName">Name shown at the top</label><input id="setName" maxlength="60"></div>
+            <div class="grid2">
+              <div class="field"><label for="setTurn">Turn time (min)</label><input id="setTurn" type="number" min="15" max="300" step="5"></div>
+              <div class="field"><label for="setHold">Hold table before res (min)</label><input id="setHold" type="number" min="0" max="180" step="5"></div>
+            </div>
+            <p class="hint">Turn time turns a table red once a party has been seated that long. Hold time marks a table as held when a reservation assigned to it is that close.</p>
+            <p class="hint" id="storageNote"></p>
+          </div>
+        </div>
+        <div class="panel">
+          <h2>Tables <span class="count" id="tblCount">0</span><button class="btn small" id="arrange">Arrange floor</button></h2>
+          <div class="body">
+            <div class="trow lbl"><span>Name</span><span>Seats</span><span>Section</span><span>Shape</span><span></span></div>
+            <div id="tableRows" style="display:flex;flex-direction:column;gap:6px"></div>
+            <div class="btnrow"><button class="btn" id="addTable">+ Add table</button></div>
+          </div>
+        </div>
+        <div class="panel">
+          <h2>Your data</h2>
+          <div class="body">
+            <p class="hint">Everything the host writes is yours. Export the full history as CSV for reporting, or take a JSON backup you can restore on another device.</p>
+            <div class="btnrow">
+              <button class="btn" id="exportCsv">Export history (CSV)</button>
+              <button class="btn" id="backup">Backup (JSON)</button>
+              <label class="btn" for="importFile">Restore backup</label>
+              <input type="file" id="importFile" accept="application/json,.json" hidden>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <dialog id="partyDlg">
+    <form id="partyForm" method="dialog">
+      <h3 id="pTitle">New reservation</h3>
+      <div class="seg" id="pType">
+        <button type="button" data-v="res" aria-pressed="true">Reservation</button>
+        <button type="button" data-v="walkin" aria-pressed="false">Walk-in</button>
+      </div>
+      <div class="field"><label for="pName">Name</label><input id="pName" required maxlength="60" autocomplete="off"></div>
+      <div class="field"><span class="lbl">Guests</span>
+        <div class="sizes" id="pSizes"></div>
+      </div>
+      <div class="grid3">
+        <div class="field" id="pDateF"><label for="pDate">Date</label><input id="pDate" type="date"></div>
+        <div class="field" id="pTimeF"><label for="pTime">Time</label><input id="pTime" type="time" step="900"></div>
+        <div class="field" id="pQuoteF"><label for="pQuote">Quoted wait (min)</label><input id="pQuote" type="number" min="0" max="240" step="5"></div>
+        <div class="field"><label for="pPhone">Phone</label><input id="pPhone" type="tel" maxlength="30" autocomplete="off"></div>
+      </div>
+      <div class="grid2">
+        <div class="field"><label for="pTable">Table</label><select id="pTable"></select></div>
+        <div class="field" id="pStatusF"><label for="pStatus">Status</label><select id="pStatus"></select></div>
+      </div>
+      <div class="field"><span class="lbl">Flags</span><div class="tags" id="pTags"></div></div>
+      <div class="field"><label for="pNotes">Notes</label><textarea id="pNotes" maxlength="500" placeholder="Allergies, occasion, seating preference"></textarea></div>
+      <div class="dfoot">
+        <button type="button" class="btn danger left" id="pDelete">Delete</button>
+        <button type="button" class="btn" id="pCancel">Cancel</button>
+        <button type="submit" class="btn" id="pSave">Save</button>
+        <button type="button" class="btn primary" id="pSeat">Save &amp; seat</button>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog id="tableDlg"><div class="dbody" id="tableBody"></div></dialog>
+
+  <div class="toast" id="toast" role="status" hidden></div>
+</div>
+
+<script>
+(function(){
+"use strict";
+/* ------------------------------------------------------------ helpers */
+const $ = (s, r = document) => r.querySelector(s);
+const pad = n => String(n).padStart(2, "0");
+const dayKey = d => d.getFullYear() + "-" + pad(d.getMonth() + 1) + "-" + pad(d.getDate());
+const parseDay = k => { const [y, m, d] = k.split("-").map(Number); return new Date(y, m - 1, d); };
+const uid = p => p + Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+const esc = s => String(s == null ? "" : s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+const minsSince = ts => Math.max(0, Math.floor((Date.now() - ts) / 60000));
+function fmtTime(hhmm){
+  if (!hhmm) return "";
+  const [h, m] = hhmm.split(":").map(Number);
+  return ((h % 12) || 12) + ":" + pad(m) + (h < 12 ? "a" : "p");
+}
+function minsUntil(hhmm, date){
+  const [h, m] = hhmm.split(":").map(Number);
+  const t = parseDay(date); t.setHours(h, m, 0, 0);
+  return Math.round((t - Date.now()) / 60000);
+}
+function nextQuarter(){
+  const d = new Date(); d.setMinutes(Math.ceil((d.getMinutes() + 1) / 15) * 15, 0, 0);
+  return pad(d.getHours()) + ":" + pad(d.getMinutes());
+}
+
+const TAGS = ["Birthday", "Anniversary", "Allergy", "High chair", "Wheelchair", "Regular", "VIP", "Patio"];
+const STATUS = { booked: "Booked", waiting: "Waiting", seated: "Seated", done: "Done", noshow: "No-show", cancelled: "Cancelled", left: "Left" };
+const LIVE = new Set(["booked", "waiting", "seated"]);
+const DEFAULT_SETTINGS = { name: "Host Stand", turn: 90, hold: 30 };
+
+function starterTables(){
+  const T = [];
+  const add = (label, seats, section, shape, x, y) => T.push({ id: "t_" + label.toLowerCase(), label, seats, section, shape, x, y });
+  // Main dining: two rows of four-tops, deuces along the wall, a six and an eight
+  [["1",14],["2",27],["3",40],["4",53]].forEach(([l,x]) => add(l, 4, "Main", "square", x, 22));
+  [["5",14],["6",27],["7",40],["8",53]].forEach(([l,x]) => add(l, 4, "Main", "round", x, 47));
+  add("9", 2, "Main", "square", 10, 74); add("10", 2, "Main", "square", 21, 74);
+  add("11", 6, "Main", "rect", 36, 75); add("12", 8, "Main", "rect", 54, 75);
+  // Bar
+  ["B1","B2","B3","B4"].forEach((l, i) => add(l, 2, "Bar", "round", 71 + (i % 2) * 9, 22 + Math.floor(i / 2) * 20));
+  // Patio
+  ["P1","P2","P3"].forEach((l, i) => add(l, 4, "Patio", "round", 90, 22 + i * 25));
+  return T;
+}
+
+/* ------------------------------------------------------------ state */
+const S = {
+  settings: { ...DEFAULT_SETTINGS },
+  tables: [],
+  parties: [],
+  date: dayKey(new Date()),
+  view: "floor",
+  seating: null,        // party id being seated
+  pick: new Set(),      // table ids picked while seating
+  editLayout: false,
+  bookFilter: "all",
+  store: null,
+  loaded: false,
+};
+const isToday = () => S.date === dayKey(new Date());
+const tableById = id => S.tables.find(t => t.id === id);
+const partyById = id => S.parties.find(p => p.id === id);
+const tableLabels = ids => (ids || []).map(id => (tableById(id) || {}).label || "?").join("+");
+
+/* ------------------------------------------------------------ storage
+   Two backends with one interface. Inside a claude.ai artifact the shared
+   document store keeps every device on the same book, live. Anywhere else
+   (opened from disk, or hosted) it is this browser's localStorage. */
+function localStore(){
+  const K = "host-stand:v1";
+  const read = () => { try { return JSON.parse(localStorage.getItem(K) || "null"); } catch (e) { return null; } };
+  let d = read() || {};
+  d.parties = d.parties || {};
+  let fresh = false;
+  if (!Array.isArray(d.tables)) { d.tables = starterTables(); fresh = true; }
+  const subs = new Set();
+  const fire = () => subs.forEach(f => f());
+  let warned = false;
+  const persist = () => {
+    try { localStorage.setItem(K, JSON.stringify(d)); }
+    catch (e) { if (!warned) { toast("This browser is not saving. Take a backup from Setup."); warned = true; } }
+  };
+  const write = () => { persist(); fire(); };
+  if (fresh) persist();
+  addEventListener("storage", e => {
+    if (e.key !== K) return;
+    const n = read(); if (!n) return;
+    d = n; d.parties = d.parties || {}; d.tables = d.tables || []; fire();
+  });
+  const watch = f => { subs.add(f); f(); return () => subs.delete(f); };
+  return {
+    mode: "local",
+    watchSettings: cb => watch(() => cb(d.settings || null)),
+    watchTables: cb => watch(() => cb(d.tables.map(t => ({ ...t })))),
+    watchParties: (date, cb) => watch(() => cb(Object.values(d.parties).filter(p => p.date === date).map(p => ({ ...p })))),
+    saveSettings: async s => { d.settings = s; write(); },
+    saveTable: async t => { const i = d.tables.findIndex(x => x.id === t.id); if (i < 0) d.tables.push(t); else d.tables[i] = t; write(); },
+    deleteTable: async id => { d.tables = d.tables.filter(t => t.id !== id); write(); },
+    saveParty: async p => { d.parties[p.id] = p; write(); },
+    deleteParty: async id => { delete d.parties[id]; write(); },
+    allParties: async () => Object.values(d.parties),
+  };
+}
+
+function sharedStore(db){
+  const chains = new Map();
+  // One write at a time per document, in order.
+  const serial = (key, fn) => {
+    const next = (chains.get(key) || Promise.resolve()).catch(() => {}).then(fn);
+    chains.set(key, next);
+    return next;
+  };
+  const onErr = e => { if (e && e.code !== "revoked") toast("Lost the live connection. Reload the page."); };
+  const docs = q => q.docs.map(x => ({ ...x.data(), id: x.id }));
+  return {
+    mode: "shared",
+    watchSettings: cb => db.doc("config/settings").onSnapshot(s => cb(s.exists ? { ...s.data() } : null), onErr),
+    watchTables: cb => db.collection("tables").onSnapshot(q => cb(docs(q)), onErr),
+    watchParties: (date, cb) => db.collection("parties").where("date", "==", date).onSnapshot(q => cb(docs(q)), onErr),
+    saveSettings: s => serial("config/settings", () => db.doc("config/settings").set(s)),
+    saveTable: t => serial("tables/" + t.id, () => db.collection("tables").doc(t.id).set(t)),
+    deleteTable: id => serial("tables/" + id, () => db.collection("tables").doc(id).delete()),
+    saveParty: p => serial("parties/" + p.id, () => db.collection("parties").doc(p.id).set(p)),
+    deleteParty: id => serial("parties/" + id, () => db.collection("parties").doc(id).delete()),
+    allParties: async () => docs(await db.collection("parties").orderBy("date", "desc").limit(1000).get()),
+  };
+}
+
+let unsubParties = null;
+function watchDate(){
+  if (unsubParties) unsubParties();
+  unsubParties = S.store.watchParties(S.date, ps => { S.parties = ps; render(); });
+}
+
+async function savePartyNow(p){
+  const i = S.parties.findIndex(x => x.id === p.id);
+  if (p.date === S.date) { if (i < 0) S.parties.push(p); else S.parties[i] = p; }
+  else if (i >= 0) S.parties.splice(i, 1);
+  render();
+  try { await S.store.saveParty(p); } catch (e) { toast("Could not save " + p.name + ". Try again."); }
+}
+async function saveTableNow(t){
+  const i = S.tables.findIndex(x => x.id === t.id);
+  if (i < 0) S.tables.push(t); else S.tables[i] = t;
+  render();
+  try { await S.store.saveTable(t); } catch (e) { toast("Could not save table " + t.label + "."); }
+}
+
+/* ------------------------------------------------------------ table state */
+function tableState(t){
+  const seated = S.parties.find(p => p.status === "seated" && (p.tableIds || []).includes(t.id));
+  if (seated) {
+    const m = minsSince(seated.seatedAt || Date.now());
+    return { kind: m >= S.settings.turn ? "late" : "seated", party: seated, m };
+  }
+  const booked = S.parties
+    .filter(p => (p.status === "booked" || p.status === "waiting") && p.time && (p.tableIds || []).includes(t.id))
+    .map(p => ({ p, d: minsUntil(p.time, p.date) }))
+    .sort((a, b) => a.d - b.d);
+  if (!isToday()) return booked.length ? { kind: "held", party: booked[0].p } : { kind: "open" };
+  const soon = booked.find(x => x.d <= S.settings.hold && x.d >= -45);
+  if (soon) return { kind: "held", party: soon.p, d: soon.d };
+  return { kind: "open", next: booked.find(x => x.d > 0) };
+}
+function tableSize(t){
+  const w = { 1: 6.5, 2: 7.5, 3: 8.5, 4: 9.5, 5: 11, 6: 13, 7: 14, 8: 16 }[Math.min(8, t.seats)] || 16 + (t.seats - 8);
+  const ratio = t.shape === "rect" ? 1.7 : 1;
+  return { w, ratio };
+}
+
+/* ------------------------------------------------------------ render */
+function render(){
+  $("#rname").textContent = S.settings.name || "Host Stand";
+  document.title = (S.settings.name && S.settings.name !== "Host Stand") ? S.settings.name + " · Host Stand" : "Host Stand";
+  const dt = parseDay(S.date);
+  $("#dateLabel").textContent = dt.toLocaleDateString(undefined, { weekday: "short", month: "short", day: "numeric" });
+  $("#todayBtn").hidden = isToday();
+  document.querySelectorAll(".tabs button").forEach(b => b.setAttribute("aria-selected", String(b.dataset.view === S.view)));
+  ["floor", "book", "setup"].forEach(v => { $("#view-" + v).hidden = S.view !== v; });
+  renderStats();
+  if (S.view === "floor") { renderFloor(); renderRail(); }
+  if (S.view === "book") renderBook();
+  if (S.view === "setup") renderSetup();
+}
+
+function renderStats(){
+  const ps = S.parties;
+  const sum = arr => arr.reduce((a, p) => a + (+p.size || 0), 0);
+  const res = ps.filter(p => p.type === "res" && p.status !== "cancelled");
+  const seated = ps.filter(p => p.status === "seated");
+  const waiting = ps.filter(p => p.status === "waiting");
+  const served = ps.filter(p => p.status === "seated" || p.status === "done");
+  const noshow = ps.filter(p => p.status === "noshow");
+  const openT = S.tables.filter(t => tableState(t).kind === "open").length;
+  $("#stats").innerHTML =
+    stat(sum(res), "covers booked") +
+    stat(sum(served), "covers served") +
+    (isToday() ? stat(sum(seated), "in house") + stat(waiting.length, waiting.length === 1 ? "party waiting" : "parties waiting") + stat(openT + "/" + S.tables.length, "tables open") : "") +
+    (noshow.length ? stat(noshow.length, "no-show") : "") +
+    `<span class="mode">${!S.store ? "Connecting…" : S.store.mode === "shared" ? "Shared book · live on every device" : "Saved on this device only"}</span>`;
+}
+const stat = (v, l) => `<div class="stat"><b>${esc(v)}</b><span>${esc(l)}</span></div>`;
+
+function renderFloor(){
+  const floor = $("#floor");
+  floor.classList.toggle("picking", !!S.seating);
+  floor.classList.toggle("editing", S.editLayout);
+  const banner = $("#floorBanner");
+  if (S.seating) {
+    const p = partyById(S.seating);
+    const seats = [...S.pick].reduce((a, id) => a + ((tableById(id) || {}).seats || 0), 0);
+    banner.innerHTML = `<div class="banner"><p><b>Seating ${esc(p ? p.name : "")}</b> · ${p ? p.size : ""} guests. Tap one table, or several to push together.${S.pick.size ? ` <b>${esc(tableLabels([...S.pick]))}</b> · ${seats} seats` : ""}</p>
+      <button class="btn" data-act="cancelSeat">Cancel</button>
+      <button class="btn primary" data-act="confirmSeat" ${S.pick.size ? "" : "disabled"}>Seat here</button></div>`;
+  } else if (S.editLayout) {
+    banner.innerHTML = `<div class="banner edit"><p><b>Arranging the floor.</b> Drag tables to where they sit in the room. Tap one to rename or resize it.</p>
+      <button class="btn primary" data-act="doneLayout">Done</button></div>`;
+  } else banner.innerHTML = "";
+
+  if (!S.tables.length) {
+    floor.innerHTML = `<div class="empty-floor"><div><p><b>No tables yet.</b></p><p class="hint">Start from a sample dining room and rearrange it, or add your own tables in Setup.</p>
+      <div class="btnrow" style="justify-content:center"><button class="btn primary" data-act="starter">Use the sample floor</button><button class="btn" data-act="goSetup">Go to Setup</button></div></div></div>`;
+    return;
+  }
+  const zones = {};
+  S.tables.forEach(t => { const z = zones[t.section] || (zones[t.section] = { x: 100, y: 100 }); z.x = Math.min(z.x, t.x); z.y = Math.min(z.y, t.y); });
+  let html = Object.entries(zones).map(([name, z]) => `<div class="zone" style="left:${clamp(z.x - 6, 1, 90)}%;top:${clamp(z.y - 14, 1, 90)}%">${esc(name)}</div>`).join("");
+  html += S.tables.map(t => {
+    const st = tableState(t);
+    const { w, ratio } = tableSize(t);
+    let sub = t.seats + " seats";
+    if (st.kind === "seated" || st.kind === "late") sub = `${esc(st.party.name)} ${st.party.size} · ${st.m}m`;
+    else if (st.kind === "held") sub = `${fmtTime(st.party.time)} ${esc(st.party.name)}`;
+    else if (st.next) sub = `${t.seats} · next ${fmtTime(st.next.p.time)}`;
+    const cls = ["tbl", st.kind, t.shape === "round" ? "round" : "", S.pick.has(t.id) ? "picked" : ""].join(" ");
+    return `<button class="${cls}" data-id="${esc(t.id)}" style="left:${t.x}%;top:${t.y}%;width:${w}%;aspect-ratio:${ratio}" aria-label="Table ${esc(t.label)}, ${st.kind}">
+      <span class="l">${esc(t.label)}</span><span class="s">${sub}</span></button>`;
+  }).join("");
+  floor.innerHTML = html;
+}
+
+function partyRow(p, acts, when){
+  const tags = (p.tags || []).map(t => `<span class="chip${t === "Allergy" ? " warn" : ""}">${esc(t)}</span>`).join("");
+  return `<li class="row" data-party="${esc(p.id)}">
+    <div class="t">${when}</div>
+    <div class="who"><b>${esc(p.name)}</b> · ${p.size}${p.tableIds && p.tableIds.length ? ` · <span class="num">T${esc(tableLabels(p.tableIds))}</span>` : ""}
+      <div class="meta">${tags}${p.notes ? esc(p.notes) : ""}</div></div>
+    ${acts ? `<div class="acts">${acts}</div>` : ""}</li>`;
+}
+
+function renderRail(){
+  const ps = S.parties;
+  const waiting = ps.filter(p => p.status === "waiting").sort((a, b) => (a.arrivedAt || a.createdAt) - (b.arrivedAt || b.createdAt));
+  $("#waitCount").textContent = waiting.length;
+  $("#waitList").innerHTML = waiting.length ? waiting.map(p => {
+    const m = minsSince(p.arrivedAt || p.createdAt);
+    const over = p.quote != null && p.quote !== "" && m > +p.quote;
+    const when = `${m}m<small class="${over ? "bad" : ""}">${p.type === "res" ? "res " + fmtTime(p.time) : (p.quote ? "quoted " + p.quote : "walk-in")}</small>`;
+    return partyRow(p, `<button class="btn small primary" data-act="seat" data-id="${p.id}">Seat</button><button class="btn small" data-act="left" data-id="${p.id}">Left</button>`, when);
+  }).join("") : `<li class="none">Nobody waiting.</li>`;
+
+  const arriving = ps.filter(p => p.status === "booked").sort((a, b) => (a.time || "").localeCompare(b.time || ""));
+  $("#arrCount").textContent = arriving.length;
+  $("#arrList").innerHTML = arriving.length ? arriving.map(p => {
+    let small = "";
+    if (isToday() && p.time) {
+      const d = minsUntil(p.time, p.date);
+      small = d < -10 ? `<small class="bad">late ${-d}m</small>` : d <= 0 ? `<small>due now</small>` : d < 120 ? `<small>in ${d}m</small>` : "";
+    }
+    const acts = isToday()
+      ? `<button class="btn small" data-act="arrived" data-id="${p.id}">Arrived</button><button class="btn small primary" data-act="seat" data-id="${p.id}">Seat</button><button class="btn small" data-act="noshow" data-id="${p.id}">No-show</button>`
+      : "";
+    return partyRow(p, acts, fmtTime(p.time) + small);
+  }).join("") : `<li class="none">${isToday() ? "No more reservations today." : "No reservations for this day."}</li>`;
+
+  const seated = ps.filter(p => p.status === "seated").sort((a, b) => a.seatedAt - b.seatedAt);
+  $("#seatCount").textContent = seated.length;
+  $("#seatList").innerHTML = seated.length ? seated.map(p => {
+    const m = minsSince(p.seatedAt);
+    return partyRow(p, `<button class="btn small" data-act="clear" data-id="${p.id}">Clear table</button><button class="btn small" data-act="move" data-id="${p.id}">Move</button>`,
+      `${m}m<small class="${m >= S.settings.turn ? "bad" : ""}">since ${new Date(p.seatedAt).toLocaleTimeString([], { hour: "numeric", minute: "2-digit" }).replace(" ", "").toLowerCase()}</small>`);
+  }).join("") : `<li class="none">No one seated.</li>`;
+}
+
+function renderBook(){
+  const dt = parseDay(S.date);
+  $("#bookTitle").textContent = dt.toLocaleDateString(undefined, { weekday: "long", month: "long", day: "numeric" });
+  const F = [["all", "All"], ["live", "Upcoming & seated"], ["done", "Done"], ["noshow", "No-show"], ["cancelled", "Cancelled"]];
+  $("#filters").innerHTML = F.map(([k, l]) => `<button data-filter="${k}" aria-pressed="${S.bookFilter === k}">${l}</button>`).join("");
+
+  // covers per half hour, reservations only
+  const buckets = {};
+  S.parties.filter(p => p.type === "res" && p.time && !["cancelled", "noshow"].includes(p.status)).forEach(p => {
+    const [h, m] = p.time.split(":").map(Number);
+    const k = pad(h) + ":" + (m < 30 ? "00" : "30");
+    buckets[k] = (buckets[k] || 0) + (+p.size || 0);
+  });
+  const keys = Object.keys(buckets).sort();
+  if (keys.length) {
+    const [h0] = keys[0].split(":").map(Number), [h1] = keys[keys.length - 1].split(":").map(Number);
+    const all = [];
+    for (let h = Math.max(0, h0 - 1); h <= Math.min(23, h1 + 1); h++) all.push(pad(h) + ":00", pad(h) + ":30");
+    const max = Math.max(...Object.values(buckets));
+    $("#slots").innerHTML = all.map(k => {
+      const v = buckets[k] || 0;
+      return `<div class="slot" title="${fmtTime(k)}: ${v} covers"><b>${v || ""}</b><i style="height:${v ? Math.max(6, v / max * 38) : 0}px"></i><span>${k.endsWith(":00") ? fmtTime(k).replace(":00", "") : ""}</span></div>`;
+    }).join("");
+    $("#slots").hidden = false;
+  } else $("#slots").hidden = true;
+
+  let rows = S.parties.slice();
+  if (S.bookFilter === "live") rows = rows.filter(p => LIVE.has(p.status));
+  else if (S.bookFilter !== "all") rows = rows.filter(p => p.status === S.bookFilter);
+  rows.sort((a, b) => (a.time || "99").localeCompare(b.time || "99") || (a.createdAt - b.createdAt));
+  $("#bookBody").innerHTML = rows.length ? rows.map(p => `<tr data-party="${esc(p.id)}" class="${["cancelled", "noshow", "left"].includes(p.status) ? "gone" : ""}">
+      <td class="tm">${p.time ? fmtTime(p.time) : `<span class="chip">walk-in</span>`}</td>
+      <td><b>${esc(p.name)}</b></td>
+      <td class="num" style="font-size:17px;font-weight:700">${p.size}</td>
+      <td>${esc(p.phone || "")}</td>
+      <td class="num">${p.tableIds && p.tableIds.length ? esc(tableLabels(p.tableIds)) : ""}</td>
+      <td><span class="chip st-${p.status}">${STATUS[p.status] || p.status}</span></td>
+      <td class="notes">${(p.tags || []).map(t => `<span class="chip${t === "Allergy" ? " warn" : ""}">${esc(t)}</span>`).join("")}${esc(p.notes || "")}</td></tr>`).join("")
+    : `<tr><td colspan="7" class="none">Nothing in the book for this day${S.bookFilter !== "all" ? " with that status" : ""}.</td></tr>`;
+}
+
+function renderSetup(){
+  if ($("#view-setup").contains(document.activeElement) && document.activeElement !== document.body) return;
+  $("#setName").value = S.settings.name || "";
+  $("#setTurn").value = S.settings.turn;
+  $("#setHold").value = S.settings.hold;
+  $("#storageNote").textContent = !S.store ? "" : S.store.mode === "shared"
+    ? "This book is shared. Every device signed in to this page sees the same reservations and floor, live."
+    : "This book is saved in this browser on this device. Take a backup before clearing browser data or switching devices.";
+  $("#tblCount").textContent = S.tables.length;
+  const sections = [...new Set(S.tables.map(t => t.section).concat(["Main", "Bar", "Patio"]))];
+  $("#tableRows").innerHTML = S.tables.slice().sort((a, b) => a.section.localeCompare(b.section) || a.label.localeCompare(b.label, undefined, { numeric: true })).map(t => `
+    <div class="trow" data-tid="${esc(t.id)}">
+      <input data-k="label" value="${esc(t.label)}" maxlength="8" aria-label="Table name">
+      <input data-k="seats" type="number" min="1" max="20" value="${t.seats}" aria-label="Seats">
+      <input data-k="section" value="${esc(t.section)}" list="sectionList" maxlength="20" aria-label="Section">
+      <select data-k="shape" aria-label="Shape">${["square", "round", "rect"].map(s => `<option ${t.shape === s ? "selected" : ""} value="${s}">${s === "rect" ? "long" : s}</option>`).join("")}</select>
+      <button class="iconbtn" data-act="delTable" data-id="${esc(t.id)}" aria-label="Remove table ${esc(t.label)}" title="Remove">×</button>
+    </div>`).join("") + `<datalist id="sectionList">${sections.map(s => `<option value="${esc(s)}">`).join("")}</datalist>`;
+}
+
+/* ------------------------------------------------------------ party dialog */
+const dlg = $("#partyDlg");
+let editing = null;       // party being edited (clone) or null for new
+let pType = "res", pSize = 2, afterSaveTable = null;
+
+function buildSizes(){
+  const btns = [1, 2, 3, 4, 5, 6, 7, 8].map(n => `<button type="button" data-size="${n}" aria-pressed="${pSize === n}">${n}</button>`).join("");
+  $("#pSizes").innerHTML = btns + `<input id="pSizeOther" type="number" min="1" max="60" placeholder="9+" aria-label="Other party size" value="${pSize > 8 ? pSize : ""}">`;
+}
+function setType(t){
+  pType = t;
+  $("#pType").querySelectorAll("button").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.v === t)));
+  $("#pTimeF").hidden = t !== "res";
+  $("#pDateF").hidden = t !== "res";
+  $("#pQuoteF").hidden = t !== "walkin";
+  $("#pTitle").textContent = (editing ? "Edit " : "New ") + (t === "res" ? "reservation" : "walk-in");
+}
+function openParty(p, opts = {}){
+  editing = p ? { ...p } : null;
+  afterSaveTable = opts.table || null;
+  pSize = p ? +p.size : (opts.size || 2);
+  buildSizes();
+  $("#pName").value = p ? p.name : "";
+  $("#pPhone").value = p ? p.phone || "" : "";
+  $("#pDate").value = p ? p.date : S.date;
+  $("#pTime").value = p ? p.time || "" : (opts.type === "walkin" ? "" : (isToday() ? nextQuarter() : "19:00"));
+  $("#pQuote").value = p ? (p.quote ?? "") : "";
+  $("#pNotes").value = p ? p.notes || "" : "";
+  $("#pTable").innerHTML = `<option value="">Any table</option>` + S.tables.slice().sort((a, b) => a.label.localeCompare(b.label, undefined, { numeric: true }))
+    .map(t => `<option value="${esc(t.id)}">${esc(t.label)} · ${t.seats} seats · ${esc(t.section)}</option>`).join("");
+  $("#pTable").value = p && p.tableIds && p.tableIds.length === 1 ? p.tableIds[0] : (opts.table || "");
+  $("#pStatus").innerHTML = Object.entries(STATUS).map(([k, l]) => `<option value="${k}">${l}</option>`).join("");
+  $("#pStatus").value = p ? p.status : "booked";
+  $("#pStatusF").hidden = !p;
+  $("#pTags").innerHTML = TAGS.map((t, i) => `<label><input type="checkbox" id="tag${i}" value="${esc(t)}" ${p && (p.tags || []).includes(t) ? "checked" : ""}>${esc(t)}</label>`).join("");
+  $("#pDelete").hidden = !p;
+  $("#pDelete").textContent = "Delete";
+  delete $("#pDelete").dataset.armed;
+  const t = p ? p.type : (opts.type || "res");
+  setType(t);
+  $("#pSeat").hidden = !(isToday() || (p && p.date === dayKey(new Date()))) || (p && p.status === "seated");
+  if (!dlg.open) dlg.showModal();
+  setTimeout(() => $("#pName").focus(), 30);
+}
+$("#pType").addEventListener("click", e => { const b = e.target.closest("button"); if (b) setType(b.dataset.v); });
+$("#pSizes").addEventListener("click", e => {
+  const b = e.target.closest("button[data-size]"); if (!b) return;
+  pSize = +b.dataset.size; buildSizes();
+});
+$("#pSizes").addEventListener("input", e => { if (e.target.id === "pSizeOther" && +e.target.value > 0) { pSize = +e.target.value; $("#pSizes").querySelectorAll("button").forEach(b => b.setAttribute("aria-pressed", "false")); } });
+$("#pCancel").addEventListener("click", () => dlg.close());
+$("#pDelete").addEventListener("click", async e => {
+  const b = e.currentTarget;
+  if (!b.dataset.armed) { b.dataset.armed = "1"; b.textContent = "Tap again to delete"; return; }
+  const p = editing; dlg.close();
+  S.parties = S.parties.filter(x => x.id !== p.id); render();
+  try { await S.store.deleteParty(p.id); toast(p.name + " deleted"); } catch (err) { toast("Could not delete. Try again."); }
+});
+
+function collectParty(){
+  const name = $("#pName").value.trim();
+  if (!name) { $("#pName").focus(); toast("Add a name for the party."); return null; }
+  const size = clamp(Math.round(pSize) || 1, 1, 60);
+  const now = Date.now();
+  const base = editing || { id: uid("p_"), createdAt: now, status: pType === "walkin" ? "waiting" : "booked" };
+  const p = { ...base, type: pType, name, size, phone: $("#pPhone").value.trim(), notes: $("#pNotes").value.trim(),
+    tags: TAGS.filter((t, i) => $("#tag" + i).checked) };
+  if (pType === "res") {
+    p.date = $("#pDate").value || S.date;
+    p.time = $("#pTime").value || "";
+    if (!p.time) { $("#pTime").focus(); toast("Add a time for the reservation."); return null; }
+    delete p.quote;
+  } else {
+    p.date = editing ? editing.date : dayKey(new Date());
+    p.time = editing && editing.time ? editing.time : "";
+    const q = $("#pQuote").value; p.quote = q === "" ? "" : +q;
+    if (!editing) p.arrivedAt = now;
+  }
+  if (editing) {
+    const st = $("#pStatus").value;
+    if (st !== editing.status) {
+      p.status = st;
+      if (st === "seated" && !p.seatedAt) p.seatedAt = now;
+      if (st === "waiting" && !p.arrivedAt) p.arrivedAt = now;
+      if (["done", "noshow", "cancelled", "left"].includes(st)) p.closedAt = now;
+      if (LIVE.has(st)) delete p.closedAt;
+    }
+  }
+  const tsel = $("#pTable").value;
+  if (p.status !== "seated") p.tableIds = tsel ? [tsel] : [];
+  else if (tsel && !(p.tableIds || []).includes(tsel)) p.tableIds = [tsel];
+  return p;
+}
+$("#partyForm").addEventListener("submit", async e => {
+  e.preventDefault();
+  const p = collectParty(); if (!p) return;
+  dlg.close();
+  await savePartyNow(p);
+  if (p.date !== S.date) toast(`${p.name} booked for ${parseDay(p.date).toLocaleDateString(undefined, { weekday: "short", month: "short", day: "numeric" })}`);
+  else toast(`${p.name} saved`);
+});
+$("#pSeat").addEventListener("click", async () => {
+  const p = collectParty(); if (!p) return;
+  if (p.date !== dayKey(new Date())) { toast("Only today's parties can be seated."); return; }
+  dlg.close();
+  if (p.status === "booked") { p.status = "waiting"; p.arrivedAt = Date.now(); }
+  const table = afterSaveTable || (p.tableIds && p.tableIds[0]);
+  const t = table && tableById(table);
+  if (t && tableState(t).kind !== "seated" && tableState(t).kind !== "late" && t.seats >= p.size) {
+    await savePartyNow(p); await seat(p, [t.id]);
+  } else {
+    await savePartyNow(p); startSeating(p.id, table && t && !["seated", "late"].includes(tableState(t).kind) ? [table] : []);
+  }
+});
+
+/* ------------------------------------------------------------ actions */
+async function seat(p, ids){
+  const now = Date.now();
+  const moving = p.status === "seated";
+  const n = { ...p, status: "seated", tableIds: ids, seatedAt: moving ? p.seatedAt : now, arrivedAt: p.arrivedAt || now };
+  await savePartyNow(n);
+  toast(`${p.name} ${moving ? "moved to" : "seated at"} ${tableLabels(ids)}`);
+}
+function startSeating(id, pre = []){
+  if (S.date !== dayKey(new Date())) { S.date = dayKey(new Date()); watchDate(); }
+  S.seating = id; S.pick = new Set(pre); S.editLayout = false; S.view = "floor";
+  render();
+  $("#floor").scrollIntoView({ block: "nearest", behavior: "smooth" });
+}
+function endSeating(){ S.seating = null; S.pick = new Set(); render(); }
+async function setStatus(p, status){
+  const now = Date.now();
+  const n = { ...p, status };
+  if (status === "waiting") n.arrivedAt = now;
+  if (["done", "noshow", "cancelled", "left"].includes(status)) n.closedAt = now;
+  await savePartyNow(n);
+  const words = { waiting: "is waiting", done: "cleared", noshow: "marked no-show", left: "removed from the waitlist" };
+  toast(`${p.name} ${words[status] || STATUS[status]}`);
+}
+
+document.addEventListener("click", async e => {
+  const a = e.target.closest("[data-act]");
+  if (a) {
+    const act = a.dataset.act, p = a.dataset.id && partyById(a.dataset.id);
+    e.stopPropagation();
+    if (act === "seat" && p) return startSeating(p.id, (p.tableIds || []).filter(id => { const k = tableState(tableById(id) || {}).kind; return k === "open" || k === "held"; }));
+    if (act === "move" && p) return startSeating(p.id, []);
+    if (act === "arrived" && p) return setStatus(p, "waiting");
+    if (act === "noshow" && p) return setStatus(p, "noshow");
+    if (act === "left" && p) return setStatus(p, "left");
+    if (act === "clear" && p) { $("#tableDlg").close(); return setStatus(p, "done"); }
+    if (act === "cancelSeat") return endSeating();
+    if (act === "confirmSeat") {
+      const party = partyById(S.seating); const ids = [...S.pick];
+      endSeating(); if (party && ids.length) await seat(party, ids);
+      return;
+    }
+    if (act === "doneLayout") { S.editLayout = false; return render(); }
+    if (act === "goSetup") { S.view = "setup"; return render(); }
+    if (act === "starter") {
+      const ts = starterTables(); S.tables = ts; render();
+      for (const t of ts) { try { await S.store.saveTable(t); } catch (err) { toast("Could not save the floor. Try again."); break; } }
+      return;
+    }
+    if (act === "delTable") {
+      const t = tableById(a.dataset.id); if (!t) return;
+      if (!a.dataset.armed) { a.dataset.armed = "1"; a.textContent = "?"; a.title = "Tap again to remove"; toast(`Tap × again to remove table ${t.label}`); return; }
+      S.tables = S.tables.filter(x => x.id !== t.id); render();
+      try { await S.store.deleteTable(t.id); } catch (err) { toast("Could not remove the table."); }
+      return;
+    }
+    if (act === "tblWalkin") { const t = tableById(a.dataset.table); $("#tableDlg").close(); return openParty(null, { type: "walkin", table: t.id, size: Math.min(t.seats, 8) }); }
+    if (act === "tblSeatHeld" && p) { $("#tableDlg").close(); return seat(p, [a.dataset.table]); }
+    if (act === "tblEdit" && p) { $("#tableDlg").close(); return openParty(p); }
+    if (act === "tblMove" && p) { $("#tableDlg").close(); return startSeating(p.id, []); }
+    if (act === "tblClose") return $("#tableDlg").close();
+    if (act === "tblSave") return saveTableFromDlg(a.dataset.table);
+    return;
+  }
+  const row = e.target.closest("[data-party]");
+  if (row) { const p = partyById(row.dataset.party); if (p) openParty(p); return; }
+  const tb = e.target.closest("#floor .tbl");
+  if (tb && !S.editLayout) onTableTap(tableById(tb.dataset.id));
+});
+
+function onTableTap(t){
+  if (!t) return;
+  const st = tableState(t);
+  if (S.seating) {
+    if (st.kind === "seated" || st.kind === "late") { const sp = st.party; if (sp && sp.id !== S.seating) { toast(`${t.label} is taken by ${sp.name}`); return; } }
+    S.pick.has(t.id) ? S.pick.delete(t.id) : S.pick.add(t.id);
+    return render();
+  }
+  const body = $("#tableBody");
+  let html = `<h3>Table ${esc(t.label)}</h3><p class="hint">${t.seats} seats · ${esc(t.section)}</p>`;
+  if (st.kind === "seated" || st.kind === "late") {
+    const p = st.party;
+    html += `<dl class="kv"><dt>Party</dt><dd><b>${esc(p.name)}</b> · ${p.size} guests</dd>
+      <dt>Seated</dt><dd>${new Date(p.seatedAt).toLocaleTimeString([], { hour: "numeric", minute: "2-digit" })} · ${st.m} min${st.kind === "late" ? ` <span class="chip warn">past ${S.settings.turn}-min turn</span>` : ""}</dd>
+      ${p.tableIds.length > 1 ? `<dt>Tables</dt><dd>${esc(tableLabels(p.tableIds))}</dd>` : ""}
+      ${(p.tags || []).length || p.notes ? `<dt>Notes</dt><dd>${(p.tags || []).map(x => `<span class="chip${x === "Allergy" ? " warn" : ""}">${esc(x)}</span>`).join("")}${esc(p.notes || "")}</dd>` : ""}</dl>
+      <div class="dfoot"><button class="btn left" data-act="tblEdit" data-id="${p.id}">Edit party</button><button class="btn" data-act="tblMove" data-id="${p.id}">Move</button><button class="btn primary" data-act="clear" data-id="${p.id}">Clear table</button></div>`;
+  } else {
+    if (st.kind === "held") html += `<p>Held for <b>${esc(st.party.name)}</b> · ${st.party.size} at ${fmtTime(st.party.time)}${st.d != null ? (st.d >= 0 ? ` (in ${st.d} min)` : ` (${-st.d} min late)`) : ""}.</p>`;
+    else if (st.next) html += `<p class="hint">Next reservation here: ${esc(st.next.p.name)} at ${fmtTime(st.next.p.time)}.</p>`;
+    const today = isToday();
+    html += `<div class="dfoot"><button class="btn left" data-act="tblClose">Close</button>
+      ${st.kind === "held" && today ? `<button class="btn" data-act="tblSeatHeld" data-id="${st.party.id}" data-table="${t.id}">Seat ${esc(st.party.name)}</button>` : ""}
+      ${today ? `<button class="btn primary" data-act="tblWalkin" data-table="${t.id}">Seat a walk-in here</button>` : ""}</div>`;
+  }
+  body.innerHTML = html;
+  $("#tableDlg").showModal();
+}
+
+/* layout editing: drag tables, tap to edit */
+$("#floor").addEventListener("pointerdown", e => {
+  if (!S.editLayout) return;
+  const el = e.target.closest(".tbl"); if (!el) return;
+  const t = tableById(el.dataset.id); if (!t) return;
+  e.preventDefault();
+  const floor = $("#floor"), rect = floor.getBoundingClientRect();
+  const sx = e.clientX, sy = e.clientY; let moved = false;
+  el.setPointerCapture(e.pointerId);
+  const move = ev => {
+    if (!moved && Math.abs(ev.clientX - sx) + Math.abs(ev.clientY - sy) < 5) return;
+    moved = true;
+    t.x = clamp((ev.clientX - rect.left) / rect.width * 100, 3, 97);
+    t.y = clamp((ev.clientY - rect.top) / rect.height * 100, 5, 95);
+    el.style.left = t.x + "%"; el.style.top = t.y + "%";
+  };
+  const up = () => {
+    el.removeEventListener("pointermove", move); el.removeEventListener("pointerup", up); el.removeEventListener("pointercancel", up);
+    if (moved) { t.x = Math.round(t.x * 2) / 2; t.y = Math.round(t.y * 2) / 2; saveTableNow({ ...t }); }
+    else openTableEdit(t);
+  };
+  el.addEventListener("pointermove", move); el.addEventListener("pointerup", up); el.addEventListener("pointercancel", up);
+});
+function openTableEdit(t){
+  $("#tableBody").innerHTML = `<h3>Table ${esc(t.label)}</h3>
+    <div class="grid2"><div class="field"><label for="teLabel">Name</label><input id="teLabel" value="${esc(t.label)}" maxlength="8"></div>
+    <div class="field"><label for="teSeats">Seats</label><input id="teSeats" type="number" min="1" max="20" value="${t.seats}"></div>
+    <div class="field"><label for="teSection">Section</label><input id="teSection" value="${esc(t.section)}" maxlength="20"></div>
+    <div class="field"><label for="teShape">Shape</label><select id="teShape">${["square", "round", "rect"].map(s => `<option ${t.shape === s ? "selected" : ""} value="${s}">${s === "rect" ? "long" : s}</option>`).join("")}</select></div></div>
+    <div class="dfoot"><button class="btn left" data-act="tblClose">Cancel</button><button class="btn primary" data-act="tblSave" data-table="${t.id}">Save</button></div>`;
+  $("#tableDlg").showModal();
+}
+function saveTableFromDlg(id){
+  const t = tableById(id); if (!t) return;
+  const label = $("#teLabel").value.trim();
+  if (!label) return toast("Give the table a name.");
+  saveTableNow({ ...t, label, seats: clamp(+$("#teSeats").value || t.seats, 1, 20), section: $("#teSection").value.trim() || "Main", shape: $("#teShape").value });
+  $("#tableDlg").close();
+}
+$("#tableDlg").addEventListener("click", e => { if (e.target === e.currentTarget) e.currentTarget.close(); });
+dlg.addEventListener("click", e => { if (e.target === dlg) dlg.close(); });
+
+/* setup inputs */
+function saveSettingsSoon(){
+  clearTimeout(saveSettingsSoon.t);
+  saveSettingsSoon.t = setTimeout(async () => {
+    const s = { name: $("#setName").value.trim() || "Host Stand", turn: clamp(+$("#setTurn").value || 90, 15, 300), hold: clamp(+$("#setHold").value || 0, 0, 180) };
+    S.settings = s; render();
+    try { await S.store.saveSettings(s); } catch (e) { toast("Could not save settings."); }
+  }, 500);
+}
+["#setName", "#setTurn", "#setHold"].forEach(id => $(id).addEventListener("input", saveSettingsSoon));
+$("#tableRows").addEventListener("change", e => {
+  const row = e.target.closest("[data-tid]"); if (!row) return;
+  const t = tableById(row.dataset.tid); if (!t) return;
+  const k = e.target.dataset.k; let v = e.target.value;
+  if (k === "seats") v = clamp(+v || t.seats, 1, 20);
+  if (k === "label" && !v.trim()) { e.target.value = t.label; return; }
+  saveTableNow({ ...t, [k]: typeof v === "string" ? v.trim() : v });
+});
+$("#addTable").addEventListener("click", () => {
+  const n = S.tables.length + 1;
+  saveTableNow({ id: uid("t_"), label: String(n), seats: 4, section: "Main", shape: "square", x: 50, y: 50 });
+  toast(`Table ${n} added to the middle of the floor. Use Arrange floor to place it.`);
+});
+$("#arrange").addEventListener("click", () => { S.view = "floor"; S.editLayout = true; S.seating = null; render(); });
+
+/* ------------------------------------------------------------ export / backup */
+async function offerFile(filename, text, type){
+  try {
+    if (window.claude && typeof window.claude.use === "function") {
+      const dl = await window.claude.use("downloads");
+      if (dl) {
+        try { await dl.save({ filename, data: text }); toast("Saved " + filename); }
+        catch (e) { if (e && e.code !== "declined") toast("Could not save the file (" + (e.code || "error") + ")."); }
+        return;
+      }
+    }
+  } catch (e) {}
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(new Blob([text], { type }));
+  a.download = filename; document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+}
+const iso = ts => ts ? new Date(ts).toISOString() : "";
+$("#exportCsv").addEventListener("click", async () => {
+  const all = (await S.store.allParties()).sort((a, b) => a.date.localeCompare(b.date) || (a.time || "").localeCompare(b.time || "") || a.createdAt - b.createdAt);
+  const cols = ["date", "type", "name", "party_size", "phone", "res_time", "status", "tables", "quoted_wait_min", "created_at", "arrived_at", "seated_at", "closed_at", "wait_min", "table_min", "flags", "notes"];
+  const cell = v => { v = v == null ? "" : String(v); return /[",\n\r]/.test(v) ? '"' + v.replace(/"/g, '""') + '"' : v; };
+  const lines = [cols.join(",")].concat(all.map(p => [
+    p.date, p.type === "res" ? "reservation" : "walk-in", p.name, p.size, p.phone, p.time, p.status, tableLabels(p.tableIds), p.quote,
+    iso(p.createdAt), iso(p.arrivedAt), iso(p.seatedAt), iso(p.closedAt),
+    p.seatedAt && p.arrivedAt ? Math.round((p.seatedAt - p.arrivedAt) / 60000) : "",
+    p.seatedAt && p.closedAt && p.status === "done" ? Math.round((p.closedAt - p.seatedAt) / 60000) : "",
+    (p.tags || []).join("; "), p.notes,
+  ].map(cell).join(",")));
+  await offerFile(`host-stand-${dayKey(new Date())}.csv`, lines.join("\n") + "\n", "text/csv");
+});
+$("#backup").addEventListener("click", async () => {
+  const data = { app: "host-stand", version: 1, exportedAt: new Date().toISOString(), settings: S.settings, tables: S.tables, parties: await S.store.allParties() };
+  await offerFile(`host-stand-backup-${dayKey(new Date())}.json`, JSON.stringify(data, null, 2), "application/json");
+});
+$("#importFile").addEventListener("change", async e => {
+  const f = e.target.files[0]; e.target.value = ""; if (!f) return;
+  let data;
+  try { data = JSON.parse(await f.text()); } catch (err) { return toast("That file is not a Host Stand backup (not valid JSON)."); }
+  if (!data || data.app !== "host-stand" || !Array.isArray(data.parties)) return toast("That file is not a Host Stand backup.");
+  toast(`Restoring ${data.parties.length} parties…`);
+  try {
+    if (data.settings) await S.store.saveSettings(data.settings);
+    for (const t of data.tables || []) await S.store.saveTable(t);
+    for (const p of data.parties) await S.store.saveParty(p);
+    toast(`Restored ${data.tables.length} tables and ${data.parties.length} parties.`);
+  } catch (err) { toast("The restore stopped partway. Try again; it is safe to repeat."); }
+});
+
+/* ------------------------------------------------------------ chrome */
+document.querySelectorAll(".tabs button").forEach(b => b.addEventListener("click", () => {
+  S.view = b.dataset.view; if (S.view !== "floor") { S.seating = null; S.pick = new Set(); S.editLayout = false; }
+  render();
+}));
+$("#filters").addEventListener("click", e => { const b = e.target.closest("button[data-filter]"); if (b) { S.bookFilter = b.dataset.filter; render(); } });
+function shiftDay(n){ const d = parseDay(S.date); d.setDate(d.getDate() + n); S.date = dayKey(d); S.seating = null; S.pick = new Set(); watchDate(); render(); }
+$("#prevDay").addEventListener("click", () => shiftDay(-1));
+$("#nextDay").addEventListener("click", () => shiftDay(1));
+$("#todayBtn").addEventListener("click", () => { S.date = dayKey(new Date()); watchDate(); render(); });
+$("#addWalkin").addEventListener("click", () => openParty(null, { type: "walkin" }));
+$("#addRes").addEventListener("click", () => openParty(null, { type: "res" }));
+$("#addRes2").addEventListener("click", () => openParty(null, { type: "res" }));
+document.addEventListener("keydown", e => { if (e.key === "Escape" && S.seating && !dlg.open) endSeating(); });
+
+function toast(msg){
+  const t = $("#toast"); t.textContent = msg; t.hidden = false;
+  clearTimeout(toast.t); toast.t = setTimeout(() => { t.hidden = true; }, 3200);
+}
+
+// Timers on the floor count up; redraw them every 30 s (no writes).
+setInterval(() => { if (S.view !== "setup" && !dlg.open) render(); }, 30000);
+// Roll over to the new day at midnight if the page is left open on today.
+let lastToday = dayKey(new Date());
+setInterval(() => { const k = dayKey(new Date()); if (k !== lastToday) { if (S.date === lastToday) { S.date = k; watchDate(); } lastToday = k; render(); } }, 60000);
+
+/* ------------------------------------------------------------ boot */
+async function boot(){
+  render();
+  let db = null;
+  if (window.claude && typeof window.claude.use === "function") {
+    try { db = await window.claude.use("db"); } catch (e) { db = null; }
+  }
+  S.store = db ? sharedStore(db) : localStore();
+  S.store.watchSettings(s => { S.settings = { ...DEFAULT_SETTINGS, ...(s || {}) }; render(); });
+  S.store.watchTables(ts => { S.tables = ts; render(); });
+  watchDate();
+  try { navigator.wakeLock && navigator.wakeLock.request("screen").catch(() => {}); } catch (e) {}
+}
+boot();
+})();
+</script>
+</body>
+</html>
