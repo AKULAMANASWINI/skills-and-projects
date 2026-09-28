@@ -6,7 +6,11 @@ book. It is standalone: it does not connect to Toast or any POS. One file,
 
 ## What it does
 
-**Floor**: the dining room drawn to match your layout. Every table shows its state
+**Floor**: the restaurant's own room, traced from the hand-drawn plan: booths
+101–106, the 200s run, the 300s wall (312–316), the rounds (2, 307–310) and the
+buffet room's two long tables. On a landscape screen the plan turns sideways to
+fill it (the top of the drawing goes to the left). On a portrait screen it shows
+as drawn. Setup → *Show the floor* fixes either one. Every table shows its state
 at a glance:
 
 | Colour | Meaning |
@@ -25,8 +29,10 @@ The right-hand rail is the working list for the shift:
 - **Seated**: who is in the house and for how long. **Clear table** when they
   leave, **Move** to change tables.
 
-To seat a party, tap **Seat**, then tap one table or several (push two four-tops
-together for a party of eight), then **Seat here**. Tapping an open table directly
+To seat a party, tap **Seat**. The banner suggests the best fits, like
+`309 · 6`, `307 · 4+1` (one added chair) or `312+313 · 8`. Tap a suggestion, or
+tap tables yourself, then **Seat here**. The banner says whether the pick fits,
+needs added chairs, or is short. Tapping an open table directly
 lets you seat a walk-in there in two taps.
 
 **Book**: the day's page from the book: every reservation and walk-in with time,
@@ -34,10 +40,19 @@ guests, phone, table, status and notes. A covers-per-half-hour strip shows where
 the rush is. Use the arrows at the top to go to any date and take bookings for
 next week.
 
-**Setup**: restaurant name, turn time, hold window, and the table list (name,
-seats, section, shape). **Arrange floor** lets you drag tables into place on the
-floor plan. A sample 19-table room (main dining, bar, patio) is there to start
-from.
+**Setup**: restaurant name, turn time, hold window, floor shape, and the table
+list. **Arrange floor** lets you drag tables into place.
+
+The house seating rules are built into the table list:
+
+| Tables | Rule |
+|---|---|
+| 307, 308, 310 | 4 seats, up to 5 with an added chair |
+| 312–316 | push together (group `300s wall`) for parties over 6 |
+| Buffet A + B | buffet room: 8 seats each normally, 12 and 13 with added chairs (25 together); only suggested for parties of 8 or more, and first choice for 13+ |
+
+Seat counts for the other tables were read off the sketch (2 for the small
+booths, 4 for 104 and 204, 6 for tables 2 and 309). Correct any of them in Setup.
 
 **Your data**: export the full history as CSV, or take a JSON backup and
 restore it on another device.
@@ -59,9 +74,10 @@ data deletes the book.
 
 Three collections, the same shape in both backends and in the JSON backup:
 
-- `config/settings`: `{ name, turn, hold }`
-- `tables/<id>`: `{ id, label, seats, section, shape, x, y }`, with `x`/`y` as a
-  percentage of the floor
+- `config/settings`: `{ name, turn, hold, aspect, scale, orient }`
+- `tables/<id>`: `{ id, label, seats, max, min, join, section, shape, x, y }`:
+  `max` is capacity with added chairs, `min` the smallest party it is offered to,
+  `join` the push-together group, and `x`/`y` a percentage of the floor as drawn
 - `parties/<id>`: one row per reservation or walk-in:
 
 | Field | |

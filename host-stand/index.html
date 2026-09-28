@@ -78,9 +78,8 @@ main{flex:1;padding-block:16px;padding-inline:16px}
 @media (max-width:980px){.floorview{grid-template-columns:minmax(0,1fr)}}
 
 .floorwrap{overflow-x:auto;border-radius:12px;border:1px solid var(--line);background:var(--floor)}
-.floor{position:relative;min-width:620px;aspect-ratio:16/10;container-type:inline-size;
+.floor{position:relative;min-width:620px;aspect-ratio:var(--ar,16/10);container-type:inline-size;margin-inline:auto;
   background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:5% 8%}
-.zone{position:absolute;font:600 11px/1 var(--f-ui);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);pointer-events:none}
 .tbl{position:absolute;transform:translate(-50%,-50%);border:2px solid var(--open);background:var(--tbl);border-radius:10px;
   display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;padding:2px;cursor:pointer;text-align:center;overflow:hidden;
   box-shadow:var(--shadow);transition:transform .12s ease,box-shadow .12s ease}
@@ -95,6 +94,9 @@ main{flex:1;padding-block:16px;padding-inline:16px}
 .tbl.held{border-color:var(--held);background:var(--held-bg);border-style:dashed}
 .tbl.held .s{color:var(--held)}
 .tbl:hover{transform:translate(-50%,-50%) scale(1.04)}
+.floor.portrait{min-width:340px;width:min(100%,calc((100dvh - 200px) * var(--arn,1)))}
+.floor.portrait .tbl .l{font-size:clamp(12px,3.6cqw,22px)}
+.floor.portrait .tbl .s{font-size:clamp(9px,2.2cqw,13px)}
 .floor.picking .tbl.seated,.floor.picking .tbl.late{opacity:.35;cursor:not-allowed}
 .tbl.picked{outline:3px solid var(--accent);outline-offset:3px;background:var(--accent-soft)}
 .floor.editing .tbl{cursor:grab;touch-action:none;border-style:dashed}
@@ -172,7 +174,9 @@ table.book{width:100%;border-collapse:collapse;font-size:14px;min-width:760px}
 .field textarea{resize:vertical;min-height:60px}
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
-.trow{display:grid;grid-template-columns:minmax(0,1.1fr) 70px minmax(0,1fr) minmax(0,1fr) 36px;gap:6px;align-items:center}
+.trow{display:grid;grid-template-columns:minmax(0,1fr) 62px 62px minmax(0,1.2fr) minmax(0,1.2fr) minmax(0,1.3fr) 36px;gap:6px;align-items:center;min-width:640px}
+.setup .panel.wide{grid-column:1/-1}
+.trows{overflow-x:auto;display:flex;flex-direction:column;gap:6px}
 .trow input,.trow select{border:1px solid var(--line);background:var(--surface);border-radius:6px;padding:6px 8px;width:100%;min-width:0}
 .hint{font-size:13px;color:var(--muted);margin:0}
 .btnrow{display:flex;flex-wrap:wrap;gap:8px}
@@ -276,16 +280,13 @@ dialog h3{margin:0;font:700 22px/1.15 var(--f-num)}
               <div class="field"><label for="setTurn">Turn time (min)</label><input id="setTurn" type="number" min="15" max="300" step="5"></div>
               <div class="field"><label for="setHold">Hold table before res (min)</label><input id="setHold" type="number" min="0" max="180" step="5"></div>
             </div>
+            <div class="grid2">
+              <div class="field"><label for="setAspect">Floor shape</label><select id="setAspect"></select></div>
+              <div class="field"><label for="setScale">Table size (%)</label><input id="setScale" type="number" min="50" max="250" step="10"></div>
+            </div>
+            <div class="field"><label for="setOrient">Show the floor</label><select id="setOrient"></select></div>
             <p class="hint">Turn time turns a table red once a party has been seated that long. Hold time marks a table as held when a reservation assigned to it is that close.</p>
             <p class="hint" id="storageNote"></p>
-          </div>
-        </div>
-        <div class="panel">
-          <h2>Tables <span class="count" id="tblCount">0</span><button class="btn small" id="arrange">Arrange floor</button></h2>
-          <div class="body">
-            <div class="trow lbl"><span>Name</span><span>Seats</span><span>Section</span><span>Shape</span><span></span></div>
-            <div id="tableRows" style="display:flex;flex-direction:column;gap:6px"></div>
-            <div class="btnrow"><button class="btn" id="addTable">+ Add table</button></div>
           </div>
         </div>
         <div class="panel">
@@ -298,6 +299,17 @@ dialog h3{margin:0;font:700 22px/1.15 var(--f-num)}
               <label class="btn" for="importFile">Restore backup</label>
               <input type="file" id="importFile" accept="application/json,.json" hidden>
             </div>
+          </div>
+        </div>
+        <div class="panel wide">
+          <h2>Tables <span class="count" id="tblCount">0</span><button class="btn small" id="arrange">Arrange floor</button></h2>
+          <div class="body">
+            <p class="hint">Seats is the normal count. Max is the most it takes with an added chair (leave blank if none). Tables with the same name under Pushes together can be joined for a big party, and the app suggests them when seating.</p>
+            <div class="trows">
+              <div class="trow lbl"><span>Name</span><span>Seats</span><span>Max</span><span>Section</span><span>Pushes together</span><span>Shape</span><span></span></div>
+              <div id="tableRows" style="display:flex;flex-direction:column;gap:6px"></div>
+            </div>
+            <div class="btnrow"><button class="btn" id="addTable">+ Add table</button></div>
           </div>
         </div>
       </div>
@@ -371,21 +383,45 @@ function nextQuarter(){
 const TAGS = ["Birthday", "Anniversary", "Allergy", "High chair", "Wheelchair", "Regular", "VIP", "Patio"];
 const STATUS = { booked: "Booked", waiting: "Waiting", seated: "Seated", done: "Done", noshow: "No-show", cancelled: "Cancelled", left: "Left" };
 const LIVE = new Set(["booked", "waiting", "seated"]);
-const DEFAULT_SETTINGS = { name: "Host Stand", turn: 90, hold: 30 };
+const DEFAULT_SETTINGS = { name: "Host Stand", turn: 90, hold: 30, aspect: "2/3", scale: 110, orient: "auto" };
+const ORIENTS = [["auto", "Fit the screen"], ["drawn", "As drawn"], ["turned", "Turned sideways"]];
+const ASPECTS = [["16/10", "Wide (landscape)"], ["1/1", "Square"], ["3/4", "Tall"], ["2/3", "Taller (portrait)"]];
+
+/* The restaurant's own floor, traced from the hand-drawn plan. Positions are
+   pixel centres on that sketch (about 960 x 1470 of drawing area), turned
+   into percentages of the floor so the room keeps its shape at any size. */
+/* max: most guests with an extra chair. min: smallest party it is for.
+   join: tables that push together. */
+const TABLE_RULES = {
+  "307": { max: 5 }, "308": { max: 5 }, "310": { max: 5 },
+  "312": { join: "300s wall" }, "313": { join: "300s wall" }, "314": { join: "300s wall" },
+  "315": { join: "300s wall" }, "316": { join: "300s wall" },
+  // the buffet room takes 8 to 25 with added chairs, across both tables
+  "Buffet A": { min: 8, max: 12, join: "Buffet room" }, "Buffet B": { min: 8, max: 13, join: "Buffet room" },
+};
 
 function starterTables(){
-  const T = [];
-  const add = (label, seats, section, shape, x, y) => T.push({ id: "t_" + label.toLowerCase(), label, seats, section, shape, x, y });
-  // Main dining: two rows of four-tops, deuces along the wall, a six and an eight
-  [["1",14],["2",27],["3",40],["4",53]].forEach(([l,x]) => add(l, 4, "Main", "square", x, 22));
-  [["5",14],["6",27],["7",40],["8",53]].forEach(([l,x]) => add(l, 4, "Main", "round", x, 47));
-  add("9", 2, "Main", "square", 10, 74); add("10", 2, "Main", "square", 21, 74);
-  add("11", 6, "Main", "rect", 36, 75); add("12", 8, "Main", "rect", 54, 75);
-  // Bar
-  ["B1","B2","B3","B4"].forEach((l, i) => add(l, 2, "Bar", "round", 71 + (i % 2) * 9, 22 + Math.floor(i / 2) * 20));
-  // Patio
-  ["P1","P2","P3"].forEach((l, i) => add(l, 4, "Patio", "round", 90, 22 + i * 25));
-  return T;
+  const X0 = 100, W = 960, Y0 = 50, H = 1470;
+  const r = v => Math.round(v * 2) / 2;
+  return [
+    // 300s: the five four-tops along the top-left wall, and the rounds on the right
+    ["316", 4, "300s", "rect", 458, 178], ["315", 4, "300s", "rect", 470, 292], ["314", 4, "300s", "rect", 485, 398],
+    ["313", 4, "300s", "rect", 505, 487], ["312", 4, "300s", "rect", 525, 568],
+    ["2", 6, "300s", "round", 822, 195], ["307", 4, "300s", "round", 805, 280], ["308", 4, "300s", "round", 815, 358],
+    ["309", 6, "300s", "round", 822, 450], ["310", 4, "300s", "round", 860, 552],
+    // 100s: booths on the left
+    ["106", 2, "100s", "square", 375, 785], ["103", 2, "100s", "square", 203, 872], ["102", 2, "100s", "square", 205, 975],
+    ["101", 2, "100s", "square", 205, 1100], ["105", 2, "100s", "square", 378, 885], ["104", 4, "100s", "tall", 395, 1055],
+    // 200s: the middle run
+    ["204", 4, "200s", "tall", 488, 705], ["208", 2, "200s", "square", 652, 680], ["203", 2, "200s", "square", 490, 890],
+    ["202", 2, "200s", "square", 505, 1058], ["207", 2, "200s", "square", 678, 855], ["206", 2, "200s", "square", 695, 1020],
+    ["201", 2, "200s", "square", 560, 1345], ["205", 2, "200s", "square", 733, 1310],
+    // the buffet room: the two long unnumbered tables on the right
+    ["Buffet A", 8, "Buffet room", "tall", 838, 805], ["Buffet B", 8, "Buffet room", "tall", 888, 1165],
+  ].map(([label, seats, section, shape, x, y]) => ({
+    id: "t_" + label.toLowerCase().replace(/[^a-z0-9]+/g, "-"), label, seats, section, shape,
+    x: r((x - X0) / W * 100), y: r((y - Y0) / H * 100), ...(TABLE_RULES[label] || {}),
+  }));
 }
 
 /* ------------------------------------------------------------ state */
@@ -507,10 +543,56 @@ function tableState(t){
   if (soon) return { kind: "held", party: soon.p, d: soon.d };
   return { kind: "open", next: booked.find(x => x.d > 0) };
 }
+/* The floor can be shown turned a quarter-turn anticlockwise, so a tall room
+   fills a landscape iPad: the top of the drawing goes to the left. Stored
+   positions always stay as drawn; only the display is turned. */
+function floorView(){
+  const [aw, ah] = (S.settings.aspect || "16/10").split("/").map(Number);
+  const o = S.settings.orient || "auto";
+  const turned = o === "turned" || (o === "auto" && aw / ah < 1 && innerWidth > innerHeight && innerWidth > 700);
+  return turned ? { turned, aw: ah, ah: aw } : { turned, aw, ah };
+}
+const toView = (t, v) => v.turned ? { x: t.y, y: 100 - t.x } : { x: t.x, y: t.y };
+const fromView = (x, y, v) => v.turned ? { x: 100 - y, y: x } : { x, y };
+const viewShape = (shape, v) => !v.turned ? shape : shape === "rect" ? "tall" : shape === "tall" ? "rect" : shape;
+
+const maxOf = t => Math.max(t.seats || 0, +t.max || 0);
+const seatText = t => maxOf(t) > t.seats ? `${t.seats}–${maxOf(t)} seats` : `${t.seats} seats`;
+const labelSort = (a, b) => a.label.localeCompare(b.label, undefined, { numeric: true });
+
+/* Best places to put a party: single tables first (tightest fit), then runs
+   of neighbouring tables from the same push-together group. A fit that needs
+   added chairs ranks after one that doesn't. */
+function suggestTables(p){
+  const size = +p.size || 1;
+  const free = t => { const st = tableState(t); return st.kind === "open" || (st.kind === "held" && st.party.id === p.id); };
+  const out = [];
+  S.tables.filter(free).forEach(t => {
+    if (maxOf(t) >= size && size >= (+t.min || 0)) out.push({ ids: [t.id], seats: t.seats, max: maxOf(t), room: !!t.min });
+  });
+  const groups = {};
+  S.tables.filter(t => t.join).forEach(t => (groups[t.join] = groups[t.join] || []).push(t));
+  Object.values(groups).forEach(g => {
+    g.sort(labelSort);
+    for (let i = 0; i < g.length; i++) {
+      let seats = 0, max = 0, min = 0, ids = [];
+      for (let j = i; j < g.length && free(g[j]); j++) {
+        ids.push(g[j].id); seats += g[j].seats; max += maxOf(g[j]); min = Math.max(min, +g[j].min || 0);
+        if (ids.length > 1 && max >= size) { if (size >= min) out.push({ ids: ids.slice(), seats, max, room: min > 0 }); break; }
+      }
+    }
+  });
+  // empty seats cost 1 each, added chairs 1.5 each, each extra table pushed in 2.5,
+  // and a private room 4 unless the party is too big for the dining room anyway
+  const score = o => (o.seats >= size ? o.seats - size : (size - o.seats) * 1.5) + (o.ids.length - 1) * 2.5 + (o.room && size < 13 ? 4 : 0);
+  return out.sort((a, b) => score(a) - score(b)).slice(0, 4);
+}
+
 function tableSize(t){
-  const w = { 1: 6.5, 2: 7.5, 3: 8.5, 4: 9.5, 5: 11, 6: 13, 7: 14, 8: 16 }[Math.min(8, t.seats)] || 16 + (t.seats - 8);
-  const ratio = t.shape === "rect" ? 1.7 : 1;
-  return { w, ratio };
+  const base = { 1: 6.5, 2: 8, 3: 8.5, 4: 9.5, 5: 10.5, 6: 11.5, 7: 12.5, 8: 13.5 }[Math.min(8, t.seats)] || 13.5 + (t.seats - 8);
+  const k = (+S.settings.scale || 100) / 100;
+  if (t.shape === "tall") return { w: base * k * 0.65, ratio: 1 / 1.6 };
+  return { w: base * k, ratio: t.shape === "rect" ? 1.4 : 1 };
 }
 
 /* ------------------------------------------------------------ render */
@@ -550,11 +632,24 @@ function renderFloor(){
   const floor = $("#floor");
   floor.classList.toggle("picking", !!S.seating);
   floor.classList.toggle("editing", S.editLayout);
+  const V = floorView();
+  floor.style.setProperty("--ar", V.aw + "/" + V.ah); floor.style.setProperty("--arn", String(V.aw / V.ah));
+  floor.classList.toggle("portrait", V.aw / V.ah < 1.2);
   const banner = $("#floorBanner");
   if (S.seating) {
     const p = partyById(S.seating);
-    const seats = [...S.pick].reduce((a, id) => a + ((tableById(id) || {}).seats || 0), 0);
-    banner.innerHTML = `<div class="banner"><p><b>Seating ${esc(p ? p.name : "")}</b> · ${p ? p.size : ""} guests. Tap one table, or several to push together.${S.pick.size ? ` <b>${esc(tableLabels([...S.pick]))}</b> · ${seats} seats` : ""}</p>
+    const picked = [...S.pick].map(tableById).filter(Boolean);
+    const seats = picked.reduce((a, t) => a + t.seats, 0), max = picked.reduce((a, t) => a + maxOf(t), 0);
+    const size = p ? +p.size : 0;
+    let fit = "";
+    if (picked.length) {
+      fit = size <= seats ? `<span class="chip st-done">fits</span>`
+        : size <= max ? `<span class="chip st-booked">fits with ${size - seats} added chair${size - seats > 1 ? "s" : ""}</span>`
+        : `<span class="chip warn">${size - max} seat${size - max > 1 ? "s" : ""} short</span>`;
+    }
+    const sug = p ? suggestTables(p) : [];
+    banner.innerHTML = `<div class="banner"><p><b>Seating ${esc(p ? p.name : "")}</b> · ${size} guests. Tap one table, or several to push together.${picked.length ? ` <b>${esc(tableLabels([...S.pick]))}</b> · ${seats === max ? seats : seats + "–" + max} seats ${fit}` : ""}</p>
+      ${sug.length ? `<div class="btnrow" style="flex-basis:100%"><span class="lbl" style="align-self:center">Suggested</span>${sug.map(o => `<button class="btn small" data-act="pickSet" data-ids="${esc(o.ids.join(","))}">${esc(tableLabels(o.ids))} · ${o.seats >= size ? o.seats : o.seats + "+" + (size - o.seats)}</button>`).join("")}</div>` : p ? `<p class="hint" style="flex-basis:100%">No open table or push-together fits ${size}. Pick tables yourself.</p>` : ""}
       <button class="btn" data-act="cancelSeat">Cancel</button>
       <button class="btn primary" data-act="confirmSeat" ${S.pick.size ? "" : "disabled"}>Seat here</button></div>`;
   } else if (S.editLayout) {
@@ -563,22 +658,22 @@ function renderFloor(){
   } else banner.innerHTML = "";
 
   if (!S.tables.length) {
-    floor.innerHTML = `<div class="empty-floor"><div><p><b>No tables yet.</b></p><p class="hint">Start from a sample dining room and rearrange it, or add your own tables in Setup.</p>
-      <div class="btnrow" style="justify-content:center"><button class="btn primary" data-act="starter">Use the sample floor</button><button class="btn" data-act="goSetup">Go to Setup</button></div></div></div>`;
+    floor.innerHTML = `<div class="empty-floor"><div><p><b>No tables yet.</b></p><p class="hint">Load the restaurant's floor plan, or add tables one by one in Setup.</p>
+      <div class="btnrow" style="justify-content:center"><button class="btn primary" data-act="starter">Load our floor plan</button><button class="btn" data-act="goSetup">Go to Setup</button></div></div></div>`;
     return;
   }
-  const zones = {};
-  S.tables.forEach(t => { const z = zones[t.section] || (zones[t.section] = { x: 100, y: 100 }); z.x = Math.min(z.x, t.x); z.y = Math.min(z.y, t.y); });
-  let html = Object.entries(zones).map(([name, z]) => `<div class="zone" style="left:${clamp(z.x - 6, 1, 90)}%;top:${clamp(z.y - 14, 1, 90)}%">${esc(name)}</div>`).join("");
-  html += S.tables.map(t => {
+  const html = S.tables.map(t => {
     const st = tableState(t);
-    const { w, ratio } = tableSize(t);
-    let sub = t.seats + " seats";
+    const sz = tableSize({ ...t, shape: viewShape(t.shape, V) });
+    // sizes are a share of the room's drawn width; turned, the floor is wider
+    const w = V.turned ? sz.w * V.ah / V.aw : sz.w, ratio = sz.ratio;
+    const at = toView(t, V);
+    let sub = seatText(t);
     if (st.kind === "seated" || st.kind === "late") sub = `${esc(st.party.name)} ${st.party.size} · ${st.m}m`;
     else if (st.kind === "held") sub = `${fmtTime(st.party.time)} ${esc(st.party.name)}`;
-    else if (st.next) sub = `${t.seats} · next ${fmtTime(st.next.p.time)}`;
+    else if (st.next) sub = `${maxOf(t) > t.seats ? t.seats + "–" + maxOf(t) : t.seats} · next ${fmtTime(st.next.p.time)}`;
     const cls = ["tbl", st.kind, t.shape === "round" ? "round" : "", S.pick.has(t.id) ? "picked" : ""].join(" ");
-    return `<button class="${cls}" data-id="${esc(t.id)}" style="left:${t.x}%;top:${t.y}%;width:${w}%;aspect-ratio:${ratio}" aria-label="Table ${esc(t.label)}, ${st.kind}">
+    return `<button class="${cls}" data-id="${esc(t.id)}" style="left:${at.x}%;top:${at.y}%;width:${w}%;aspect-ratio:${ratio}" aria-label="Table ${esc(t.label)}, ${st.kind}">
       <span class="l">${esc(t.label)}</span><span class="s">${sub}</span></button>`;
   }).join("");
   floor.innerHTML = html;
@@ -588,7 +683,7 @@ function partyRow(p, acts, when){
   const tags = (p.tags || []).map(t => `<span class="chip${t === "Allergy" ? " warn" : ""}">${esc(t)}</span>`).join("");
   return `<li class="row" data-party="${esc(p.id)}">
     <div class="t">${when}</div>
-    <div class="who"><b>${esc(p.name)}</b> · ${p.size}${p.tableIds && p.tableIds.length ? ` · <span class="num">T${esc(tableLabels(p.tableIds))}</span>` : ""}
+    <div class="who"><b>${esc(p.name)}</b> · ${p.size}${p.tableIds && p.tableIds.length ? ` · <span class="num">${/^\d/.test(tableLabels(p.tableIds)) ? "T" : ""}${esc(tableLabels(p.tableIds))}</span>` : ""}
       <div class="meta">${tags}${p.notes ? esc(p.notes) : ""}</div></div>
     ${acts ? `<div class="acts">${acts}</div>` : ""}</li>`;
 }
@@ -668,24 +763,35 @@ function renderBook(){
     : `<tr><td colspan="7" class="none">Nothing in the book for this day${S.bookFilter !== "all" ? " with that status" : ""}.</td></tr>`;
 }
 
+const SHAPES = [["square", "Square"], ["round", "Round"], ["rect", "Long, across"], ["tall", "Long, up/down"]];
+const shapeOptions = cur => SHAPES.map(([v, l]) => `<option ${cur === v ? "selected" : ""} value="${v}">${l}</option>`).join("");
+
 function renderSetup(){
   if ($("#view-setup").contains(document.activeElement) && document.activeElement !== document.body) return;
   $("#setName").value = S.settings.name || "";
   $("#setTurn").value = S.settings.turn;
   $("#setHold").value = S.settings.hold;
+  $("#setAspect").innerHTML = ASPECTS.map(([v, l]) => `<option value="${v}">${l}</option>`).join("");
+  $("#setAspect").value = S.settings.aspect || "16/10";
+  $("#setScale").value = S.settings.scale || 100;
+  $("#setOrient").innerHTML = ORIENTS.map(([v, l]) => `<option value="${v}">${l}</option>`).join("");
+  $("#setOrient").value = S.settings.orient || "auto";
   $("#storageNote").textContent = !S.store ? "" : S.store.mode === "shared"
     ? "This book is shared. Every device signed in to this page sees the same reservations and floor, live."
     : "This book is saved in this browser on this device. Take a backup before clearing browser data or switching devices.";
   $("#tblCount").textContent = S.tables.length;
   const sections = [...new Set(S.tables.map(t => t.section).concat(["Main", "Bar", "Patio"]))];
+  const joins = [...new Set(S.tables.map(t => t.join).filter(Boolean))];
   $("#tableRows").innerHTML = S.tables.slice().sort((a, b) => a.section.localeCompare(b.section) || a.label.localeCompare(b.label, undefined, { numeric: true })).map(t => `
     <div class="trow" data-tid="${esc(t.id)}">
       <input data-k="label" value="${esc(t.label)}" maxlength="8" aria-label="Table name">
-      <input data-k="seats" type="number" min="1" max="20" value="${t.seats}" aria-label="Seats">
+      <input data-k="seats" type="number" min="1" max="40" value="${t.seats}" aria-label="Seats">
+      <input data-k="max" type="number" min="0" max="60" value="${maxOf(t) > t.seats ? maxOf(t) : ""}" placeholder="–" aria-label="Most seats with added chairs">
       <input data-k="section" value="${esc(t.section)}" list="sectionList" maxlength="20" aria-label="Section">
-      <select data-k="shape" aria-label="Shape">${["square", "round", "rect"].map(s => `<option ${t.shape === s ? "selected" : ""} value="${s}">${s === "rect" ? "long" : s}</option>`).join("")}</select>
+      <input data-k="join" value="${esc(t.join || "")}" list="joinList" maxlength="24" placeholder="–" aria-label="Pushes together with group">
+      <select data-k="shape" aria-label="Shape">${shapeOptions(t.shape)}</select>
       <button class="iconbtn" data-act="delTable" data-id="${esc(t.id)}" aria-label="Remove table ${esc(t.label)}" title="Remove">×</button>
-    </div>`).join("") + `<datalist id="sectionList">${sections.map(s => `<option value="${esc(s)}">`).join("")}</datalist>`;
+    </div>`).join("") + `<datalist id="sectionList">${sections.map(s => `<option value="${esc(s)}">`).join("")}</datalist><datalist id="joinList">${joins.map(s => `<option value="${esc(s)}">`).join("")}</datalist>`;
 }
 
 /* ------------------------------------------------------------ party dialog */
@@ -717,7 +823,7 @@ function openParty(p, opts = {}){
   $("#pQuote").value = p ? (p.quote ?? "") : "";
   $("#pNotes").value = p ? p.notes || "" : "";
   $("#pTable").innerHTML = `<option value="">Any table</option>` + S.tables.slice().sort((a, b) => a.label.localeCompare(b.label, undefined, { numeric: true }))
-    .map(t => `<option value="${esc(t.id)}">${esc(t.label)} · ${t.seats} seats · ${esc(t.section)}</option>`).join("");
+    .map(t => `<option value="${esc(t.id)}">${esc(t.label)} · ${seatText(t)} · ${esc(t.section)}</option>`).join("");
   $("#pTable").value = p && p.tableIds && p.tableIds.length === 1 ? p.tableIds[0] : (opts.table || "");
   $("#pStatus").innerHTML = Object.entries(STATUS).map(([k, l]) => `<option value="${k}">${l}</option>`).join("");
   $("#pStatus").value = p ? p.status : "booked";
@@ -796,7 +902,7 @@ $("#pSeat").addEventListener("click", async () => {
   if (p.status === "booked") { p.status = "waiting"; p.arrivedAt = Date.now(); }
   const table = afterSaveTable || (p.tableIds && p.tableIds[0]);
   const t = table && tableById(table);
-  if (t && tableState(t).kind !== "seated" && tableState(t).kind !== "late" && t.seats >= p.size) {
+  if (t && tableState(t).kind !== "seated" && tableState(t).kind !== "late" && maxOf(t) >= p.size) {
     await savePartyNow(p); await seat(p, [t.id]);
   } else {
     await savePartyNow(p); startSeating(p.id, table && t && !["seated", "late"].includes(tableState(t).kind) ? [table] : []);
@@ -840,6 +946,7 @@ document.addEventListener("click", async e => {
     if (act === "left" && p) return setStatus(p, "left");
     if (act === "clear" && p) { $("#tableDlg").close(); return setStatus(p, "done"); }
     if (act === "cancelSeat") return endSeating();
+    if (act === "pickSet") { S.pick = new Set(a.dataset.ids.split(",")); return render(); }
     if (act === "confirmSeat") {
       const party = partyById(S.seating); const ids = [...S.pick];
       endSeating(); if (party && ids.length) await seat(party, ids);
@@ -882,7 +989,8 @@ function onTableTap(t){
     return render();
   }
   const body = $("#tableBody");
-  let html = `<h3>Table ${esc(t.label)}</h3><p class="hint">${t.seats} seats · ${esc(t.section)}</p>`;
+  const mates = t.join ? S.tables.filter(x => x.join === t.join && x.id !== t.id).sort(labelSort).map(x => x.label) : [];
+  let html = `<h3>Table ${esc(t.label)}</h3><p class="hint">${seatText(t)} · ${esc(t.section)}${mates.length ? ` · pushes together with ${esc(mates.join(", "))}` : ""}</p>`;
   if (st.kind === "seated" || st.kind === "late") {
     const p = st.party;
     html += `<dl class="kv"><dt>Party</dt><dd><b>${esc(p.name)}</b> · ${p.size} guests</dd>
@@ -914,9 +1022,10 @@ $("#floor").addEventListener("pointerdown", e => {
   const move = ev => {
     if (!moved && Math.abs(ev.clientX - sx) + Math.abs(ev.clientY - sy) < 5) return;
     moved = true;
-    t.x = clamp((ev.clientX - rect.left) / rect.width * 100, 3, 97);
-    t.y = clamp((ev.clientY - rect.top) / rect.height * 100, 5, 95);
-    el.style.left = t.x + "%"; el.style.top = t.y + "%";
+    const vx = clamp((ev.clientX - rect.left) / rect.width * 100, 3, 97);
+    const vy = clamp((ev.clientY - rect.top) / rect.height * 100, 3, 97);
+    Object.assign(t, fromView(vx, vy, floorView()));
+    el.style.left = vx + "%"; el.style.top = vy + "%";
   };
   const up = () => {
     el.removeEventListener("pointermove", move); el.removeEventListener("pointerup", up); el.removeEventListener("pointercancel", up);
@@ -928,9 +1037,12 @@ $("#floor").addEventListener("pointerdown", e => {
 function openTableEdit(t){
   $("#tableBody").innerHTML = `<h3>Table ${esc(t.label)}</h3>
     <div class="grid2"><div class="field"><label for="teLabel">Name</label><input id="teLabel" value="${esc(t.label)}" maxlength="8"></div>
-    <div class="field"><label for="teSeats">Seats</label><input id="teSeats" type="number" min="1" max="20" value="${t.seats}"></div>
+    <div class="field"><label for="teSeats">Seats</label><input id="teSeats" type="number" min="1" max="40" value="${t.seats}"></div>
+    <div class="field"><label for="teMax">Max with added chairs</label><input id="teMax" type="number" min="0" max="60" value="${maxOf(t) > t.seats ? maxOf(t) : ""}"></div>
+    <div class="field"><label for="teMin">Smallest party (optional)</label><input id="teMin" type="number" min="0" max="60" value="${+t.min || ""}"></div>
+    <div class="field"><label for="teJoin">Pushes together (group)</label><input id="teJoin" value="${esc(t.join || "")}" maxlength="24"></div>
     <div class="field"><label for="teSection">Section</label><input id="teSection" value="${esc(t.section)}" maxlength="20"></div>
-    <div class="field"><label for="teShape">Shape</label><select id="teShape">${["square", "round", "rect"].map(s => `<option ${t.shape === s ? "selected" : ""} value="${s}">${s === "rect" ? "long" : s}</option>`).join("")}</select></div></div>
+    <div class="field"><label for="teShape">Shape</label><select id="teShape">${shapeOptions(t.shape)}</select></div></div>
     <div class="dfoot"><button class="btn left" data-act="tblClose">Cancel</button><button class="btn primary" data-act="tblSave" data-table="${t.id}">Save</button></div>`;
   $("#tableDlg").showModal();
 }
@@ -938,7 +1050,8 @@ function saveTableFromDlg(id){
   const t = tableById(id); if (!t) return;
   const label = $("#teLabel").value.trim();
   if (!label) return toast("Give the table a name.");
-  saveTableNow({ ...t, label, seats: clamp(+$("#teSeats").value || t.seats, 1, 20), section: $("#teSection").value.trim() || "Main", shape: $("#teShape").value });
+  saveTableNow({ ...t, label, seats: clamp(+$("#teSeats").value || t.seats, 1, 40), max: +$("#teMax").value > 0 ? clamp(+$("#teMax").value, 1, 60) : 0, min: +$("#teMin").value > 0 ? clamp(+$("#teMin").value, 1, 60) : 0,
+    join: $("#teJoin").value.trim(), section: $("#teSection").value.trim() || "Main", shape: $("#teShape").value });
   $("#tableDlg").close();
 }
 $("#tableDlg").addEventListener("click", e => { if (e.target === e.currentTarget) e.currentTarget.close(); });
@@ -948,17 +1061,22 @@ dlg.addEventListener("click", e => { if (e.target === dlg) dlg.close(); });
 function saveSettingsSoon(){
   clearTimeout(saveSettingsSoon.t);
   saveSettingsSoon.t = setTimeout(async () => {
-    const s = { name: $("#setName").value.trim() || "Host Stand", turn: clamp(+$("#setTurn").value || 90, 15, 300), hold: clamp(+$("#setHold").value || 0, 0, 180) };
+    const s = { name: $("#setName").value.trim() || "Host Stand", turn: clamp(+$("#setTurn").value || 90, 15, 300), hold: clamp(+$("#setHold").value || 0, 0, 180),
+      aspect: $("#setAspect").value || "16/10", scale: clamp(+$("#setScale").value || 100, 50, 250), orient: $("#setOrient").value || "auto" };
     S.settings = s; render();
     try { await S.store.saveSettings(s); } catch (e) { toast("Could not save settings."); }
   }, 500);
 }
-["#setName", "#setTurn", "#setHold"].forEach(id => $(id).addEventListener("input", saveSettingsSoon));
+["#setName", "#setTurn", "#setHold", "#setScale"].forEach(id => $(id).addEventListener("input", saveSettingsSoon));
+$("#setAspect").addEventListener("change", saveSettingsSoon);
+$("#setOrient").addEventListener("change", saveSettingsSoon);
+let resizeT; addEventListener("resize", () => { clearTimeout(resizeT); resizeT = setTimeout(() => { if (S.view === "floor") renderFloor(); }, 150); });
 $("#tableRows").addEventListener("change", e => {
   const row = e.target.closest("[data-tid]"); if (!row) return;
   const t = tableById(row.dataset.tid); if (!t) return;
   const k = e.target.dataset.k; let v = e.target.value;
-  if (k === "seats") v = clamp(+v || t.seats, 1, 20);
+  if (k === "seats") v = clamp(+v || t.seats, 1, 40);
+  if (k === "max") v = +v > 0 ? clamp(+v, 1, 60) : 0;
   if (k === "label" && !v.trim()) { e.target.value = t.label; return; }
   saveTableNow({ ...t, [k]: typeof v === "string" ? v.trim() : v });
 });
