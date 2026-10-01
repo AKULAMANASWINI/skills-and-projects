@@ -3,10 +3,43 @@
 A ledger for the hours you actually spend on your hobbies. One page, no build
 step: `index.html` is the whole application.
 
-Its own look, deliberately not Plate & Barbell's: a cool grey ledger ground,
-Bricolage Grotesque headings, Hanken Grotesk body, DM Mono for every number and
-label. The chrome is kept quiet — one deep petrol accent, `#0E4552` — so the
-hobby inks are the only strong colour on the page.
+## The look
+
+All three hobbies this was built around — pottery, sewing, journal writing — are
+handwork, so the page takes its cues from the bench rather than the office.
+
+**Indigo and oat.** The ground is oat `#E7E5DF`, the ink indigo-black `#1A1B2E`,
+the structural accent a deep indigo `#2A2E6E`; dark mode is a near-black indigo
+`#101124` with a periwinkle accent. Indigo because it is the dyer's and the
+writer's colour, and because it sits far enough from every hobby ink to read as
+structure rather than data. The chrome stays quiet so the inks are the only
+strong colour on the page.
+
+**The ground is woven.** A one-pixel warp every 4px and weft every 7px, at the
+edge of visibility — different pitches, the way real cloth is, so it reads as
+texture and never as a grid you might measure against. The consistency grid
+carries the same weave, so untouched days look like bare cloth and logged ones
+like dye taken up.
+
+**Type.** Bricolage Grotesque for headings, Hanken Grotesk for body, DM Mono for
+every number and label — deliberately not Plate & Barbell's Fraunces/Work
+Sans/Space Mono, so the two read as siblings rather than clones. Hero figures
+are set in the mono, never the display face.
+
+**Today opens on the day's thread.** One segment per session, in that hobby's
+ink, carrying a warp texture, laid in a track. Its length is measured against a
+four-hour day rather than against the day's own total — normalising to itself
+would draw a full bar for a ten-minute morning, which reads as "done". The rule
+across the top of the hero is the hobby inks themselves, in order.
+
+**Motion that knows when to stay still.** The view is rebuilt on every
+interaction, so an unconditional entrance animation would re-animate the page
+every time you touched a control. `animateNext` is raised only on arrival —
+boot, a tab change, a different day — so cards rise, meters sweep, bars grow and
+the day's figure counts up when you get somewhere new, and nothing moves at all
+while you are typing into a form. All of it is behind
+`prefers-reduced-motion: no-preference`, and the count-up falls straight to the
+final value whenever it is skipped, so a figure is never left wrong.
 
 Two places it runs:
 
@@ -88,12 +121,13 @@ Series colours are the data-viz skill's validated categorical palette, checked
 against this app's own card surfaces rather than the reference ones —
 `#FAFBFB` light, `#181F22` dark:
 
-- **Light**: worst adjacent CVD ΔE 9.1, worst adjacent normal-vision ΔE 19.6.
-  Three inks (aqua, yellow, magenta) sit under 3:1 against the light card, so
-  the relief rule applies and is honoured — a key is always present, the bars
-  carry direct labels, and every chart has a table view.
-- **Dark**: worst adjacent CVD ΔE 8.4, normal-vision ΔE 19.3, all eight clear
-  3:1.
+- **Light** (`#F7F6F2`): worst adjacent CVD ΔE 9.1, worst adjacent
+  normal-vision ΔE 19.6. Four inks (orange, aqua, yellow, magenta) sit under
+  3:1 against the oat card, so the relief rule applies and is honoured — a key
+  is always present, the bars carry direct labels, and every chart has a table
+  view.
+- **Dark** (`#1A1C32`): worst adjacent CVD ΔE 8.4, normal-vision ΔE 19.3, all
+  eight clear 3:1.
 
 Inks are handed out in fixed order as hobbies are created and never recycled by
 rank, so hiding three series in the key does not repaint the rest.

@@ -18,50 +18,55 @@ img{max-width:100%}
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700&family=Hanken+Grotesk:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 :root{
-  --paper:#EBEDEE; --card:#FAFBFB; --card-2:#E2E6E8; --sunk:#F1F3F4;
-  --line:#C8D0D4; --line-soft:#DBE1E4;
-  --ink:#0F1A1F; --body:#3E4C53; --muted:#67757D;
-  --accent:#0E4552; --accent-2:#1B6475; --accent-soft:#DAE5E8; --on-accent:#FAFBFB;
+  --paper:#E7E5DF; --card:#F7F6F2; --card-2:#DEDCD4; --sunk:#EFEDE7;
+  --line:#C9C6BB; --line-soft:#DCD9CF;
+  --ink:#1A1B2E; --body:#45465C; --muted:#6B6C82;
+  --accent:#2A2E6E; --accent-2:#3F459B; --accent-soft:#DFDFF0; --on-accent:#F7F6F2;
   --good:#1F7A4D; --warning:#8A6108; --critical:#B03024;
-  --good-soft:#DFEFE6; --warning-soft:#F5EBD3; --critical-soft:#F7E1DE;
-  /* hobby inks — validated categorical palette, light steps */
+  --good-soft:#DDEDE4; --warning-soft:#F3E9D2; --critical-soft:#F6DFDC;
   --k1:#2a78d6; --k2:#eb6834; --k3:#1baf7a; --k4:#eda100;
   --k5:#e87ba4; --k6:#008300; --k7:#4a3aa7; --k8:#e34948;
-  /* sequential blue ramp for the consistency grid */
-  --q0:#E2E6E8; --q1:#cde2fb; --q2:#9ec5f4; --q3:#5598e7; --q4:#2a78d6; --q5:#184f95;
-  --grid:#DBE1E4;
+  --q0:#E3E0D8; --q1:#cde2fb; --q2:#9ec5f4; --q3:#5598e7; --q4:#2a78d6; --q5:#184f95;
+  --grid:#DCD9CF;
+  --weave:rgba(26,27,46,.05); --tooth:rgba(26,27,46,.035);
+  --lift:0 1px 0 rgba(26,27,46,.05), 0 6px 18px -12px rgba(26,27,46,.28);
+  --lift-2:0 1px 0 rgba(26,27,46,.06), 0 16px 34px -18px rgba(26,27,46,.42);
   --display:'Bricolage Grotesque',ui-sans-serif,'Segoe UI',system-ui,sans-serif;
   --sans:'Hanken Grotesk',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
   --mono:'DM Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
-  --shadow:0 1px 0 rgba(15,26,31,.04);
+  --shadow:var(--lift);
 }
 @media (prefers-color-scheme: dark){
   :root:not([data-theme="light"]){
-    --paper:#0F1416; --card:#181F22; --card-2:#212A2E; --sunk:#141A1D;
-    --line:#2E393E; --line-soft:#232D31;
-    --ink:#E8EEF0; --body:#B4C0C6; --muted:#8A979E;
-    --accent:#6FC3D1; --accent-2:#93D5E0; --accent-soft:#1D3238; --on-accent:#0F1416;
-    --good:#5FB98A; --warning:#D8A93F; --critical:#E77A6B;
-    --good-soft:#163024; --warning-soft:#302710; --critical-soft:#341B18;
-    --k1:#3987e5; --k2:#d95926; --k3:#199e70; --k4:#c98500;
-    --k5:#d55181; --k6:#008300; --k7:#9085e9; --k8:#e66767;
-    --q0:#1E282C; --q1:#143453; --q2:#1C4E86; --q3:#2a78d6; --q4:#5598e7; --q5:#9ec5f4;
-    --grid:#232D31;
-    --shadow:0 1px 0 rgba(0,0,0,.25);
+  --paper:#101124; --card:#1A1C32; --card-2:#242740; --sunk:#15172B;
+  --line:#343760; --line-soft:#282B4A;
+  --ink:#EDEBF5; --body:#B6B8CE; --muted:#8A8CA8;
+  --accent:#9096EC; --accent-2:#B2B6F5; --accent-soft:#252A54; --on-accent:#101124;
+  --good:#5FB98A; --warning:#D8A93F; --critical:#E77A6B;
+  --good-soft:#14301F; --warning-soft:#2F2710; --critical-soft:#331B18;
+  --k1:#3987e5; --k2:#d95926; --k3:#199e70; --k4:#c98500;
+  --k5:#d55181; --k6:#008300; --k7:#9085e9; --k8:#e66767;
+  --q0:#232640; --q1:#1B2F52; --q2:#234A84; --q3:#2a78d6; --q4:#5598e7; --q5:#9ec5f4;
+  --grid:#282B4A;
+  --weave:rgba(255,255,255,.035); --tooth:rgba(255,255,255,.022);
+  --lift:0 1px 0 rgba(0,0,0,.3), 0 6px 18px -12px rgba(0,0,0,.7);
+  --lift-2:0 1px 0 rgba(0,0,0,.35), 0 16px 34px -18px rgba(0,0,0,.85);
   }
 }
 :root[data-theme="dark"]{
-  --paper:#0F1416; --card:#181F22; --card-2:#212A2E; --sunk:#141A1D;
-  --line:#2E393E; --line-soft:#232D31;
-  --ink:#E8EEF0; --body:#B4C0C6; --muted:#8A979E;
-  --accent:#6FC3D1; --accent-2:#93D5E0; --accent-soft:#1D3238; --on-accent:#0F1416;
+  --paper:#101124; --card:#1A1C32; --card-2:#242740; --sunk:#15172B;
+  --line:#343760; --line-soft:#282B4A;
+  --ink:#EDEBF5; --body:#B6B8CE; --muted:#8A8CA8;
+  --accent:#9096EC; --accent-2:#B2B6F5; --accent-soft:#252A54; --on-accent:#101124;
   --good:#5FB98A; --warning:#D8A93F; --critical:#E77A6B;
-  --good-soft:#163024; --warning-soft:#302710; --critical-soft:#341B18;
+  --good-soft:#14301F; --warning-soft:#2F2710; --critical-soft:#331B18;
   --k1:#3987e5; --k2:#d95926; --k3:#199e70; --k4:#c98500;
   --k5:#d55181; --k6:#008300; --k7:#9085e9; --k8:#e66767;
-  --q0:#1E282C; --q1:#143453; --q2:#1C4E86; --q3:#2a78d6; --q4:#5598e7; --q5:#9ec5f4;
-  --grid:#232D31;
-  --shadow:0 1px 0 rgba(0,0,0,.25);
+  --q0:#232640; --q1:#1B2F52; --q2:#234A84; --q3:#2a78d6; --q4:#5598e7; --q5:#9ec5f4;
+  --grid:#282B4A;
+  --weave:rgba(255,255,255,.035); --tooth:rgba(255,255,255,.022);
+  --lift:0 1px 0 rgba(0,0,0,.3), 0 6px 18px -12px rgba(0,0,0,.7);
+  --lift-2:0 1px 0 rgba(0,0,0,.35), 0 16px 34px -18px rgba(0,0,0,.85);
 }
 *{box-sizing:border-box}
 html,body{height:100%}
@@ -132,7 +137,9 @@ main{max-width:1120px; width:100%; margin:0 auto; padding-inline:20px; padding-b
 .rule{height:1px; background:var(--line-soft); border:0; margin:0}
 
 .banner{display:flex; gap:12px; align-items:center; flex-wrap:wrap; background:var(--card);
-  border:1px solid var(--line); border-left:3px solid var(--k4); padding:11px 15px; font-size:13px}
+  border:1px solid var(--line); border-left:3px solid var(--k4); padding:10px 15px; font-size:12.5px;
+  box-shadow:var(--lift)}
+.banner.quiet{border-left-color:var(--line); background:transparent; box-shadow:none; color:var(--muted)}
 .banner .eyebrow{flex:none}
 .banner p{color:var(--body)}
 .banner button{margin-left:auto}
@@ -151,8 +158,9 @@ main{max-width:1120px; width:100%; margin:0 auto; padding-inline:20px; padding-b
 .timer{display:flex; align-items:center; gap:14px; flex-wrap:wrap; padding:14px 16px;
   background:var(--card); border:1px solid var(--line); border-left:3px solid var(--line)}
 .timer.running{border-left-color:var(--critical); background:var(--sunk)}
-.timer-read{font-family:var(--mono); font-size:1.85rem; font-weight:500; color:var(--ink); letter-spacing:-.02em; line-height:1;
-  font-variant-numeric:tabular-nums}
+.timer-read{font-family:var(--mono); font-size:1.4rem; font-weight:500; color:var(--muted); letter-spacing:-.02em; line-height:1;
+  font-variant-numeric:tabular-nums; transition:font-size .2s ease, color .2s ease}
+.timer.running .timer-read{font-size:1.95rem}
 .timer.running .timer-read{color:var(--critical)}
 .timer-meta{margin-right:auto; display:flex; flex-direction:column; gap:3px; min-width:0}
 .timer-meta .who{font-size:13px; color:var(--body); display:flex; align-items:center; gap:7px; min-width:0}
@@ -332,6 +340,123 @@ tfoot td{font-family:var(--mono); color:var(--ink); border-top:1px solid var(--l
   .tile:nth-child(odd){border-left:0}
   .timer{gap:10px}
   .timer-read{font-size:1.6rem}
+}
+</style>
+<style>
+/* ============================================================
+   The bench layer — material, weight and motion.
+   Everything above sets the system; this is where it is dressed.
+   All three hobbies here are handwork, so the page takes its cues
+   from the bench: linen tooth on the ground, indigo for structure,
+   thread for the day's work.
+   ============================================================ */
+
+/* The ground is woven, not flat — a 4px warp and weft at the edge of
+   visibility. It reads as texture, never as a grid to measure against. */
+body{
+  background-color:var(--paper);
+  background-image:
+    repeating-linear-gradient(90deg, var(--weave) 0 1px, transparent 1px 4px),
+    repeating-linear-gradient(0deg,  var(--tooth) 0 1px, transparent 1px 7px);
+}
+
+h1{font-size:1.55rem} h2{font-size:1.32rem; letter-spacing:-.02em} h3{font-size:1.06rem}
+.card{box-shadow:var(--lift)}
+.card-h{padding:15px 18px 13px}
+.card-b{padding:18px}
+.topbar{background-color:var(--paper); backdrop-filter:saturate(1.1)}
+.brand h1{font-size:1.3rem; letter-spacing:-.025em}
+.tab{letter-spacing:.09em}
+.tab[aria-selected="true"]{border-bottom-width:2px}
+
+/* A stitched rule — ornament, used between blocks of chrome. Charts keep
+   solid hairlines; nothing dashed is ever a gridline. */
+.stitch{height:1px; border:0; margin:0;
+  background-image:repeating-linear-gradient(90deg, var(--line) 0 5px, transparent 5px 10px)}
+
+/* ---------------- the hero: today, as a length of thread ---------------- */
+.hero{position:relative; background:var(--card); border:1px solid var(--line); box-shadow:var(--lift-2)}
+.hero::before{content:""; position:absolute; inset:0 0 auto 0; height:2px; background:var(--rule, var(--accent))}
+.hero-in{display:flex; gap:24px; align-items:flex-start; flex-wrap:wrap; padding:24px 22px 18px}
+.hero-fig{display:flex; flex-direction:column; gap:3px; min-width:0}
+.hero-num{font-family:var(--mono); font-weight:500; color:var(--ink);
+  font-size:clamp(2.5rem, 7.5vw, 3.5rem); line-height:.92; letter-spacing:-.05em;
+  font-variant-numeric:tabular-nums}
+.hero-num small{font-size:.3em; letter-spacing:0; color:var(--muted); margin-left:.2em; font-weight:400}
+.hero-sub{font-size:13.5px; color:var(--muted); max-width:34ch}
+.hero-side{display:flex; margin-left:auto; border:1px solid var(--line-soft); background:var(--sunk)}
+.hero-side > div{padding:11px 17px; border-left:1px solid var(--line-soft); min-width:96px}
+.hero-side > div:first-child{border-left:0}
+.hero-side .v{font-family:var(--mono); font-size:1.22rem; color:var(--ink); line-height:1.15}
+.hero-side .v.ok{color:var(--good)}
+.hero-side .l{font-family:var(--mono); font-size:9.5px; letter-spacing:.09em; text-transform:uppercase;
+  color:var(--muted); margin-top:3px}
+
+/* The day's thread: one segment per session, width by minutes. Each carries a
+   warp texture so a band of colour reads as something spun rather than a bar. */
+.thread{display:flex; gap:2px; height:18px; margin:4px 22px 0; background:var(--sunk);
+  box-shadow:inset 0 0 0 1px var(--line-soft)}
+.thread > i{display:block; min-width:4px; position:relative; flex:none;
+  background-image:repeating-linear-gradient(90deg, rgba(255,255,255,.26) 0 1px, transparent 1px 4px)}
+.thread > i.rest{background:none; min-width:0; box-shadow:none; animation:none!important}
+.thread-scale{display:flex; justify-content:space-between; margin:3px 22px 0;
+  font-family:var(--mono); font-size:9.5px; letter-spacing:.07em; text-transform:uppercase; color:var(--muted)}
+:root[data-theme="dark"] .thread > i,
+:root:not([data-theme="light"]) .thread > i{background-image:repeating-linear-gradient(90deg, rgba(0,0,0,.26) 0 1px, transparent 1px 4px)}
+.thread-empty{height:18px; margin:4px 22px 0; border:1px dashed var(--line); background:var(--sunk)}
+.thread-key{display:flex; flex-wrap:wrap; gap:4px 16px; padding:11px 22px 18px}
+.thread-key .item{display:inline-flex; align-items:center; gap:7px; font-size:12.5px; color:var(--body)}
+.thread-key .item .sw{width:9px; height:9px; flex:none}
+.thread-key .item .n{font-family:var(--mono); font-size:11px; color:var(--muted)}
+
+/* ---------------- surfaces with a bit more hand ---------------- */
+.tile .v{font-size:1.7rem; letter-spacing:-.03em}
+.hcard{box-shadow:var(--lift); transition:box-shadow .18s ease, transform .18s ease}
+.hcard:hover{box-shadow:var(--lift-2); transform:translateY(-2px)}
+.hcard-h{padding:15px 16px 11px}
+.meter{height:8px; background:var(--card-2)}
+.meter > i{transform-origin:left center}
+.btn{transition:background .14s ease, border-color .14s ease, transform .1s ease}
+.btn:active{transform:translateY(1px)}
+.row{transition:background .13s ease}
+.proj{transition:background .13s ease}
+.proj:hover{background:var(--sunk)}
+.timer.running{box-shadow:inset 3px 0 0 var(--critical), var(--lift)}
+
+/* The consistency grid sits on the same weave as the page, so the empty days
+   read as bare cloth and the logged ones as dye taken up. */
+.heat-in{background-image:
+  repeating-linear-gradient(90deg, var(--weave) 0 1px, transparent 1px 3px),
+  repeating-linear-gradient(0deg,  var(--tooth) 0 1px, transparent 1px 3px)}
+
+/* ---------------- motion ----------------
+   Gated on `.anim`, which render() puts on the view only when the tab or the
+   day actually changed — so the page animates when you arrive somewhere new
+   and stays perfectly still while you type into it. */
+@keyframes hl-rise{from{opacity:0; transform:translateY(9px)} to{opacity:1; transform:none}}
+@keyframes hl-growx{from{transform:scaleX(0)} to{transform:scaleX(1)}}
+@keyframes hl-growy{from{transform:scaleY(0)} to{transform:scaleY(1)}}
+@media (prefers-reduced-motion: no-preference){
+  .anim > *{animation:hl-rise .34s cubic-bezier(.2,.75,.3,1) both}
+  .anim > *:nth-child(2){animation-delay:45ms}
+  .anim > *:nth-child(3){animation-delay:90ms}
+  .anim > *:nth-child(4){animation-delay:130ms}
+  .anim > *:nth-child(5){animation-delay:165ms}
+  .anim > *:nth-child(n+6){animation-delay:195ms}
+  .anim .meter > i{animation:hl-growx .6s cubic-bezier(.2,.75,.3,1) both .12s}
+  .anim .thread > i{animation:hl-growx .5s cubic-bezier(.2,.75,.3,1) both; transform-origin:left center}
+  .anim .barmark{transform-box:fill-box; transform-origin:bottom center;
+    animation:hl-growy .46s cubic-bezier(.2,.75,.3,1) both; animation-delay:calc(var(--i, 0) * 14ms)}
+  .anim .barmark.lie{transform-origin:left center; animation-name:hl-growx}
+}
+
+@media (max-width:760px){
+  .hero-in{padding:19px 15px 15px; gap:16px}
+  .hero-side{margin-left:0; width:100%}
+  .hero-side > div{flex:1; min-width:0; padding:9px 12px}
+  .thread,.thread-empty{margin-inline:15px}
+  .thread-key{padding:10px 15px 15px}
+  .card-h,.card-b{padding-left:15px; padding-right:15px}
 }
 </style>
 </head>
@@ -1068,7 +1193,8 @@ function weeklyStack(weeks, series){
       const isTop = stackRows[stackRows.length - 1] === s;
       /* a 2px surface gap keeps adjacent segments legible without a stroke */
       const h = Math.max(1, bot - top - (isTop ? 0 : 2));
-      const node = svgEl("path", {d: barPath(cx - bw/2, top, bw, h, isTop ? 4 : 0, true), fill: s.color});
+      const node = svgEl("path", {class:"barmark", style:"--i:" + i,
+        d: barPath(cx - bw/2, top, bw, h, isTop ? 4 : 0, true), fill: s.color});
       node.__tip = () => [
         el("div", {class:"th", text: "Week of " + fmtDate(wk.key)}),
       ].concat(stackRows.map(r => tipRow(r.color, r.label, fmtMins(r.by[wk.key] || 0))))
@@ -1103,7 +1229,8 @@ function hoursByHobby(rows){
     const bw = Math.max(2, (r.minutes / max) * iw);
     kids.push(svgEl("text", {x:0, y:yy + 15, class:"vlabel",
       text: r.label.length > maxChars ? r.label.slice(0, maxChars - 1) + "…" : r.label}, svgEl("title", {text:r.label})));
-    const node = svgEl("path", {d: barPath(labelW, yy + 5, bw, 14, 4, false), fill: r.color});
+    const node = svgEl("path", {class:"barmark lie", style:"--i:" + i,
+      d: barPath(labelW, yy + 5, bw, 14, 4, false), fill: r.color});
     node.__tip = () => [el("div", {class:"th", text:r.label}),
       tipRow(r.color, "Logged", fmtMins(r.minutes)),
       tipRow(null, "Sessions", String(r.sessions)),
@@ -1132,7 +1259,8 @@ function hourHistogram(counts, colorVar){
   counts.forEach((c, h) => {
     const cx = M.l + step * h + step / 2;
     if(c > 0){
-      const node = svgEl("path", {d: barPath(cx - bw/2, y(c), bw, M.t + ih - y(c), 3, true), fill: colorVar});
+      const node = svgEl("path", {class:"barmark", style:"--i:" + h,
+        d: barPath(cx - bw/2, y(c), bw, M.t + ih - y(c), 3, true), fill: colorVar});
       node.__tip = () => [el("div", {class:"th", text: fmtHour(h) + " – " + fmtHour((h+1) % 24)}),
         tipRow(colorVar, c === 1 ? "session" : "sessions", String(c))];
       kids.push(node);
@@ -1227,23 +1355,11 @@ function viewToday(){
   const live = liveHobbies();
   const out = el("div", {class:"stack"});
 
-  add(out, runtimeBanners());
-
-  /* ---- the timer ---- */
+  /* ---- the day, as a length of thread. The hero opens the page: it is the
+         one thing worth seeing before anything else. ---- */
+  add(out, todayHero({date, isToday, today, week, wkFrom, wkTo, st, touched, live}));
+  add(out, demoBanner());
   add(out, timerStrip());
-
-  /* ---- the day at a glance ---- */
-  add(out, el("div", {class:"tiles"}, [
-    tile(isToday ? "Logged today" : "Logged that day", fmtMins(sum(today, s => s.minutes)), null,
-      today.length ? today.length + (today.length === 1 ? " session" : " sessions") : "Nothing yet"),
-    tile("This week", fmtMins(sum(week, s => s.minutes)), null,
-      fmtDate(wkFrom) + " – " + fmtDate(wkTo)),
-    tile("Streak", st.current, st.current === 1 ? " day" : " days",
-      st.longest > st.current ? ["best ", el("b", {text: st.longest + " days"})] : (st.current ? "Keep it going" : "Log something to start one"),
-      st.current >= 3 ? "is-good" : ""),
-    tile("Hobbies touched", touched.size, " of " + live.length,
-      live.length ? neglectedNote() : "Add your first hobby"),
-  ]));
 
   /* ---- log a session ---- */
   add(out, logForm());
@@ -1257,16 +1373,98 @@ function viewToday(){
   } else {
     today.forEach(s => add(rows, sessionRow(s)));
   }
-  add(out, el("section", {class:"card"}, [
+  const ledgerCard = el("section", {class:"card"}, [
     cardHead(isToday ? "Today’s ledger" : fmtDateFull(date), [
       el("span", {class:"eyebrow", text: fmtMins(sum(today, s => s.minutes)) + " · " + today.length + (today.length === 1 ? " entry" : " entries")}),
     ]),
     el("div", {class:"card-b tight"}, rows),
-  ]));
+  ]);
+  add(out, ledgerCard);
 
   /* ---- where the week stands ---- */
   if(live.length) add(out, weekGoalsCard(wkFrom));
+  add(out, storageBanner());
   return out;
+}
+
+/* The day's work drawn as thread on the bench: one segment per session, its
+   width the minutes it took, in that hobby's ink. An empty day is an empty
+   loom rather than a zero. */
+function todayHero(d){
+  const mins = sum(d.today, s => s.minutes);
+  const byHobby = {};
+  d.today.forEach(s => { byHobby[s.hobbyId] = (byHobby[s.hobbyId] || 0) + s.minutes; });
+  const names = Object.keys(byHobby);
+
+  const num = el("div", {class:"hero-num"});
+  countUp(num, mins, v => {
+    const m = Math.round(v);
+    return m >= 60 ? Math.floor(m / 60) + "h " + String(m % 60).padStart(2, "0") + "m" : m + "m";
+  });
+
+  const sub = !d.live.length
+    ? "Add a hobby and the day starts filling in."
+    : !d.today.length
+      ? (d.isToday ? "Nothing on the bench yet. Start the clock below, or write it in by hand."
+                   : "Nothing was logged that day.")
+      : d.today.length + (d.today.length === 1 ? " session" : " sessions") + " across " +
+        names.length + (names.length === 1 ? " hobby" : " hobbies") +
+        (d.isToday ? "" : " on " + fmtDateFull(d.date));
+
+  const side = el("div", {class:"hero-side"}, [
+    el("div", {}, [el("div", {class:"v", text: fmtMins(sum(d.week, s => s.minutes))}),
+      el("div", {class:"l", text:"This week"})]),
+    el("div", {}, [el("div", {class:"v" + (d.st.current >= 3 ? " ok" : ""), text: String(d.st.current) + "d"}),
+      el("div", {class:"l", text: d.st.longest > d.st.current ? "Streak · best " + d.st.longest : "Streak"})]),
+    el("div", {}, [el("div", {class:"v", text: d.touched.size + "/" + d.live.length}),
+      el("div", {class:"l", text:"Hobbies today"})]),
+  ]);
+
+  const inks = d.live.slice(0, 6).map(h => inkCss(h.ink));
+  const rule = inks.length
+    ? "linear-gradient(90deg," + inks.map((c, i) =>
+        c + " " + (i * 100 / inks.length).toFixed(2) + "% " + ((i + 1) * 100 / inks.length).toFixed(2) + "%").join(",") + ")"
+    : "var(--accent)";
+  const hero = el("section", {class:"hero", style:"--rule:" + rule}, [
+    el("div", {class:"hero-in"}, [
+      el("div", {class:"hero-fig"}, [
+        el("div", {class:"eyebrow", text: d.isToday ? "Today · " + DOW_SHORT[dowIndex(d.date)] + " " + fmtDate(d.date) : fmtDateFull(d.date)}),
+        num,
+        el("div", {class:"hero-sub", text: sub}),
+      ]),
+      side,
+    ]),
+  ]);
+
+  if(d.today.length){
+    /* Measured against a four-hour day, so the thread's LENGTH means minutes.
+       Normalising to the day's own total would draw a full bar for a ten-minute
+       day, which would read as "done". */
+    const SCALE = Math.max(240, mins);
+    add(hero, el("div", {class:"thread", role:"img",
+      "aria-label":"The day's sessions, to scale: " + d.today.map(x => hobbyName(x.hobbyId) + " " + fmtMins(x.minutes)).join(", ")},
+      d.today.map(sx => el("i", {
+        style:"width:" + Math.max(1.2, sx.minutes / SCALE * 100).toFixed(2) + "%; background:" + hobbyInk(sx.hobbyId),
+        title: hobbyName(sx.hobbyId) + " · " + fmtMins(sx.minutes) + (sx.at ? " · " + sx.at : ""),
+      })).concat([el("i", {class:"rest", style:"flex:1"})])));
+    add(hero, el("div", {class:"thread-scale"}, [
+      el("span", {text:"0"}),
+      el("span", {text: SCALE <= 240 ? "4h" : fmtHours(SCALE)}),
+    ]));
+    add(hero, el("div", {class:"thread-key"}, names
+      .sort((a, b) => byHobby[b] - byHobby[a])
+      .map(id => el("span", {class:"item"}, [
+        el("span", {class:"sw", style:"background:" + hobbyInk(id)}),
+        el("span", {text: hobbyName(id)}),
+        el("span", {class:"n", text: fmtMins(byHobby[id])}),
+      ]))));
+  } else {
+    add(hero, el("div", {class:"thread-empty", "aria-hidden":"true"}));
+    add(hero, el("div", {class:"thread-key"},
+      el("span", {class:"item"}, el("span", {class:"n",
+        text: d.live.length ? neglectedNote.text() : "No hobbies yet"}))));
+  }
+  return hero;
 }
 
 function neglectedNote(){
@@ -1278,23 +1476,31 @@ function neglectedNote(){
   if(!stale.length) return "All of them seen recently";
   return [el("b", {text: stale[0].h.name}), " untouched for " + daysBetween(stale[0].last, todayISO()) + " days"];
 }
+/* The same observation as a bare string, for places that take text not nodes. */
+neglectedNote.text = function(){
+  const totals = hobbyTotals();
+  const stale = liveHobbies()
+    .map(h => ({h, last: totals[h.id] ? totals[h.id].last : ""}))
+    .filter(x => x.last && daysBetween(x.last, todayISO()) >= 14)
+    .sort((a, b) => a.last.localeCompare(b.last));
+  if(!stale.length) return "Every hobby seen in the last fortnight";
+  return stale[0].h.name + " has not been touched in " + daysBetween(stale[0].last, todayISO()) + " days";
+};
 
-function runtimeBanners(){
-  const out = [];
-  if(!Persist.db){
-    out.push(el("div", {class:"banner"}, [
-      el("span", {class:"eyebrow", text:"This browser only"}),
-      el("p", {text:"The ledger is saved in this browser’s local storage. It will not follow you to another device — take a backup from Settings."}),
-    ]));
-  }
-  if(state.demo){
-    out.push(el("div", {class:"banner", style:"border-left-color:var(--k4)"}, [
-      el("span", {class:"eyebrow", text:"Example ledger"}),
-      el("p", {text:"Four months of made-up sessions, so the charts have something to show. The moment you log anything real, all of this goes."}),
-      el("button", {class:"btn btn-sm", type:"button", text:"Clear it now", onclick:clearExamples}),
-    ]));
-  }
-  return out;
+function storageBanner(){
+  if(Persist.db) return null;
+  return el("div", {class:"banner quiet"}, [
+    el("span", {class:"eyebrow", text:"This browser only"}),
+    el("p", {text:"Saved in this browser’s local storage — it will not follow you to another device. Take a backup from Settings."}),
+  ]);
+}
+function demoBanner(){
+  if(!state.demo) return null;
+  return el("div", {class:"banner", style:"border-left-color:var(--k4)"}, [
+    el("span", {class:"eyebrow", text:"Example ledger"}),
+    el("p", {text:"Four months of made-up sessions, so the charts have something to show. The first thing you log clears them."}),
+    el("button", {class:"btn btn-sm", type:"button", text:"Clear now", onclick:clearExamples}),
+  ]);
 }
 
 /* ---------------- the timer ---------------- */
@@ -1821,7 +2027,10 @@ function heatColor(m){
   return c;
 }
 function consistencyCard(){
-  const weeks = 53;
+  /* Grows with the ledger: a fortnight-old log should not open on nine months
+     of empty cloth, and a long one still tops out at a year. */
+  const firstDay = allSessions().reduce((a, x) => (!a || x.date < a) ? x.date : a, "");
+  const weeks = clamp(firstDay ? Math.ceil(daysBetween(firstDay, todayISO()) / 7) + 2 : 14, 14, 53);
   const thisWeek = weekStartOf(todayISO(), state.config.weekStart);
   const start = addDays(thisWeek, -7 * (weeks - 1));
   const hid = state.heatHobby;
@@ -1865,7 +2074,7 @@ function consistencyCard(){
 
   return el("section", {class:"card"}, [
     cardHead("Days you showed up", [
-      el("span", {class:"eyebrow", text:"The last 52 weeks"}),
+      el("span", {class:"eyebrow", text: weeks >= 53 ? "The last 52 weeks" : "The last " + weeks + " weeks"}),
       el("select", {"aria-label":"Filter the grid by hobby", style:"width:auto; min-width:150px",
         onchange:e => { state.heatHobby = e.target.value; render(); }}, [
         el("option", {value:"", text:"All hobbies", selected: !hid}),
@@ -2333,6 +2542,30 @@ function importBackup(e){
   e.target.value = "";
 }
 
+/* ============================ motion ============================
+   The whole view is rebuilt on every interaction, so an entrance animation
+   that ran on each render would re-animate the page every time you touched a
+   control. `animateNext` is raised only when you actually arrive somewhere —
+   boot, a tab change, a different day — and render lowers it again. */
+let animateNext = true;
+let animating = false;
+const stillPlease = () => {
+  try{ return matchMedia("(prefers-reduced-motion: reduce)").matches; }catch(e){ return false; }
+};
+/* Counts a figure up to its value once, on arrival. Falls straight to the
+   final value when the view is not animating, so the number is never wrong. */
+function countUp(node, to, fmt){
+  if(!animating || stillPlease() || !(to > 0)){ node.textContent = fmt(to); return; }
+  const t0 = performance.now(), dur = 620;
+  node.textContent = fmt(0);
+  const step = t => {
+    const k = Math.min(1, (t - t0) / dur);
+    node.textContent = fmt(to * (1 - Math.pow(1 - k, 3)));
+    if(k < 1) requestAnimationFrame(step);
+  };
+  requestAnimationFrame(step);
+}
+
 /* ============================ render ============================ */
 const VIEWS = {today: viewToday, hobbies: viewHobbies, trends: viewTrends, milestones: viewMilestones, settings: viewSettings};
 function render(){
@@ -2346,7 +2579,7 @@ function render(){
   TABS.forEach(([id, label]) => add(tabs, el("button", {
     class:"tab", type:"button", role:"tab", "aria-controls":"view", id:"tab-" + id,
     "aria-selected": String(state.tab === id),
-    onclick:() => { state.tab = id; render(); $("view").focus(); }, text: label,
+    onclick:() => { if(state.tab !== id){ state.tab = id; animateNext = true; } render(); $("view").focus(); }, text: label,
   })));
   /* date strip */
   const d = state.date, isToday = d === todayISO();
@@ -2359,13 +2592,18 @@ function render(){
   /* body */
   const view = clear($("view"));
   view.setAttribute("aria-labelledby", "tab-" + state.tab);
-  view.appendChild((VIEWS[state.tab] || viewToday)());
+  animating = animateNext;
+  animateNext = false;
+  const root = (VIEWS[state.tab] || viewToday)();
+  if(animating) root.classList.add("anim");
+  view.appendChild(root);
+  animating = false;
 }
 
-$("dprev").onclick = () => { state.date = addDays(state.date, -1); render(); };
-$("dnext").onclick = () => { if(state.date < todayISO()){ state.date = addDays(state.date, 1); render(); } };
-$("dtoday").onclick = () => { state.date = todayISO(); render(); };
-$("dinput").onchange = e => { if(e.target.value){ state.date = e.target.value; render(); } };
+$("dprev").onclick = () => { state.date = addDays(state.date, -1); animateNext = true; render(); };
+$("dnext").onclick = () => { if(state.date < todayISO()){ state.date = addDays(state.date, 1); animateNext = true; render(); } };
+$("dtoday").onclick = () => { state.date = todayISO(); animateNext = true; render(); };
+$("dinput").onchange = e => { if(e.target.value){ state.date = e.target.value; animateNext = true; render(); } };
 $("themebtn").onclick = toggleTheme;
 
 let resizeTimer = null;
