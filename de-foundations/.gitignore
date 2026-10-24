@@ -1,0 +1,9 @@
+data/shop.db
+data/model.db
+data/warehouse.db
+data/raw/
+data/clean/
+__pycache__/
+.venv/
+.pytest_cache/
+logs/
