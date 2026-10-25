@@ -2,6 +2,7 @@
 
 | Project | What it is |
 |---|---|
+| [`ammas-indian-cuisine/`](ammas-indian-cuisine/) | Website for Amma's Indian Cuisine — menu with veg filter, breakfast specials, table requests, hours and contact. Single static HTML file; edit `CONFIG` and `MENU` in its script. |
 | [`plate-and-barbell/`](plate-and-barbell/) | Two-person food, nutrition and gym tracker — single-page app with plan, log, trends and CSV export. |
 
 **Plate & Barbell** runs from one source file with three storage backends,
