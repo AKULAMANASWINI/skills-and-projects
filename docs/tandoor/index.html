@@ -375,34 +375,64 @@ a{color:inherit}
 .section-head h2{font-size:clamp(1.9rem,4.2vw,2.75rem);font-variation-settings:'SOFT' 20,'WONK' 1;letter-spacing:-.015em}
 .section-head p{color:var(--ink-2);max-width:46ch;margin-top:.45rem}
 
-/* ============ menu ============ */
-.legend{
-  display:flex;flex-wrap:wrap;gap:.8rem 1.6rem;align-items:center;
-  padding:1rem 1.15rem;border:1px solid var(--line);border-radius:var(--radius);
-  background:var(--ground-3);margin-bottom:1.25rem;font-size:.82rem;color:var(--ink-2);
+/* ============ menu, set like a tasting card ============ */
+.menu-grid{display:block}
+
+.menu-nav{
+  display:flex;flex-wrap:wrap;justify-content:center;gap:.45rem 1.8rem;
+  padding-bottom:1.1rem;border-bottom:1px solid var(--line);margin-bottom:1.1rem;
 }
-.legend-group{display:flex;flex-wrap:wrap;align-items:center;gap:.55rem}
-.legend-label{font-size:.66rem;font-weight:700;letter-spacing:.13em;text-transform:uppercase;color:var(--ink-3)}
-.mark{
-  font-size:.62rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
-  padding:.16rem .42rem;border-radius:4px;border:1px solid currentColor;line-height:1.4;white-space:nowrap;
+.tab{
+  background:none;border:0;border-bottom:1px solid transparent;cursor:pointer;
+  font:inherit;font-size:.7rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--ink-3);padding:.35rem 0;transition:color .15s ease,border-color .15s ease;
 }
-.mark-v{color:var(--leaf)}
-.mark-gf{color:var(--copper)}
+.tab:hover{color:var(--ink)}
+.tab[aria-selected="true"]{color:var(--ember);border-bottom-color:var(--ember)}
+
+.menu-tools{max-width:36rem;margin-inline:auto}
+.menu-note{
+  max-width:46ch;margin:.9rem auto 0;text-align:center;
+  font-size:.84rem;color:var(--ink-3);
+}
+
+.course{display:block;scroll-margin-top:calc(env(safe-area-inset-top,0px) + 84px)}
+.course-head{display:grid;justify-items:center;gap:.9rem;text-align:center}
+.course h3{
+  font-family:var(--font-body);font-size:.8rem;font-weight:700;
+  letter-spacing:.3em;text-transform:uppercase;color:var(--ink);
+}
+.course h3::after{content:"";display:block;width:30px;height:1px;background:var(--ember);margin:1.05rem auto 0}
+.course-badges{display:flex;flex-wrap:wrap;justify-content:center;gap:.9rem}
+.region{font-size:.62rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--saffron)}
+.region-veg{color:var(--leaf)}
+.course-note{
+  font-family:var(--font-display);font-style:italic;font-size:1.02rem;
+  color:var(--ink-2);text-align:center;max-width:52ch;margin:1.4rem auto 0;
+}
+
+.dishes{display:grid;gap:2.5rem;max-width:36rem;margin:3rem auto 0;text-align:center}
+.dish{display:grid;justify-items:center;gap:.5rem}
+.dish-name{
+  font-family:var(--font-body);font-size:.86rem;font-weight:650;
+  letter-spacing:.18em;text-transform:uppercase;color:var(--ink);line-height:1.5;margin:0;
+}
+.dish-desc{
+  font-family:var(--font-display);font-style:italic;font-size:1.02rem;line-height:1.55;
+  color:var(--ink-2);max-width:44ch;margin:0;
+}
+.dish-line{display:flex;flex-wrap:wrap;justify-content:center;align-items:baseline;gap:.2rem .9rem}
+.dish-price{font-size:.95rem;font-weight:650;color:var(--ember);font-variant-numeric:tabular-nums}
+.dish-mark{font-size:.72rem;letter-spacing:.1em;color:var(--ink-3)}
+.dish-mark + .dish-mark::before,
+.dish-price + .dish-mark::before{content:"\00b7";margin-right:.9rem;color:var(--line)}
+
+.menu-foot{text-align:center;max-width:52ch;margin-inline:auto}
+
 
 .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;
   clip:rect(0 0 0 0);white-space:nowrap;border:0}
 
-.menu-nav{
-  display:flex;gap:.45rem;overflow-x:auto;padding-bottom:.85rem;margin-bottom:1.25rem;
-  border-bottom:1px solid var(--line-soft);scrollbar-width:thin;
-}
-.menu-nav a{
-  flex:none;text-decoration:none;font-size:.82rem;font-weight:600;color:var(--ink-2);
-  padding:.4rem .8rem;border:1px solid var(--line);border-radius:999px;white-space:nowrap;
-  transition:border-color .15s ease,color .15s ease;
-}
-.menu-nav a:hover{border-color:var(--ember);color:var(--ember)}
 
 .menu-tools{display:flex;flex-wrap:wrap;align-items:center;gap:.65rem;margin-bottom:1.25rem}
 .search{
@@ -420,8 +450,6 @@ a{color:inherit}
 .search input::-webkit-search-cancel-button{-webkit-appearance:none;appearance:none}
 .menu-count{font-size:.82rem;color:var(--ink-3);font-variant-numeric:tabular-nums;margin-left:auto}
 
-.course-badges{display:flex;flex-wrap:wrap;gap:.35rem}
-.region-veg{color:var(--leaf);border-color:color-mix(in srgb,var(--leaf) 45%,transparent)}
 
 .chip{
   font:inherit;font-size:.83rem;font-weight:600;cursor:pointer;
@@ -431,31 +459,7 @@ a{color:inherit}
 .chip:hover{border-color:var(--ember);color:var(--ember)}
 .chip[aria-pressed="true"]{background:var(--ember);border-color:var(--ember);color:var(--ember-on)}
 
-.menu-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(19rem,1fr));
-  gap:clamp(1rem,2.2vw,1.5rem);align-items:start}
-@media (max-width:420px){.menu-grid{grid-template-columns:1fr}}
-.course{
-  scroll-margin-top:calc(env(safe-area-inset-top,0px) + 84px);
-  border:1px solid var(--line);border-radius:var(--radius);background:var(--ground-3);
-  padding:clamp(1.25rem,2.6vw,1.75rem);box-shadow:var(--shadow);
-  display:flex;flex-direction:column;gap:1.15rem;
-}
-.course-head{display:flex;align-items:baseline;justify-content:space-between;gap:1rem;flex-wrap:wrap}
-.course h3{font-size:1.3rem;font-variation-settings:'SOFT' 18,'WONK' 1}
-.region{
-  font-size:.62rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;
-  color:var(--saffron);border:1px solid color-mix(in srgb,var(--saffron) 45%,transparent);
-  padding:.18rem .5rem;border-radius:999px;white-space:nowrap;
-}
-.course-note{font-size:.85rem;color:var(--ink-2)}
 
-.dishes{display:flex;flex-direction:column;gap:1.05rem}
-.dish-top{display:flex;align-items:baseline;gap:.5rem}
-.dish-name{font-family:var(--font-body);font-size:.97rem;font-weight:650;color:var(--ink);line-height:1.35}
-.leader{flex:1 1 1.5rem;min-width:1.5rem;border-bottom:1px dotted var(--line);transform:translateY(-.28em)}
-.dish-price{font-size:.92rem;font-weight:650;color:var(--ink);font-variant-numeric:tabular-nums;flex:none}
-.dish-desc{font-size:.875rem;color:var(--ink-2);margin-top:.2rem;max-width:56ch}
-.dish-marks{display:flex;flex-wrap:wrap;align-items:center;gap:.35rem;margin-top:.4rem}
 
 .menu-foot{margin-top:1.5rem;font-size:.85rem;color:var(--ink-3)}
 
@@ -672,548 +676,617 @@ a{color:inherit}
         </div>
       </div>
 
-      <nav class="menu-nav" aria-label="Jump to a menu section">
-        <a href="#m-appetizers">Appetizers</a>
-        <a href="#m-soups">Soups &amp; Salads</a>
-        <a href="#m-indochinese">Indo-Chinese</a>
-        <a href="#m-dosa">Dosa</a>
-        <a href="#m-veg">Vegetarian Delights</a>
-        <a href="#m-tandoor">From the Tandoor Oven</a>
-        <a href="#m-nonveg">Non-Vegetarian Delights</a>
-        <a href="#m-biryani">Biryani</a>
-        <a href="#m-naan">Naan</a>
-        <a href="#m-desserts">Desserts</a>
-        <a href="#m-drinks">Beverages</a>
-        <a href="#m-condiments">Condiments</a>
-      </nav>
+      <div class="menu-nav" role="tablist" aria-label="Menu sections">
+        <button type="button" class="tab" id="tab-m-appetizers" role="tab" data-target="m-appetizers" aria-controls="m-appetizers" aria-selected="true">Appetizers</button>
+        <button type="button" class="tab" id="tab-m-soups" role="tab" data-target="m-soups" aria-controls="m-soups" aria-selected="false">Soups &amp; Salads</button>
+        <button type="button" class="tab" id="tab-m-indochinese" role="tab" data-target="m-indochinese" aria-controls="m-indochinese" aria-selected="false">Indo-Chinese</button>
+        <button type="button" class="tab" id="tab-m-dosa" role="tab" data-target="m-dosa" aria-controls="m-dosa" aria-selected="false">Dosa</button>
+        <button type="button" class="tab" id="tab-m-veg" role="tab" data-target="m-veg" aria-controls="m-veg" aria-selected="false">Vegetarian Delights</button>
+        <button type="button" class="tab" id="tab-m-tandoor" role="tab" data-target="m-tandoor" aria-controls="m-tandoor" aria-selected="false">From the Tandoor Oven</button>
+        <button type="button" class="tab" id="tab-m-nonveg" role="tab" data-target="m-nonveg" aria-controls="m-nonveg" aria-selected="false">Non-Vegetarian Delights</button>
+        <button type="button" class="tab" id="tab-m-biryani" role="tab" data-target="m-biryani" aria-controls="m-biryani" aria-selected="false">Biryani</button>
+        <button type="button" class="tab" id="tab-m-naan" role="tab" data-target="m-naan" aria-controls="m-naan" aria-selected="false">Naan</button>
+        <button type="button" class="tab" id="tab-m-desserts" role="tab" data-target="m-desserts" aria-controls="m-desserts" aria-selected="false">Desserts</button>
+        <button type="button" class="tab" id="tab-m-drinks" role="tab" data-target="m-drinks" aria-controls="m-drinks" aria-selected="false">Beverages</button>
+        <button type="button" class="tab" id="tab-m-condiments" role="tab" data-target="m-condiments" aria-controls="m-condiments" aria-selected="false">Condiments</button>
+      </div>
 
       <div class="menu-tools">
         <div class="search">
           <svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="9" cy="9" r="5.5" stroke="currentColor" stroke-width="1.6"/><path d="m13.2 13.2 3.3 3.3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
           <label class="sr-only" for="menu-search">Search the menu</label>
-          <input type="search" id="menu-search" placeholder="Search 98 dishes — paneer, dosa, lamb…" autocomplete="off">
+          <input type="search" id="menu-search" placeholder="Search all 98 dishes — paneer, dosa, lamb…" autocomplete="off">
         </div>
         <button type="button" class="chip" id="veg-only" aria-pressed="false">Vegetarian only</button>
         <p class="menu-count" id="menu-count" aria-live="polite">98 dishes</p>
       </div>
 
-      <div class="legend">
-        <div class="legend-group">
-          <span class="legend-label">Marks</span>
-          <span class="mark mark-v">V</span><span>Vegetarian</span>
-          <span class="mark mark-gf">GF</span><span>Gluten-free</span>
-        </div>
-        <div class="legend-group"><span>Tell your server about any allergy — the kitchen will say what it can and can’t do.</span></div>
-      </div>
+      <p class="menu-note">Tell your server about any allergy — the kitchen will say what it can and can’t do.</p>
 
       <div class="menu-grid" id="menu-grid">
 
-        <section class="course" id="m-appetizers" aria-labelledby="h-m-appetizers">
+        <section class="course" id="m-appetizers" role="tabpanel" aria-labelledby="tab-m-appetizers">
           <div class="course-head">
             <h3 id="h-m-appetizers">Appetizers</h3>
           </div>
           <ul class="dishes">
-            <li class="dish" data-veg="1" data-search="samosa pastry stuffed with a blend of potatoes and peas">
-              <div class="dish-top"><span class="dish-name">Samosa</span><span class="leader" aria-hidden="true"></span><span class="dish-price">6.95</span></div>
+                        <li class="dish" data-veg="1" data-search="samosa pastry stuffed with a blend of potatoes and peas">
+              <h4 class="dish-name">Samosa</h4>
               <p class="dish-desc">Pastry stuffed with a blend of potatoes and peas</p>
-              <div class="dish-marks"><span class="mark mark-v">V</span></div>
+              <div class="dish-line"><span class="dish-price">6.95</span><span class="dish-mark">Vegetarian</span></div>
             </li>
-            <li class="dish" data-veg="1" data-search="pani puri crispy fried puri filled with potatoes and onions">
-              <div class="dish-top"><span class="dish-name">Pani Puri</span><span class="leader" aria-hidden="true"></span><span class="dish-price">6.95</span></div>
+                        <li class="dish" data-veg="1" data-search="pani puri crispy fried puri filled with potatoes and onions">
+              <h4 class="dish-name">Pani Puri</h4>
               <p class="dish-desc">Crispy fried puri filled with potatoes and onions</p>
-              <div class="dish-marks"><span class="mark mark-v">V</span></div>
+              <div class="dish-line"><span class="dish-price">6.95</span><span class="dish-mark">Vegetarian</span></div>
             </li>
-            <li class="dish" data-veg="1" data-search="vegetable pakora mixed vegetables dipped with spiced chickpea batter">
-              <div class="dish-top"><span class="dish-name">Vegetable Pakora</span><span class="leader" aria-hidden="true"></span><span class="dish-price">6.95</span></div>
+                        <li class="dish" data-veg="1" data-search="vegetable pakora mixed vegetables dipped with spiced chickpea batter">
+              <h4 class="dish-name">Vegetable Pakora</h4>
               <p class="dish-desc">Mixed vegetables dipped with spiced chickpea batter</p>
-              <div class="dish-marks"><span class="mark mark-v">V</span></div>
+              <div class="dish-line"><span class="dish-price">6.95</span><span class="dish-mark">Vegetarian</span></div>
             </li>
-            <li class="dish" data-veg="1" data-search="cut mirchi peppers coated in a seasoned chickpea-flour batter">
-              <div class="dish-top"><span class="dish-name">Cut Mirchi</span><span class="leader" aria-hidden="true"></span><span class="dish-price">6.95</span></div>
+                        <li class="dish" data-veg="1" data-search="cut mirchi peppers coated in a seasoned chickpea-flour batter">
+              <h4 class="dish-name">Cut Mirchi</h4>
               <p class="dish-desc">Peppers coated in a seasoned chickpea-flour batter</p>
-              <div class="dish-marks"><span class="mark mark-v">V</span></div>
+              <div class="dish-line"><span class="dish-price">6.95</span><span class="dish-mark">Vegetarian</span></div>
             </li>
-            <li class="dish" data-veg="1" data-search="potato bhajji crispy battered potato slices seasoned with spices">
-              <div class="dish-top"><span class="dish-name">Potato Bhajji</span><span class="leader" aria-hidden="true"></span><span class="dish-price">6.95</span></div>
+                        <li class="dish" data-veg="1" data-search="potato bhajji crispy battered potato slices seasoned with spices">
+              <h4 class="dish-name">Potato Bhajji</h4>
               <p class="dish-desc">Crispy battered potato slices seasoned with spices</p>
-              <div class="dish-marks"><span class="mark mark-v">V</span></div>
+              <div class="dish-line"><span class="dish-price">6.95</span><span class="dish-mark">Vegetarian</span></div>
             </li>
-            <li class="dish" data-veg="1" data-search="vegetable spring roll crispy golden pastry filled with mixed vegetables">
-              <div class="dish-top"><span class="dish-name">Vegetable Spring Roll</span><span class="leader" aria-hidden="true"></span><span class="dish-price">5.95</span></div>
+                        <li class="dish" data-veg="1" data-search="vegetable spring roll crispy golden pastry filled with mixed vegetables">
+              <h4 class="dish-name">Vegetable Spring Roll</h4>
               <p class="dish-desc">Crispy golden pastry filled with mixed vegetables</p>
-              <div class="dish-marks"><span class="mark mark-v">V</span></div>
+              <div class="dish-line"><span class="dish-price">5.95</span><span class="dish-mark">Vegetarian</span></div>
             </li>
-            <li class="dish" data-veg="1" data-search="bhel puri crispy puffed rice tossed with vegetables, chutneys and spices">
-              <div class="dish-top"><span class="dish-name">Bhel Puri</span><span class="leader" aria-hidden="true"></span><span class="dish-price">5.95</span></div>
+                        <li class="dish" data-veg="1" data-search="bhel puri crispy puffed rice tossed with vegetables, chutneys and spices">
+              <h4 class="dish-name">Bhel Puri</h4>
               <p class="dish-desc">Crispy puffed rice tossed with vegetables, chutneys and spices</p>
-              <div class="dish-marks"><span class="mark mark-v">V</span></div>
+              <div class="dish-line"><span class="dish-price">5.95</span><span class="dish-mark">Vegetarian</span></div>
             </li>
-            <li class="dish" data-veg="1" data-search="paneer pakora crispy golden fried paneer">
-              <div class="dish-top"><span class="dish-name">Paneer Pakora</span><span class="leader" aria-hidden="true"></span><span class="dish-price">7.95</span></div>
+                        <li class="dish" data-veg="1" data-search="paneer pakora crispy golden fried paneer">
+              <h4 class="dish-name">Paneer Pakora</h4>
               <p class="dish-desc">Crispy golden fried paneer</p>
-              <div class="dish-marks"><span class="mark mark-v">V</span></div>
+              <div class="dish-line"><span class="dish-price">7.95</span><span class="dish-mark">Vegetarian</span></div>
             </li>
-            <li class="dish" data-veg="1" data-search="samosa chana chaat samosa topped with chickpeas, chutney, and spices">
-              <div class="dish-top"><span class="dish-name">Samosa Chana Chaat</span><span class="leader" aria-hidden="true"></span><span class="dish-price">8.95</span></div>
+                        <li class="dish" data-veg="1" data-search="samosa chana chaat samosa topped with chickpeas, chutney, and spices">
+              <h4 class="dish-name">Samosa Chana Chaat</h4>
               <p class="dish-desc">Samosa topped with chickpeas, chutney, and spices</p>
-              <div class="dish-marks"><span class="mark mark-v">V</span></div>
+              <div class="dish-line"><span class="dish-price">8.95</span><span class="dish-mark">Vegetarian</span></div>
             </li>
-            <li class="dish" data-veg="1" data-search="assorted snacks platter with samosa, pakora, bhaji and cut mirchi">
-              <div class="dish-top"><span class="dish-name">Assorted Snacks</span><span class="leader" aria-hidden="true"></span><span class="dish-price">8.95</span></div>
+                        <li class="dish" data-veg="1" data-search="assorted snacks platter with samosa, pakora, bhaji and cut mirchi">
+              <h4 class="dish-name">Assorted Snacks</h4>
               <p class="dish-desc">Platter with samosa, pakora, bhaji and cut mirchi</p>
-              <div class="dish-marks"><span class="mark mark-v">V</span></div>
+              <div class="dish-line"><span class="dish-price">8.95</span><span class="dish-mark">Vegetarian</span></div>
             </li>
-            <li class="dish" data-veg="0" data-search="chicken pakora chicken tenders coated in a seasoned chickpea-flour batter">
-              <div class="dish-top"><span class="dish-name">Chicken Pakora</span><span class="leader" aria-hidden="true"></span><span class="dish-price">7.95</span></div>
+                        <li class="dish" data-veg="0" data-search="chicken pakora chicken tenders coated in a seasoned chickpea-flour batter">
+              <h4 class="dish-name">Chicken Pakora</h4>
               <p class="dish-desc">Chicken tenders coated in a seasoned chickpea-flour batter</p>
+              <div class="dish-line"><span class="dish-price">7.95</span></div>
             </li>
-            <li class="dish" data-veg="0" data-search="peppery calamari crisp calamari seasoned with masala">
-              <div class="dish-top"><span class="dish-name">Peppery Calamari</span><span class="leader" aria-hidden="true"></span><span class="dish-price">7.95</span></div>
+                        <li class="dish" data-veg="0" data-search="peppery calamari crisp calamari seasoned with masala">
+              <h4 class="dish-name">Peppery Calamari</h4>
               <p class="dish-desc">Crisp calamari seasoned with masala</p>
+              <div class="dish-line"><span class="dish-price">7.95</span></div>
             </li>
-            <li class="dish" data-veg="0" data-search="fish pakora tender fish pieces coated in a spiced batter and fried until crispy">
-              <div class="dish-top"><span class="dish-name">Fish Pakora</span><span class="leader" aria-hidden="true"></span><span class="dish-price">7.95</span></div>
+                        <li class="dish" data-veg="0" data-search="fish pakora tender fish pieces coated in a spiced batter and fried until crispy">
+              <h4 class="dish-name">Fish Pakora</h4>
               <p class="dish-desc">Tender fish pieces coated in a spiced batter and fried until crispy</p>
+              <div class="dish-line"><span class="dish-price">7.95</span></div>
             </li>
           </ul>
         </section>
 
-        <section class="course" id="m-soups" aria-labelledby="h-m-soups">
+        <section class="course" id="m-soups" role="tabpanel" aria-labelledby="tab-m-soups">
           <div class="course-head">
             <h3 id="h-m-soups">Soups &amp; Salads</h3>
             <span class="course-badges"><span class="region region-veg">All vegetarian</span></span>
           </div>
           <ul class="dishes">
-            <li class="dish" data-veg="1" data-search="kachumber diced cucumber and tomatoes with lemon dressing">
-              <div class="dish-top"><span class="dish-name">Kachumber</span><span class="leader" aria-hidden="true"></span><span class="dish-price">6.95</span></div>
+                        <li class="dish" data-veg="1" data-search="kachumber diced cucumber and tomatoes with lemon dressing">
+              <h4 class="dish-name">Kachumber</h4>
               <p class="dish-desc">Diced cucumber and tomatoes with lemon dressing</p>
-              <div class="dish-marks"><span class="mark mark-gf">GF</span></div>
+              <div class="dish-line"><span class="dish-price">6.95</span><span class="dish-mark">Gluten-free</span></div>
             </li>
-            <li class="dish" data-veg="1" data-search="butternut squash soup cumin-spiced house specialty">
-              <div class="dish-top"><span class="dish-name">Butternut Squash Soup</span><span class="leader" aria-hidden="true"></span><span class="dish-price">5.95</span></div>
+                        <li class="dish" data-veg="1" data-search="butternut squash soup cumin-spiced house specialty">
+              <h4 class="dish-name">Butternut Squash Soup</h4>
               <p class="dish-desc">Cumin-spiced house specialty</p>
-              <div class="dish-marks"><span class="mark mark-gf">GF</span></div>
+              <div class="dish-line"><span class="dish-price">5.95</span><span class="dish-mark">Gluten-free</span></div>
             </li>
-            <li class="dish" data-veg="1" data-search="tomato soup creamy tomato-butter soup">
-              <div class="dish-top"><span class="dish-name">Tomato Soup</span><span class="leader" aria-hidden="true"></span><span class="dish-price">5.95</span></div>
+                        <li class="dish" data-veg="1" data-search="tomato soup creamy tomato-butter soup">
+              <h4 class="dish-name">Tomato Soup</h4>
               <p class="dish-desc">Creamy tomato-butter soup</p>
+              <div class="dish-line"><span class="dish-price">5.95</span></div>
             </li>
           </ul>
         </section>
 
-        <section class="course" id="m-indochinese" aria-labelledby="h-m-indochinese">
+        <section class="course" id="m-indochinese" role="tabpanel" aria-labelledby="tab-m-indochinese">
           <div class="course-head">
             <h3 id="h-m-indochinese">Indo-Chinese</h3>
           </div>
           <ul class="dishes">
-            <li class="dish" data-veg="1" data-search="gobi manchurian crispy cauliflower tossed in tomato-soy sauce">
-              <div class="dish-top"><span class="dish-name">Gobi Manchurian</span><span class="leader" aria-hidden="true"></span><span class="dish-price">12.95</span></div>
+                        <li class="dish" data-veg="1" data-search="gobi manchurian crispy cauliflower tossed in tomato-soy sauce">
+              <h4 class="dish-name">Gobi Manchurian</h4>
               <p class="dish-desc">Crispy cauliflower tossed in tomato-soy sauce</p>
-              <div class="dish-marks"><span class="mark mark-v">V</span></div>
+              <div class="dish-line"><span class="dish-price">12.95</span><span class="dish-mark">Vegetarian</span></div>
             </li>
-            <li class="dish" data-veg="1" data-search="chilli paneer crispy paneer tossed in hot, sweet and tangy chilli sauce">
-              <div class="dish-top"><span class="dish-name">Chilli Paneer</span><span class="leader" aria-hidden="true"></span><span class="dish-price">13.95</span></div>
+                        <li class="dish" data-veg="1" data-search="chilli paneer crispy paneer tossed in hot, sweet and tangy chilli sauce">
+              <h4 class="dish-name">Chilli Paneer</h4>
               <p class="dish-desc">Crispy paneer tossed in hot, sweet and tangy chilli sauce</p>
-              <div class="dish-marks"><span class="mark mark-v">V</span></div>
+              <div class="dish-line"><span class="dish-price">13.95</span><span class="dish-mark">Vegetarian</span></div>
             </li>
-            <li class="dish" data-veg="0" data-search="chicken manchurian crispy deep-fried chicken in tomato-soy sauce">
-              <div class="dish-top"><span class="dish-name">Chicken Manchurian</span><span class="leader" aria-hidden="true"></span><span class="dish-price">13.95</span></div>
+                        <li class="dish" data-veg="0" data-search="chicken manchurian crispy deep-fried chicken in tomato-soy sauce">
+              <h4 class="dish-name">Chicken Manchurian</h4>
               <p class="dish-desc">Crispy deep-fried chicken in tomato-soy sauce</p>
+              <div class="dish-line"><span class="dish-price">13.95</span></div>
             </li>
-            <li class="dish" data-veg="0" data-search="chicken 65 crispy fried chicken marinated in yogurt and red chillies">
-              <div class="dish-top"><span class="dish-name">Chicken 65</span><span class="leader" aria-hidden="true"></span><span class="dish-price">13.95</span></div>
+                        <li class="dish" data-veg="0" data-search="chicken 65 crispy fried chicken marinated in yogurt and red chillies">
+              <h4 class="dish-name">Chicken 65</h4>
               <p class="dish-desc">Crispy fried chicken marinated in yogurt and red chillies</p>
+              <div class="dish-line"><span class="dish-price">13.95</span></div>
             </li>
-            <li class="dish" data-veg="0" data-search="chilli chicken crispy chicken in hot, sweet and tangy chilli sauce">
-              <div class="dish-top"><span class="dish-name">Chilli Chicken</span><span class="leader" aria-hidden="true"></span><span class="dish-price">13.95</span></div>
+                        <li class="dish" data-veg="0" data-search="chilli chicken crispy chicken in hot, sweet and tangy chilli sauce">
+              <h4 class="dish-name">Chilli Chicken</h4>
               <p class="dish-desc">Crispy chicken in hot, sweet and tangy chilli sauce</p>
+              <div class="dish-line"><span class="dish-price">13.95</span></div>
             </li>
           </ul>
         </section>
 
-        <section class="course" id="m-dosa" aria-labelledby="h-m-dosa">
+        <section class="course" id="m-dosa" role="tabpanel" aria-labelledby="tab-m-dosa">
           <div class="course-head">
             <h3 id="h-m-dosa">Dosa</h3>
             <span class="course-badges"><span class="region">South</span></span>
           </div>
           <p class="course-note">Served with assorted chutneys and sambar.</p>
           <ul class="dishes">
-            <li class="dish" data-veg="1" data-search="masala dosa thin lentil crepe with spiced potato stuffing">
-              <div class="dish-top"><span class="dish-name">Masala Dosa</span><span class="leader" aria-hidden="true"></span><span class="dish-price">12.95</span></div>
+                        <li class="dish" data-veg="1" data-search="masala dosa thin lentil crepe with spiced potato stuffing">
+              <h4 class="dish-name">Masala Dosa</h4>
               <p class="dish-desc">Thin lentil crepe with spiced potato stuffing</p>
-              <div class="dish-marks"><span class="mark mark-v">V</span></div>
+              <div class="dish-line"><span class="dish-price">12.95</span><span class="dish-mark">Vegetarian</span></div>
             </li>
-            <li class="dish" data-veg="1" data-search="mysore masala dosa crepe with spicy garlicky red chutney and potato filling">
-              <div class="dish-top"><span class="dish-name">Mysore Masala Dosa</span><span class="leader" aria-hidden="true"></span><span class="dish-price">12.95</span></div>
+                        <li class="dish" data-veg="1" data-search="mysore masala dosa crepe with spicy garlicky red chutney and potato filling">
+              <h4 class="dish-name">Mysore Masala Dosa</h4>
               <p class="dish-desc">Crepe with spicy garlicky red chutney and potato filling</p>
-              <div class="dish-marks"><span class="mark mark-v">V</span></div>
+              <div class="dish-line"><span class="dish-price">12.95</span><span class="dish-mark">Vegetarian</span></div>
             </li>
-            <li class="dish" data-veg="1" data-search="paneer tikka dosa thin lentil crepe with diced paneer and bell peppers">
-              <div class="dish-top"><span class="dish-name">Paneer Tikka Dosa</span><span class="leader" aria-hidden="true"></span><span class="dish-price">12.95</span></div>
+                        <li class="dish" data-veg="1" data-search="paneer tikka dosa thin lentil crepe with diced paneer and bell peppers">
+              <h4 class="dish-name">Paneer Tikka Dosa</h4>
               <p class="dish-desc">Thin lentil crepe with diced paneer and bell peppers</p>
-              <div class="dish-marks"><span class="mark mark-v">V</span></div>
+              <div class="dish-line"><span class="dish-price">12.95</span><span class="dish-mark">Vegetarian</span></div>
             </li>
-            <li class="dish" data-veg="1" data-search="ghee roast dosa crispy lentil crepe roasted with ghee and onions">
-              <div class="dish-top"><span class="dish-name">Ghee Roast Dosa</span><span class="leader" aria-hidden="true"></span><span class="dish-price">12.95</span></div>
+                        <li class="dish" data-veg="1" data-search="ghee roast dosa crispy lentil crepe roasted with ghee and onions">
+              <h4 class="dish-name">Ghee Roast Dosa</h4>
               <p class="dish-desc">Crispy lentil crepe roasted with ghee and onions</p>
-              <div class="dish-marks"><span class="mark mark-v">V</span></div>
+              <div class="dish-line"><span class="dish-price">12.95</span><span class="dish-mark">Vegetarian</span></div>
             </li>
-            <li class="dish" data-veg="1" data-search="chole bhatura soft fluffy deep-fried bread served with chickpea curry">
-              <div class="dish-top"><span class="dish-name">Chole Bhatura</span><span class="leader" aria-hidden="true"></span><span class="dish-price">12.95</span></div>
+                        <li class="dish" data-veg="1" data-search="chole bhatura soft fluffy deep-fried bread served with chickpea curry">
+              <h4 class="dish-name">Chole Bhatura</h4>
               <p class="dish-desc">Soft fluffy deep-fried bread served with chickpea curry</p>
-              <div class="dish-marks"><span class="mark mark-v">V</span></div>
+              <div class="dish-line"><span class="dish-price">12.95</span><span class="dish-mark">Vegetarian</span></div>
             </li>
-            <li class="dish" data-veg="0" data-search="chicken tikka dosa crepe stuffed with chicken and bell peppers">
-              <div class="dish-top"><span class="dish-name">Chicken Tikka Dosa</span><span class="leader" aria-hidden="true"></span><span class="dish-price">12.95</span></div>
+                        <li class="dish" data-veg="0" data-search="chicken tikka dosa crepe stuffed with chicken and bell peppers">
+              <h4 class="dish-name">Chicken Tikka Dosa</h4>
               <p class="dish-desc">Crepe stuffed with chicken and bell peppers</p>
+              <div class="dish-line"><span class="dish-price">12.95</span></div>
             </li>
           </ul>
         </section>
 
-        <section class="course" id="m-veg" aria-labelledby="h-m-veg">
+        <section class="course" id="m-veg" role="tabpanel" aria-labelledby="tab-m-veg">
           <div class="course-head">
             <h3 id="h-m-veg">Vegetarian Delights</h3>
             <span class="course-badges"><span class="region region-veg">All vegetarian</span></span>
           </div>
           <ul class="dishes">
-            <li class="dish" data-veg="1" data-search="aloo gobi cauliflower and potatoes in masala sauce">
-              <div class="dish-top"><span class="dish-name">Aloo Gobi</span><span class="leader" aria-hidden="true"></span><span class="dish-price">12.95</span></div>
+                        <li class="dish" data-veg="1" data-search="aloo gobi cauliflower and potatoes in masala sauce">
+              <h4 class="dish-name">Aloo Gobi</h4>
               <p class="dish-desc">Cauliflower and potatoes in masala sauce</p>
+              <div class="dish-line"><span class="dish-price">12.95</span></div>
             </li>
-            <li class="dish" data-veg="1" data-search="dal makhani slow-simmered black lentils in creamy house gravy">
-              <div class="dish-top"><span class="dish-name">Dal Makhani</span><span class="leader" aria-hidden="true"></span><span class="dish-price">12.95</span></div>
+                        <li class="dish" data-veg="1" data-search="dal makhani slow-simmered black lentils in creamy house gravy">
+              <h4 class="dish-name">Dal Makhani</h4>
               <p class="dish-desc">Slow-simmered black lentils in creamy house gravy</p>
+              <div class="dish-line"><span class="dish-price">12.95</span></div>
             </li>
-            <li class="dish" data-veg="1" data-search="dal tadka yellow lentils tempered with garlic, cumin and herbs">
-              <div class="dish-top"><span class="dish-name">Dal Tadka</span><span class="leader" aria-hidden="true"></span><span class="dish-price">12.95</span></div>
+                        <li class="dish" data-veg="1" data-search="dal tadka yellow lentils tempered with garlic, cumin and herbs">
+              <h4 class="dish-name">Dal Tadka</h4>
               <p class="dish-desc">Yellow lentils tempered with garlic, cumin and herbs</p>
+              <div class="dish-line"><span class="dish-price">12.95</span></div>
             </li>
-            <li class="dish" data-veg="1" data-search="vegetable coconut korma south indian vegetables in coconut onion sauce">
-              <div class="dish-top"><span class="dish-name">Vegetable Coconut Korma</span><span class="leader" aria-hidden="true"></span><span class="dish-price">12.95</span></div>
+                        <li class="dish" data-veg="1" data-search="vegetable coconut korma south indian vegetables in coconut onion sauce">
+              <h4 class="dish-name">Vegetable Coconut Korma</h4>
               <p class="dish-desc">South Indian vegetables in coconut onion sauce</p>
+              <div class="dish-line"><span class="dish-price">12.95</span></div>
             </li>
-            <li class="dish" data-veg="1" data-search="veg madras masala mixed vegetables in a spicy south indian coconut curry">
-              <div class="dish-top"><span class="dish-name">Veg Madras Masala</span><span class="leader" aria-hidden="true"></span><span class="dish-price">12.95</span></div>
+                        <li class="dish" data-veg="1" data-search="veg madras masala mixed vegetables in a spicy south indian coconut curry">
+              <h4 class="dish-name">Veg Madras Masala</h4>
               <p class="dish-desc">Mixed vegetables in a spicy South Indian coconut curry</p>
+              <div class="dish-line"><span class="dish-price">12.95</span></div>
             </li>
-            <li class="dish" data-veg="1" data-search="chana masala garbanzo beans with black cumin and onion sauce">
-              <div class="dish-top"><span class="dish-name">Chana Masala</span><span class="leader" aria-hidden="true"></span><span class="dish-price">12.95</span></div>
+                        <li class="dish" data-veg="1" data-search="chana masala garbanzo beans with black cumin and onion sauce">
+              <h4 class="dish-name">Chana Masala</h4>
               <p class="dish-desc">Garbanzo beans with black cumin and onion sauce</p>
+              <div class="dish-line"><span class="dish-price">12.95</span></div>
             </li>
-            <li class="dish" data-veg="1" data-search="pumpkin masala pumpkin, onions and tomatoes in home-style masala">
-              <div class="dish-top"><span class="dish-name">Pumpkin Masala</span><span class="leader" aria-hidden="true"></span><span class="dish-price">12.95</span></div>
+                        <li class="dish" data-veg="1" data-search="pumpkin masala pumpkin, onions and tomatoes in home-style masala">
+              <h4 class="dish-name">Pumpkin Masala</h4>
               <p class="dish-desc">Pumpkin, onions and tomatoes in home-style masala</p>
+              <div class="dish-line"><span class="dish-price">12.95</span></div>
             </li>
-            <li class="dish" data-veg="1" data-search="hyderabadi bagara baingan baby eggplant in coconut and sesame sauce">
-              <div class="dish-top"><span class="dish-name">Hyderabadi Bagara Baingan</span><span class="leader" aria-hidden="true"></span><span class="dish-price">12.95</span></div>
+                        <li class="dish" data-veg="1" data-search="hyderabadi bagara baingan baby eggplant in coconut and sesame sauce">
+              <h4 class="dish-name">Hyderabadi Bagara Baingan</h4>
               <p class="dish-desc">Baby eggplant in coconut and sesame sauce</p>
+              <div class="dish-line"><span class="dish-price">12.95</span></div>
             </li>
-            <li class="dish" data-veg="1" data-search="bhindi masala tender okra stir-fried with cumin and coriander">
-              <div class="dish-top"><span class="dish-name">Bhindi Masala</span><span class="leader" aria-hidden="true"></span><span class="dish-price">12.95</span></div>
+                        <li class="dish" data-veg="1" data-search="bhindi masala tender okra stir-fried with cumin and coriander">
+              <h4 class="dish-name">Bhindi Masala</h4>
               <p class="dish-desc">Tender okra stir-fried with cumin and coriander</p>
+              <div class="dish-line"><span class="dish-price">12.95</span></div>
             </li>
-            <li class="dish" data-veg="1" data-search="malai kofta fried vegetable dumplings in a rich creamy sauce">
-              <div class="dish-top"><span class="dish-name">Malai Kofta</span><span class="leader" aria-hidden="true"></span><span class="dish-price">13.95</span></div>
+                        <li class="dish" data-veg="1" data-search="malai kofta fried vegetable dumplings in a rich creamy sauce">
+              <h4 class="dish-name">Malai Kofta</h4>
               <p class="dish-desc">Fried vegetable dumplings in a rich creamy sauce</p>
+              <div class="dish-line"><span class="dish-price">13.95</span></div>
             </li>
-            <li class="dish" data-veg="1" data-search="paneer saag paneer cooked in spinach and onion sauce">
-              <div class="dish-top"><span class="dish-name">Paneer Saag</span><span class="leader" aria-hidden="true"></span><span class="dish-price">13.95</span></div>
+                        <li class="dish" data-veg="1" data-search="paneer saag paneer cooked in spinach and onion sauce">
+              <h4 class="dish-name">Paneer Saag</h4>
               <p class="dish-desc">Paneer cooked in spinach and onion sauce</p>
+              <div class="dish-line"><span class="dish-price">13.95</span></div>
             </li>
-            <li class="dish" data-veg="1" data-search="paneer karahi masala paneer stir-fried with peppers and onions">
-              <div class="dish-top"><span class="dish-name">Paneer Karahi Masala</span><span class="leader" aria-hidden="true"></span><span class="dish-price">13.95</span></div>
+                        <li class="dish" data-veg="1" data-search="paneer karahi masala paneer stir-fried with peppers and onions">
+              <h4 class="dish-name">Paneer Karahi Masala</h4>
               <p class="dish-desc">Paneer stir-fried with peppers and onions</p>
+              <div class="dish-line"><span class="dish-price">13.95</span></div>
             </li>
-            <li class="dish" data-veg="1" data-search="paneer makhani paneer in tomato-butter sauce">
-              <div class="dish-top"><span class="dish-name">Paneer Makhani</span><span class="leader" aria-hidden="true"></span><span class="dish-price">13.95</span></div>
+                        <li class="dish" data-veg="1" data-search="paneer makhani paneer in tomato-butter sauce">
+              <h4 class="dish-name">Paneer Makhani</h4>
               <p class="dish-desc">Paneer in tomato-butter sauce</p>
+              <div class="dish-line"><span class="dish-price">13.95</span></div>
             </li>
-            <li class="dish" data-veg="1" data-search="paneer tikka masala cottage cheese in rich tomato cream sauce">
-              <div class="dish-top"><span class="dish-name">Paneer Tikka Masala</span><span class="leader" aria-hidden="true"></span><span class="dish-price">13.95</span></div>
+                        <li class="dish" data-veg="1" data-search="paneer tikka masala cottage cheese in rich tomato cream sauce">
+              <h4 class="dish-name">Paneer Tikka Masala</h4>
               <p class="dish-desc">Cottage cheese in rich tomato cream sauce</p>
+              <div class="dish-line"><span class="dish-price">13.95</span></div>
             </li>
-            <li class="dish" data-veg="1" data-search="shahi paneer cottage cheese in creamy cashew and saffron gravy">
-              <div class="dish-top"><span class="dish-name">Shahi Paneer</span><span class="leader" aria-hidden="true"></span><span class="dish-price">13.95</span></div>
+                        <li class="dish" data-veg="1" data-search="shahi paneer cottage cheese in creamy cashew and saffron gravy">
+              <h4 class="dish-name">Shahi Paneer</h4>
               <p class="dish-desc">Cottage cheese in creamy cashew and saffron gravy</p>
+              <div class="dish-line"><span class="dish-price">13.95</span></div>
             </li>
-            <li class="dish" data-veg="1" data-search="methi malai matar green peas in a creamy fenugreek sauce">
-              <div class="dish-top"><span class="dish-name">Methi Malai Matar</span><span class="leader" aria-hidden="true"></span><span class="dish-price">13.95</span></div>
+                        <li class="dish" data-veg="1" data-search="methi malai matar green peas in a creamy fenugreek sauce">
+              <h4 class="dish-name">Methi Malai Matar</h4>
               <p class="dish-desc">Green peas in a creamy fenugreek sauce</p>
+              <div class="dish-line"><span class="dish-price">13.95</span></div>
             </li>
-            <li class="dish" data-veg="1" data-search="methi paneer matar paneer and peas in a creamy fenugreek sauce">
-              <div class="dish-top"><span class="dish-name">Methi Paneer Matar</span><span class="leader" aria-hidden="true"></span><span class="dish-price">13.95</span></div>
+                        <li class="dish" data-veg="1" data-search="methi paneer matar paneer and peas in a creamy fenugreek sauce">
+              <h4 class="dish-name">Methi Paneer Matar</h4>
               <p class="dish-desc">Paneer and peas in a creamy fenugreek sauce</p>
+              <div class="dish-line"><span class="dish-price">13.95</span></div>
             </li>
           </ul>
         </section>
 
-        <section class="course" id="m-tandoor" aria-labelledby="h-m-tandoor">
+        <section class="course" id="m-tandoor" role="tabpanel" aria-labelledby="tab-m-tandoor">
           <div class="course-head">
             <h3 id="h-m-tandoor">From the Tandoor Oven</h3>
             <span class="course-badges"><span class="region">North</span></span>
           </div>
           <ul class="dishes">
-            <li class="dish" data-veg="0" data-search="chicken tandoori chicken leg quarters served with grilled onions and bell peppers">
-              <div class="dish-top"><span class="dish-name">Chicken Tandoori</span><span class="leader" aria-hidden="true"></span><span class="dish-price">13.95</span></div>
+                        <li class="dish" data-veg="0" data-search="chicken tandoori chicken leg quarters served with grilled onions and bell peppers">
+              <h4 class="dish-name">Chicken Tandoori</h4>
               <p class="dish-desc">Chicken leg quarters served with grilled onions and bell peppers</p>
+              <div class="dish-line"><span class="dish-price">13.95</span></div>
             </li>
-            <li class="dish" data-veg="0" data-search="salmon tandoori yogurt-marinated salmon served with onion and bell peppers">
-              <div class="dish-top"><span class="dish-name">Salmon Tandoori</span><span class="leader" aria-hidden="true"></span><span class="dish-price">13.95</span></div>
+                        <li class="dish" data-veg="0" data-search="salmon tandoori yogurt-marinated salmon served with onion and bell peppers">
+              <h4 class="dish-name">Salmon Tandoori</h4>
               <p class="dish-desc">Yogurt-marinated salmon served with onion and bell peppers</p>
+              <div class="dish-line"><span class="dish-price">13.95</span></div>
             </li>
-            <li class="dish" data-veg="1" data-search="paneer tikka kebab marinated paneer with bell pepper, onions and spices">
-              <div class="dish-top"><span class="dish-name">Paneer Tikka Kebab</span><span class="leader" aria-hidden="true"></span><span class="dish-price">13.95</span></div>
+                        <li class="dish" data-veg="1" data-search="paneer tikka kebab marinated paneer with bell pepper, onions and spices">
+              <h4 class="dish-name">Paneer Tikka Kebab</h4>
               <p class="dish-desc">Marinated paneer with bell pepper, onions and spices</p>
-              <div class="dish-marks"><span class="mark mark-v">V</span></div>
+              <div class="dish-line"><span class="dish-price">13.95</span><span class="dish-mark">Vegetarian</span></div>
             </li>
-            <li class="dish" data-veg="0" data-search="chicken tikka kebab chicken breast in yogurt, fenugreek and mustard">
-              <div class="dish-top"><span class="dish-name">Chicken Tikka Kebab</span><span class="leader" aria-hidden="true"></span><span class="dish-price">15.95</span></div>
+                        <li class="dish" data-veg="0" data-search="chicken tikka kebab chicken breast in yogurt, fenugreek and mustard">
+              <h4 class="dish-name">Chicken Tikka Kebab</h4>
               <p class="dish-desc">Chicken breast in yogurt, fenugreek and mustard</p>
+              <div class="dish-line"><span class="dish-price">15.95</span></div>
             </li>
-            <li class="dish" data-veg="0" data-search="reshmi kebab cashew-crusted chicken thigh in yogurt and spices">
-              <div class="dish-top"><span class="dish-name">Reshmi Kebab</span><span class="leader" aria-hidden="true"></span><span class="dish-price">15.95</span></div>
+                        <li class="dish" data-veg="0" data-search="reshmi kebab cashew-crusted chicken thigh in yogurt and spices">
+              <h4 class="dish-name">Reshmi Kebab</h4>
               <p class="dish-desc">Cashew-crusted chicken thigh in yogurt and spices</p>
+              <div class="dish-line"><span class="dish-price">15.95</span></div>
             </li>
-            <li class="dish" data-veg="0" data-search="chicken lollipop fried chicken lollipops tossed in a spicy sauce">
-              <div class="dish-top"><span class="dish-name">Chicken Lollipop</span><span class="leader" aria-hidden="true"></span><span class="dish-price">15.95</span></div>
+                        <li class="dish" data-veg="0" data-search="chicken lollipop fried chicken lollipops tossed in a spicy sauce">
+              <h4 class="dish-name">Chicken Lollipop</h4>
               <p class="dish-desc">Fried chicken lollipops tossed in a spicy sauce</p>
+              <div class="dish-line"><span class="dish-price">15.95</span></div>
             </li>
-            <li class="dish" data-veg="0" data-search="shrimp tandoori yogurt-marinated shrimp with onions   bell peppers">
-              <div class="dish-top"><span class="dish-name">Shrimp Tandoori</span><span class="leader" aria-hidden="true"></span><span class="dish-price">17.95</span></div>
+                        <li class="dish" data-veg="0" data-search="shrimp tandoori yogurt-marinated shrimp with onions   bell peppers">
+              <h4 class="dish-name">Shrimp Tandoori</h4>
               <p class="dish-desc">Yogurt-marinated shrimp with onions &amp; bell peppers</p>
+              <div class="dish-line"><span class="dish-price">17.95</span></div>
             </li>
-            <li class="dish" data-veg="0" data-search="lamb boti kebab tender lamb leg marinated in yogurt and spices">
-              <div class="dish-top"><span class="dish-name">Lamb Boti Kebab</span><span class="leader" aria-hidden="true"></span><span class="dish-price">17.95</span></div>
+                        <li class="dish" data-veg="0" data-search="lamb boti kebab tender lamb leg marinated in yogurt and spices">
+              <h4 class="dish-name">Lamb Boti Kebab</h4>
               <p class="dish-desc">Tender lamb leg marinated in yogurt and spices</p>
+              <div class="dish-line"><span class="dish-price">17.95</span></div>
             </li>
-            <li class="dish" data-veg="0" data-search="mixed grill assorted tandoori chicken, chicken tikka, lamb kebab and tandoori shrimp">
-              <div class="dish-top"><span class="dish-name">Mixed Grill</span><span class="leader" aria-hidden="true"></span><span class="dish-price">18.95</span></div>
+                        <li class="dish" data-veg="0" data-search="mixed grill assorted tandoori chicken, chicken tikka, lamb kebab and tandoori shrimp">
+              <h4 class="dish-name">Mixed Grill</h4>
               <p class="dish-desc">Assorted tandoori chicken, chicken tikka, lamb kebab and tandoori shrimp</p>
+              <div class="dish-line"><span class="dish-price">18.95</span></div>
             </li>
           </ul>
         </section>
 
-        <section class="course" id="m-nonveg" aria-labelledby="h-m-nonveg">
+        <section class="course" id="m-nonveg" role="tabpanel" aria-labelledby="tab-m-nonveg">
           <div class="course-head">
             <h3 id="h-m-nonveg">Non-Vegetarian Delights</h3>
           </div>
           <p class="course-note">Add $2 for lamb and $3 for shrimp unless noted otherwise.</p>
           <ul class="dishes">
-            <li class="dish" data-veg="0" data-search="chicken tikka masala grilled chicken in tandoor, simmered in a creamy tomato sauce">
-              <div class="dish-top"><span class="dish-name">Chicken Tikka Masala</span><span class="leader" aria-hidden="true"></span><span class="dish-price">14.95</span></div>
+                        <li class="dish" data-veg="0" data-search="chicken tikka masala grilled chicken in tandoor, simmered in a creamy tomato sauce">
+              <h4 class="dish-name">Chicken Tikka Masala</h4>
               <p class="dish-desc">Grilled chicken in tandoor, simmered in a creamy tomato sauce</p>
+              <div class="dish-line"><span class="dish-price">14.95</span></div>
             </li>
-            <li class="dish" data-veg="0" data-search="butter chicken boneless chicken in a creamy tomato cashew sauce">
-              <div class="dish-top"><span class="dish-name">Butter Chicken</span><span class="leader" aria-hidden="true"></span><span class="dish-price">14.95</span></div>
+                        <li class="dish" data-veg="0" data-search="butter chicken boneless chicken in a creamy tomato cashew sauce">
+              <h4 class="dish-name">Butter Chicken</h4>
               <p class="dish-desc">Boneless chicken in a creamy tomato cashew sauce</p>
+              <div class="dish-line"><span class="dish-price">14.95</span></div>
             </li>
-            <li class="dish" data-veg="0" data-search="coconut chicken korma boneless chicken in a delicious creamy coconut sauce">
-              <div class="dish-top"><span class="dish-name">Coconut Chicken Korma</span><span class="leader" aria-hidden="true"></span><span class="dish-price">14.95</span></div>
+                        <li class="dish" data-veg="0" data-search="coconut chicken korma boneless chicken in a delicious creamy coconut sauce">
+              <h4 class="dish-name">Coconut Chicken Korma</h4>
               <p class="dish-desc">Boneless chicken in a delicious creamy coconut sauce</p>
+              <div class="dish-line"><span class="dish-price">14.95</span></div>
             </li>
-            <li class="dish" data-veg="0" data-search="chicken madras masala boneless chicken in a spicy south indian coconut curry">
-              <div class="dish-top"><span class="dish-name">Chicken Madras Masala</span><span class="leader" aria-hidden="true"></span><span class="dish-price">14.95</span></div>
+                        <li class="dish" data-veg="0" data-search="chicken madras masala boneless chicken in a spicy south indian coconut curry">
+              <h4 class="dish-name">Chicken Madras Masala</h4>
               <p class="dish-desc">Boneless chicken in a spicy south Indian coconut curry</p>
+              <div class="dish-line"><span class="dish-price">14.95</span></div>
             </li>
-            <li class="dish" data-veg="0" data-search="chicken karahi boneless chicken cooked in a spiced tomato gravy">
-              <div class="dish-top"><span class="dish-name">Chicken Karahi</span><span class="leader" aria-hidden="true"></span><span class="dish-price">14.95</span></div>
+                        <li class="dish" data-veg="0" data-search="chicken karahi boneless chicken cooked in a spiced tomato gravy">
+              <h4 class="dish-name">Chicken Karahi</h4>
               <p class="dish-desc">Boneless chicken cooked in a spiced tomato gravy</p>
+              <div class="dish-line"><span class="dish-price">14.95</span></div>
             </li>
-            <li class="dish" data-veg="0" data-search="mango chicken boneless chicken in a sweet-spiced mango curry">
-              <div class="dish-top"><span class="dish-name">Mango Chicken</span><span class="leader" aria-hidden="true"></span><span class="dish-price">14.95</span></div>
+                        <li class="dish" data-veg="0" data-search="mango chicken boneless chicken in a sweet-spiced mango curry">
+              <h4 class="dish-name">Mango Chicken</h4>
               <p class="dish-desc">Boneless chicken in a sweet-spiced mango curry</p>
+              <div class="dish-line"><span class="dish-price">14.95</span></div>
             </li>
-            <li class="dish" data-veg="0" data-search="chicken curry boneless chicken in a homestyle curry">
-              <div class="dish-top"><span class="dish-name">Chicken Curry</span><span class="leader" aria-hidden="true"></span><span class="dish-price">14.95</span></div>
+                        <li class="dish" data-veg="0" data-search="chicken curry boneless chicken in a homestyle curry">
+              <h4 class="dish-name">Chicken Curry</h4>
               <p class="dish-desc">Boneless chicken in a homestyle curry</p>
+              <div class="dish-line"><span class="dish-price">14.95</span></div>
             </li>
-            <li class="dish" data-veg="0" data-search="chicken saag boneless chicken cooked with spinach and spices">
-              <div class="dish-top"><span class="dish-name">Chicken Saag</span><span class="leader" aria-hidden="true"></span><span class="dish-price">14.95</span></div>
+                        <li class="dish" data-veg="0" data-search="chicken saag boneless chicken cooked with spinach and spices">
+              <h4 class="dish-name">Chicken Saag</h4>
               <p class="dish-desc">Boneless chicken cooked with spinach and spices</p>
+              <div class="dish-line"><span class="dish-price">14.95</span></div>
             </li>
-            <li class="dish" data-veg="0" data-search="chicken vindaloo boneless chicken cooked in a goan style curry">
-              <div class="dish-top"><span class="dish-name">Chicken Vindaloo</span><span class="leader" aria-hidden="true"></span><span class="dish-price">14.95</span></div>
+                        <li class="dish" data-veg="0" data-search="chicken vindaloo boneless chicken cooked in a goan style curry">
+              <h4 class="dish-name">Chicken Vindaloo</h4>
               <p class="dish-desc">Boneless chicken cooked in a Goan style curry</p>
+              <div class="dish-line"><span class="dish-price">14.95</span></div>
             </li>
-            <li class="dish" data-veg="0" data-search="chicken cilantro boneless chicken cooked with fresh cilantro and spices">
-              <div class="dish-top"><span class="dish-name">Chicken Cilantro</span><span class="leader" aria-hidden="true"></span><span class="dish-price">14.95</span></div>
+                        <li class="dish" data-veg="0" data-search="chicken cilantro boneless chicken cooked with fresh cilantro and spices">
+              <h4 class="dish-name">Chicken Cilantro</h4>
               <p class="dish-desc">Boneless chicken cooked with fresh cilantro and spices</p>
+              <div class="dish-line"><span class="dish-price">14.95</span></div>
             </li>
-            <li class="dish" data-veg="0" data-search="goat curry slow-cooked goat curry with house spices">
-              <div class="dish-top"><span class="dish-name">Goat Curry</span><span class="leader" aria-hidden="true"></span><span class="dish-price">16.95</span></div>
+                        <li class="dish" data-veg="0" data-search="goat curry slow-cooked goat curry with house spices">
+              <h4 class="dish-name">Goat Curry</h4>
               <p class="dish-desc">Slow-cooked goat curry with house spices</p>
+              <div class="dish-line"><span class="dish-price">16.95</span></div>
             </li>
-            <li class="dish" data-veg="0" data-search="laal maas rajasthani lamb curry with sweet chilies   spices">
-              <div class="dish-top"><span class="dish-name">Laal Maas</span><span class="leader" aria-hidden="true"></span><span class="dish-price">16.95</span></div>
+                        <li class="dish" data-veg="0" data-search="laal maas rajasthani lamb curry with sweet chilies   spices">
+              <h4 class="dish-name">Laal Maas</h4>
               <p class="dish-desc">Rajasthani lamb curry with sweet chilies &amp; spices</p>
+              <div class="dish-line"><span class="dish-price">16.95</span></div>
             </li>
           </ul>
         </section>
 
-        <section class="course" id="m-biryani" aria-labelledby="h-m-biryani">
+        <section class="course" id="m-biryani" role="tabpanel" aria-labelledby="tab-m-biryani">
           <div class="course-head">
             <h3 id="h-m-biryani">Biryani</h3>
           </div>
           <p class="course-note">Dum-cooked basmati rice with aromatic spices, served with raita.</p>
           <ul class="dishes">
-            <li class="dish" data-veg="1" data-search="vegetable biryani basmati rice with fresh vegetables and aromatic spices">
-              <div class="dish-top"><span class="dish-name">Vegetable Biryani</span><span class="leader" aria-hidden="true"></span><span class="dish-price">12.95</span></div>
+                        <li class="dish" data-veg="1" data-search="vegetable biryani basmati rice with fresh vegetables and aromatic spices">
+              <h4 class="dish-name">Vegetable Biryani</h4>
               <p class="dish-desc">Basmati rice with fresh vegetables and aromatic spices</p>
-              <div class="dish-marks"><span class="mark mark-v">V</span></div>
+              <div class="dish-line"><span class="dish-price">12.95</span><span class="dish-mark">Vegetarian</span></div>
             </li>
-            <li class="dish" data-veg="1" data-search="paneer biryani paneer layered with basmati rice and indian spices">
-              <div class="dish-top"><span class="dish-name">Paneer Biryani</span><span class="leader" aria-hidden="true"></span><span class="dish-price">14.95</span></div>
+                        <li class="dish" data-veg="1" data-search="paneer biryani paneer layered with basmati rice and indian spices">
+              <h4 class="dish-name">Paneer Biryani</h4>
               <p class="dish-desc">Paneer layered with basmati rice and Indian spices</p>
-              <div class="dish-marks"><span class="mark mark-v">V</span></div>
+              <div class="dish-line"><span class="dish-price">14.95</span><span class="dish-mark">Vegetarian</span></div>
             </li>
-            <li class="dish" data-veg="0" data-search="egg biryani basmati rice layered with boiled eggs and traditional spices">
-              <div class="dish-top"><span class="dish-name">Egg Biryani</span><span class="leader" aria-hidden="true"></span><span class="dish-price">13.95</span></div>
+                        <li class="dish" data-veg="0" data-search="egg biryani basmati rice layered with boiled eggs and traditional spices">
+              <h4 class="dish-name">Egg Biryani</h4>
               <p class="dish-desc">Basmati rice layered with boiled eggs and traditional spices</p>
+              <div class="dish-line"><span class="dish-price">13.95</span></div>
             </li>
-            <li class="dish" data-veg="0" data-search="chicken biryani chicken cooked with fragrant basmati rice and herbs">
-              <div class="dish-top"><span class="dish-name">Chicken Biryani</span><span class="leader" aria-hidden="true"></span><span class="dish-price">14.95</span></div>
+                        <li class="dish" data-veg="0" data-search="chicken biryani chicken cooked with fragrant basmati rice and herbs">
+              <h4 class="dish-name">Chicken Biryani</h4>
               <p class="dish-desc">Chicken cooked with fragrant basmati rice and herbs</p>
+              <div class="dish-line"><span class="dish-price">14.95</span></div>
             </li>
-            <li class="dish" data-veg="0" data-search="shrimp biryani basmati rice cooked with shrimp and aromatic spices">
-              <div class="dish-top"><span class="dish-name">Shrimp Biryani</span><span class="leader" aria-hidden="true"></span><span class="dish-price">15.95</span></div>
+                        <li class="dish" data-veg="0" data-search="shrimp biryani basmati rice cooked with shrimp and aromatic spices">
+              <h4 class="dish-name">Shrimp Biryani</h4>
               <p class="dish-desc">Basmati rice cooked with shrimp and aromatic spices</p>
+              <div class="dish-line"><span class="dish-price">15.95</span></div>
             </li>
-            <li class="dish" data-veg="0" data-search="lamb biryani tender lamb with aromatic basmati rice and spices">
-              <div class="dish-top"><span class="dish-name">Lamb Biryani</span><span class="leader" aria-hidden="true"></span><span class="dish-price">16.95</span></div>
+                        <li class="dish" data-veg="0" data-search="lamb biryani tender lamb with aromatic basmati rice and spices">
+              <h4 class="dish-name">Lamb Biryani</h4>
               <p class="dish-desc">Tender lamb with aromatic basmati rice and spices</p>
+              <div class="dish-line"><span class="dish-price">16.95</span></div>
             </li>
-            <li class="dish" data-veg="0" data-search="goat biryani traditional dum biryani with tender goat and fragrant rice">
-              <div class="dish-top"><span class="dish-name">Goat Biryani</span><span class="leader" aria-hidden="true"></span><span class="dish-price">16.95</span></div>
+                        <li class="dish" data-veg="0" data-search="goat biryani traditional dum biryani with tender goat and fragrant rice">
+              <h4 class="dish-name">Goat Biryani</h4>
               <p class="dish-desc">Traditional dum biryani with tender goat and fragrant rice</p>
+              <div class="dish-line"><span class="dish-price">16.95</span></div>
             </li>
           </ul>
         </section>
 
-        <section class="course" id="m-naan" aria-labelledby="h-m-naan">
+        <section class="course" id="m-naan" role="tabpanel" aria-labelledby="tab-m-naan">
           <div class="course-head">
             <h3 id="h-m-naan">Naan</h3>
             <span class="course-badges"><span class="region region-veg">All vegetarian</span></span>
           </div>
           <ul class="dishes">
-            <li class="dish" data-veg="1" data-search="plain / butter naan ">
-              <div class="dish-top"><span class="dish-name">Plain / Butter Naan</span><span class="leader" aria-hidden="true"></span><span class="dish-price">2.95</span></div>
+                        <li class="dish" data-veg="1" data-search="plain / butter naan ">
+              <h4 class="dish-name">Plain / Butter Naan</h4>
+              <div class="dish-line"><span class="dish-price">2.95</span></div>
             </li>
-            <li class="dish" data-veg="1" data-search="roti ">
-              <div class="dish-top"><span class="dish-name">Roti</span><span class="leader" aria-hidden="true"></span><span class="dish-price">2.95</span></div>
+                        <li class="dish" data-veg="1" data-search="roti ">
+              <h4 class="dish-name">Roti</h4>
+              <div class="dish-line"><span class="dish-price">2.95</span></div>
             </li>
-            <li class="dish" data-veg="1" data-search="garlic naan ">
-              <div class="dish-top"><span class="dish-name">Garlic Naan</span><span class="leader" aria-hidden="true"></span><span class="dish-price">2.95</span></div>
+                        <li class="dish" data-veg="1" data-search="garlic naan ">
+              <h4 class="dish-name">Garlic Naan</h4>
+              <div class="dish-line"><span class="dish-price">2.95</span></div>
             </li>
-            <li class="dish" data-veg="1" data-search="cheese naan ">
-              <div class="dish-top"><span class="dish-name">Cheese Naan</span><span class="leader" aria-hidden="true"></span><span class="dish-price">3.50</span></div>
+                        <li class="dish" data-veg="1" data-search="cheese naan ">
+              <h4 class="dish-name">Cheese Naan</h4>
+              <div class="dish-line"><span class="dish-price">3.50</span></div>
             </li>
-            <li class="dish" data-veg="1" data-search="chilli naan ">
-              <div class="dish-top"><span class="dish-name">Chilli Naan</span><span class="leader" aria-hidden="true"></span><span class="dish-price">3.95</span></div>
+                        <li class="dish" data-veg="1" data-search="chilli naan ">
+              <h4 class="dish-name">Chilli Naan</h4>
+              <div class="dish-line"><span class="dish-price">3.95</span></div>
             </li>
-            <li class="dish" data-veg="1" data-search="onion naan ">
-              <div class="dish-top"><span class="dish-name">Onion Naan</span><span class="leader" aria-hidden="true"></span><span class="dish-price">3.95</span></div>
+                        <li class="dish" data-veg="1" data-search="onion naan ">
+              <h4 class="dish-name">Onion Naan</h4>
+              <div class="dish-line"><span class="dish-price">3.95</span></div>
             </li>
-            <li class="dish" data-veg="1" data-search="cheese   onion naan ">
-              <div class="dish-top"><span class="dish-name">Cheese &amp; Onion Naan</span><span class="leader" aria-hidden="true"></span><span class="dish-price">3.95</span></div>
+                        <li class="dish" data-veg="1" data-search="cheese   onion naan ">
+              <h4 class="dish-name">Cheese &amp; Onion Naan</h4>
+              <div class="dish-line"><span class="dish-price">3.95</span></div>
             </li>
-            <li class="dish" data-veg="1" data-search="peshawari naan ">
-              <div class="dish-top"><span class="dish-name">Peshawari Naan</span><span class="leader" aria-hidden="true"></span><span class="dish-price">4.95</span></div>
+                        <li class="dish" data-veg="1" data-search="peshawari naan ">
+              <h4 class="dish-name">Peshawari Naan</h4>
+              <div class="dish-line"><span class="dish-price">4.95</span></div>
             </li>
-            <li class="dish" data-veg="1" data-search="assorted bread basket butter naan, chilli naan, garlic naan and onion naan">
-              <div class="dish-top"><span class="dish-name">Assorted Bread Basket</span><span class="leader" aria-hidden="true"></span><span class="dish-price">9.95</span></div>
+                        <li class="dish" data-veg="1" data-search="assorted bread basket butter naan, chilli naan, garlic naan and onion naan">
+              <h4 class="dish-name">Assorted Bread Basket</h4>
               <p class="dish-desc">Butter naan, chilli naan, garlic naan and onion naan</p>
+              <div class="dish-line"><span class="dish-price">9.95</span></div>
             </li>
           </ul>
         </section>
 
-        <section class="course" id="m-desserts" aria-labelledby="h-m-desserts">
+        <section class="course" id="m-desserts" role="tabpanel" aria-labelledby="tab-m-desserts">
           <div class="course-head">
             <h3 id="h-m-desserts">Desserts</h3>
             <span class="course-badges"><span class="region region-veg">All vegetarian</span></span>
           </div>
           <ul class="dishes">
-            <li class="dish" data-veg="1" data-search="rice kheer ">
-              <div class="dish-top"><span class="dish-name">Rice Kheer</span><span class="leader" aria-hidden="true"></span><span class="dish-price">2.95</span></div>
+                        <li class="dish" data-veg="1" data-search="rice kheer ">
+              <h4 class="dish-name">Rice Kheer</h4>
+              <div class="dish-line"><span class="dish-price">2.95</span></div>
             </li>
-            <li class="dish" data-veg="1" data-search="gulab jamun ">
-              <div class="dish-top"><span class="dish-name">Gulab Jamun</span><span class="leader" aria-hidden="true"></span><span class="dish-price">3.95</span></div>
+                        <li class="dish" data-veg="1" data-search="gulab jamun ">
+              <h4 class="dish-name">Gulab Jamun</h4>
+              <div class="dish-line"><span class="dish-price">3.95</span></div>
             </li>
-            <li class="dish" data-veg="1" data-search="mango kulfi ">
-              <div class="dish-top"><span class="dish-name">Mango Kulfi</span><span class="leader" aria-hidden="true"></span><span class="dish-price">3.95</span></div>
+                        <li class="dish" data-veg="1" data-search="mango kulfi ">
+              <h4 class="dish-name">Mango Kulfi</h4>
+              <div class="dish-line"><span class="dish-price">3.95</span></div>
             </li>
           </ul>
         </section>
 
-        <section class="course" id="m-drinks" aria-labelledby="h-m-drinks">
+        <section class="course" id="m-drinks" role="tabpanel" aria-labelledby="tab-m-drinks">
           <div class="course-head">
             <h3 id="h-m-drinks">Beverages</h3>
             <span class="course-badges"><span class="region region-veg">All vegetarian</span></span>
           </div>
           <ul class="dishes">
-            <li class="dish" data-veg="1" data-search="mango coconut lassi creamy mango lassi blended with tropical coconut">
-              <div class="dish-top"><span class="dish-name">Mango Coconut Lassi</span><span class="leader" aria-hidden="true"></span><span class="dish-price">3.50</span></div>
+                        <li class="dish" data-veg="1" data-search="mango coconut lassi creamy mango lassi blended with tropical coconut">
+              <h4 class="dish-name">Mango Coconut Lassi</h4>
               <p class="dish-desc">Creamy mango lassi blended with tropical coconut</p>
+              <div class="dish-line"><span class="dish-price">3.50</span></div>
             </li>
-            <li class="dish" data-veg="1" data-search="strawberry lassi sweet and creamy yogurt drink blended with strawberries">
-              <div class="dish-top"><span class="dish-name">Strawberry Lassi</span><span class="leader" aria-hidden="true"></span><span class="dish-price">3.50</span></div>
+                        <li class="dish" data-veg="1" data-search="strawberry lassi sweet and creamy yogurt drink blended with strawberries">
+              <h4 class="dish-name">Strawberry Lassi</h4>
               <p class="dish-desc">Sweet and creamy yogurt drink blended with strawberries</p>
+              <div class="dish-line"><span class="dish-price">3.50</span></div>
             </li>
-            <li class="dish" data-veg="1" data-search="mango lassi refreshing yogurt drink blended with sweet mango">
-              <div class="dish-top"><span class="dish-name">Mango Lassi</span><span class="leader" aria-hidden="true"></span><span class="dish-price">3.95</span></div>
+                        <li class="dish" data-veg="1" data-search="mango lassi refreshing yogurt drink blended with sweet mango">
+              <h4 class="dish-name">Mango Lassi</h4>
               <p class="dish-desc">Refreshing yogurt drink blended with sweet mango</p>
+              <div class="dish-line"><span class="dish-price">3.95</span></div>
             </li>
-            <li class="dish" data-veg="1" data-search="chikoo lassi smooth yogurt drink blended with sweet chikoo fruit">
-              <div class="dish-top"><span class="dish-name">Chikoo Lassi</span><span class="leader" aria-hidden="true"></span><span class="dish-price">3.95</span></div>
+                        <li class="dish" data-veg="1" data-search="chikoo lassi smooth yogurt drink blended with sweet chikoo fruit">
+              <h4 class="dish-name">Chikoo Lassi</h4>
               <p class="dish-desc">Smooth yogurt drink blended with sweet chikoo fruit</p>
+              <div class="dish-line"><span class="dish-price">3.95</span></div>
             </li>
-            <li class="dish" data-veg="1" data-search="chai traditional indian tea with milk and aromatic spices">
-              <div class="dish-top"><span class="dish-name">Chai</span><span class="leader" aria-hidden="true"></span><span class="dish-price">3.95</span></div>
+                        <li class="dish" data-veg="1" data-search="chai traditional indian tea with milk and aromatic spices">
+              <h4 class="dish-name">Chai</h4>
               <p class="dish-desc">Traditional Indian tea with milk and aromatic spices</p>
+              <div class="dish-line"><span class="dish-price">3.95</span></div>
             </li>
-            <li class="dish" data-veg="1" data-search="coffee freshly brewed hot coffee">
-              <div class="dish-top"><span class="dish-name">Coffee</span><span class="leader" aria-hidden="true"></span><span class="dish-price">3.95</span></div>
+                        <li class="dish" data-veg="1" data-search="coffee freshly brewed hot coffee">
+              <h4 class="dish-name">Coffee</h4>
               <p class="dish-desc">Freshly brewed hot coffee</p>
+              <div class="dish-line"><span class="dish-price">3.95</span></div>
             </li>
-            <li class="dish" data-veg="1" data-search="fountain drinks coke, diet coke, sprite   fanta">
-              <div class="dish-top"><span class="dish-name">Fountain Drinks</span><span class="leader" aria-hidden="true"></span><span class="dish-price">2.95</span></div>
+                        <li class="dish" data-veg="1" data-search="fountain drinks coke, diet coke, sprite   fanta">
+              <h4 class="dish-name">Fountain Drinks</h4>
               <p class="dish-desc">Coke, Diet Coke, Sprite &amp; Fanta</p>
+              <div class="dish-line"><span class="dish-price">2.95</span></div>
             </li>
-            <li class="dish" data-veg="1" data-search="water bottle ">
-              <div class="dish-top"><span class="dish-name">Water Bottle</span><span class="leader" aria-hidden="true"></span><span class="dish-price">1.00</span></div>
+                        <li class="dish" data-veg="1" data-search="water bottle ">
+              <h4 class="dish-name">Water Bottle</h4>
+              <div class="dish-line"><span class="dish-price">1.00</span></div>
             </li>
           </ul>
         </section>
 
-        <section class="course" id="m-condiments" aria-labelledby="h-m-condiments">
+        <section class="course" id="m-condiments" role="tabpanel" aria-labelledby="tab-m-condiments">
           <div class="course-head">
             <h3 id="h-m-condiments">Condiments</h3>
             <span class="course-badges"><span class="region region-veg">All vegetarian</span></span>
           </div>
           <ul class="dishes">
-            <li class="dish" data-veg="1" data-search="mango chutney ">
-              <div class="dish-top"><span class="dish-name">Mango Chutney</span><span class="leader" aria-hidden="true"></span><span class="dish-price">2.95</span></div>
+                        <li class="dish" data-veg="1" data-search="mango chutney ">
+              <h4 class="dish-name">Mango Chutney</h4>
+              <div class="dish-line"><span class="dish-price">2.95</span></div>
             </li>
-            <li class="dish" data-veg="1" data-search="tamarind chutney ">
-              <div class="dish-top"><span class="dish-name">Tamarind Chutney</span><span class="leader" aria-hidden="true"></span><span class="dish-price">2.95</span></div>
+                        <li class="dish" data-veg="1" data-search="tamarind chutney ">
+              <h4 class="dish-name">Tamarind Chutney</h4>
+              <div class="dish-line"><span class="dish-price">2.95</span></div>
             </li>
-            <li class="dish" data-veg="1" data-search="mint chutney ">
-              <div class="dish-top"><span class="dish-name">Mint Chutney</span><span class="leader" aria-hidden="true"></span><span class="dish-price">2.95</span></div>
+                        <li class="dish" data-veg="1" data-search="mint chutney ">
+              <h4 class="dish-name">Mint Chutney</h4>
+              <div class="dish-line"><span class="dish-price">2.95</span></div>
             </li>
-            <li class="dish" data-veg="1" data-search="papadam ">
-              <div class="dish-top"><span class="dish-name">Papadam</span><span class="leader" aria-hidden="true"></span><span class="dish-price">2.95</span></div>
+                        <li class="dish" data-veg="1" data-search="papadam ">
+              <h4 class="dish-name">Papadam</h4>
+              <div class="dish-line"><span class="dish-price">2.95</span></div>
             </li>
-            <li class="dish" data-veg="1" data-search="raita ">
-              <div class="dish-top"><span class="dish-name">Raita</span><span class="leader" aria-hidden="true"></span><span class="dish-price">2.95</span></div>
+                        <li class="dish" data-veg="1" data-search="raita ">
+              <h4 class="dish-name">Raita</h4>
+              <div class="dish-line"><span class="dish-price">2.95</span></div>
             </li>
-            <li class="dish" data-veg="1" data-search="steamed rice ">
-              <div class="dish-top"><span class="dish-name">Steamed Rice</span><span class="leader" aria-hidden="true"></span><span class="dish-price">2.95</span></div>
+                        <li class="dish" data-veg="1" data-search="steamed rice ">
+              <h4 class="dish-name">Steamed Rice</h4>
+              <div class="dish-line"><span class="dish-price">2.95</span></div>
             </li>
           </ul>
         </section>
 
       </div>
 
-      <p class="menu-foot" id="menu-empty" hidden>Nothing matches that — clear the search, or call us and we’ll work something out.</p>
+      <p class="menu-foot" id="menu-empty" hidden>Nothing here matches. Clear the search, or call us and we’ll work something out.</p>
       <p class="menu-foot">Prices in USD and may change; call to confirm. Dine in, takeout, delivery and catering.</p>
     </div>
   </section>
@@ -1476,36 +1549,56 @@ a{color:inherit}
     if (img.complete && img.naturalWidth === 0) drop();
   });
 
-  /* ---------- menu search + vegetarian toggle ---------- */
-  var dishes = Array.prototype.slice.call(document.querySelectorAll('.dish'));
+  /* ---------- menu: tabs, search, vegetarian toggle ---------- */
+  var dishes  = Array.prototype.slice.call(document.querySelectorAll('.dish'));
   var courses = Array.prototype.slice.call(document.querySelectorAll('.course'));
-  var search = document.getElementById('menu-search');
-  var vegBtn = document.getElementById('veg-only');
-  var count = document.getElementById('menu-count');
-  var empty = document.getElementById('menu-empty');
+  var tabs    = Array.prototype.slice.call(document.querySelectorAll('.tab'));
+  var search  = document.getElementById('menu-search');
+  var vegBtn  = document.getElementById('veg-only');
+  var count   = document.getElementById('menu-count');
+  var empty   = document.getElementById('menu-empty');
+  var activeId = courses.length ? courses[0].id : null;
 
   function applyMenu() {
     var q = (search && search.value ? search.value : '').trim().toLowerCase();
     var vegOnly = vegBtn && vegBtn.getAttribute('aria-pressed') === 'true';
-    var shown = 0;
+    var searching = !!q;            // a search reaches across every section at once
+    var inView = 0;
 
     dishes.forEach(function (d) {
       var ok = true;
       if (vegOnly && d.getAttribute('data-veg') !== '1') ok = false;
       if (ok && q && (d.getAttribute('data-search') || '').indexOf(q) === -1) ok = false;
       d.hidden = !ok;
-      if (ok) shown++;
     });
+
     courses.forEach(function (c) {
-      c.hidden = c.querySelectorAll('.dish:not([hidden])').length === 0;
+      var live = c.querySelectorAll('.dish:not([hidden])').length;
+      c.hidden = searching ? live === 0 : c.id !== activeId;
+      if (!c.hidden) inView += live;
     });
-    if (count) count.textContent = shown + (shown === 1 ? ' dish' : ' dishes');
-    if (empty) empty.hidden = shown > 0;
+
+    tabs.forEach(function (t) {
+      t.setAttribute('aria-selected',
+        String(!searching && t.getAttribute('data-target') === activeId));
+    });
+
+    if (count) count.textContent = inView + (inView === 1 ? ' dish' : ' dishes');
+    if (empty) empty.hidden = inView > 0;
   }
+
+  tabs.forEach(function (t) {
+    t.addEventListener('click', function () {
+      activeId = t.getAttribute('data-target');
+      if (search && search.value) search.value = '';   // a tab click is a fresh look
+      applyMenu();
+    });
+  });
 
   if (search) search.addEventListener('input', applyMenu);
   if (vegBtn) vegBtn.addEventListener('click', function () {
-    vegBtn.setAttribute('aria-pressed', vegBtn.getAttribute('aria-pressed') === 'true' ? 'false' : 'true');
+    vegBtn.setAttribute('aria-pressed',
+      vegBtn.getAttribute('aria-pressed') === 'true' ? 'false' : 'true');
     applyMenu();
   });
   applyMenu();
