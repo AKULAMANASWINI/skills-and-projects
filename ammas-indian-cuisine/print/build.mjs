@@ -105,6 +105,7 @@ const html = `<!doctype html>
 :root {
   --ink: #171614;
   --soft: #6d6862;
+  --text: #33302c;
   --hair: #e3ded7;
   --brass: #94661c;
   --display: "Libre Caslon Display", Georgia, serif;
@@ -175,12 +176,12 @@ h1, h2, h3, p { margin: 0; font-weight: 400; }
 
 .dish { break-inside: avoid; display: grid; justify-items: center; gap: 1.4pt; padding-bottom: 10.5pt; }
 .tag { font: 500 6.2pt/1.3 var(--sans); letter-spacing: 0.24em; text-transform: uppercase; color: var(--brass); }
-.dish h3 { font: 500 8.8pt/1.35 var(--sans); letter-spacing: 0.16em; text-transform: uppercase; }
+.dish h3 { font: 600 8.8pt/1.35 var(--sans); letter-spacing: 0.16em; text-transform: uppercase; }
 .dish h3 .price, .dish h3 .mk { margin-left: 4pt; text-transform: none; }
-.dish p { font-family: var(--serif); font-style: italic; font-size: 9.4pt; line-height: 1.36; color: var(--soft); max-width: 3.1in; }
-.price { font: 500 8.9pt/1.35 var(--sans); letter-spacing: 0.06em; color: var(--brass); font-variant-numeric: tabular-nums; }
+.dish p { font-family: var(--serif); font-style: italic; font-size: 9.4pt; line-height: 1.36; color: var(--text); max-width: 3.1in; }
+.price { font: 600 8.9pt/1.35 var(--sans); letter-spacing: 0.06em; color: var(--brass); font-variant-numeric: tabular-nums; }
 .price.ask { font: italic 400 8.8pt/1.35 var(--serif); letter-spacing: 0; }
-.mk { font: 500 6pt/1 var(--sans); letter-spacing: 0.1em; color: var(--soft); border: 0.5pt solid var(--hair); padding: 1.2pt 2pt 1pt; }
+.mk { font: 600 6pt/1 var(--sans); letter-spacing: 0.1em; color: var(--text); border: 0.5pt solid var(--hair); padding: 1.2pt 2pt 1pt; }
 
 .foot {
   margin-top: 8pt;
