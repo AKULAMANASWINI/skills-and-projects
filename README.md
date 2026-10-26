@@ -2,7 +2,7 @@
 
 | Project | What it is |
 |---|---|
-| [`ammas-indian-cuisine/`](ammas-indian-cuisine/) | Restaurant website for Amma's Indian Cuisine in an American fine-dining style — menu with veg filter, breakfast, table requests, hours and contact. Static HTML plus `images/`; edit `CONFIG` and `MENU` in its script. `print/build.mjs` turns the same data into a four-page Letter menu (`print/menu.pdf`). |
+| [`ammas-indian-cuisine/`](ammas-indian-cuisine/) | Restaurant website for Amma's Indian Cuisine in an American fine-dining style — menu with veg filter, breakfast, table requests, hours and contact. Static HTML plus `images/`; edit `CONFIG` and `MENU` in its script. `print/build.mjs` turns the same data into a four-page Letter menu (`print/menu.pdf`). `logo/build.py` draws the logo concepts as outlined SVGs. |
 | [`plate-and-barbell/`](plate-and-barbell/) | Two-person food, nutrition and gym tracker — single-page app with plan, log, trends and CSV export. |
 
 **Plate & Barbell** runs from one source file with three storage backends,
