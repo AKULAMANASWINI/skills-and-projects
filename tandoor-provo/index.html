@@ -327,6 +327,41 @@ a{color:inherit}
   .gallery{grid-template-columns:1fr}
   .gallery .tall{height:auto;aspect-ratio:3/2}
 }
+/* ============ the menu card ============
+   Amma's palette, scoped to this one section: white page, near-black ink,
+   hairline rules, brass. Every component inside already draws from the
+   tokens, so redefining them here is the whole change. It reads as a
+   printed card set into the page, and it holds on either theme. */
+#menu{
+  --ground:#ffffff;
+  --ground-2:#faf8f5;
+  --ground-3:#ffffff;
+  --line:#e6e2dc;
+  --line-soft:#efece7;
+  --ink:#171614;
+  --ink-2:#6d6862;
+  --ink-3:#8a847c;
+  --ember:#94661c;          /* brass carries what ember carried */
+  --ember-on:#ffffff;
+  --saffron:#94661c;
+  --leaf:#4f6b38;
+  --glow:rgba(148,102,28,.10);
+  --chip:rgba(148,102,28,.08);
+  --shadow:0 1px 2px rgba(23,22,20,.04);
+
+  color-scheme:light;
+  background:var(--ground);
+  color:var(--ink);
+  border-block:1px solid #e6e2dc;
+  padding-block:clamp(4rem,9vw,7.5rem);
+}
+#menu .eyebrow{color:var(--ember)}
+#menu .section-head h2{font-size:clamp(2.2rem,4.6vw,3.3rem)}
+#menu .section-head{justify-content:center;text-align:center;margin-bottom:3rem}
+#menu .section-head > div{display:grid;justify-items:center;gap:.5rem}
+#menu .section-head p{max-width:52ch}
+#menu .menu-count{color:var(--ink-3)}
+
 /* ============ catering ============ */
 .catering-grid{
   display:grid;grid-template-columns:2fr 1fr;gap:clamp(.55rem,1.3vw,.95rem);
