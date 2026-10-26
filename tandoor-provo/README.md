@@ -53,3 +53,26 @@ If any of those is wrong, fix the `data-veg` attribute on that `<li>` and the ba
    goes — a photograph of a branded card. If they are also sold online or by phone, say so there.
 3. **Two photo captions.** The hero curry and the fried appetizers on the table platter aren't
    identifiable from the photographs alone — see `img/README.md`.
+
+## The printed menu
+
+`menu-print.html` is the in-restaurant menu: US Letter, four sides, meant to be printed
+double-sided on two sheets. `tandoor-menu.pdf` is that file rendered, ready to send to a printer.
+
+It is generated from the same 98 dishes as the website, so prices and descriptions cannot drift
+between the two.
+
+**To change it:** edit `menu-print.html` and re-render with
+
+```
+chrome --headless --no-pdf-header-footer --print-to-pdf=tandoor-menu.pdf menu-print.html
+```
+
+Page assignments are explicit, not automatic — the `SHEETS` list in the generator decides which
+sections sit on which side, so a section never splits across a page. If you add or remove dishes,
+check the four sides still balance.
+
+**How it is set:** black on white so it photocopies and reprints cheaply, with the logo band the
+only area of heavy ink and only on side one. Dish names in Hanken Grotesk semibold with leader
+dots to the price; descriptions in Fraunces italic beneath; V and GF in small ember boxes. Side
+four closes with the address, hours, the mark legend and the allergy line.

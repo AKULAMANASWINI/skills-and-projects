@@ -1,0 +1,575 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Tandoor Indian Cuisine — Menu</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&family=Hanken+Grotesk:wght@400;500;600&display=swap">
+<style>
+/* Printed menu — US Letter, four sides, two sheets double-sided.
+   Black on white so it photocopies and reprints cheaply; the masthead band
+   is the only area of ink, and only on the first side. */
+@page { size: Letter portrait; margin: 13mm 12mm 11mm; }
+
+:root {
+  --ink:#141210; --soft:#5d564e; --hair:#d8d2c8; --ember:#C2431A;
+  --display:"Fraunces","Hoefler Text",Georgia,serif;
+  --body:"Hanken Grotesk","Helvetica Neue",Helvetica,Arial,sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;background:#fff;color:var(--ink)}
+body{font:400 9.2pt/1.34 var(--body); -webkit-print-color-adjust:exact; print-color-adjust:exact;}
+img{max-width:100%;display:block}
+
+.sheet{position:relative;padding-bottom:9mm;break-after:page;page-break-after:always}
+.sheet:last-child{break-after:auto;page-break-after:auto}
+
+.masthead{
+  background:#15100C;color:#fff;text-align:center;
+  padding:7mm 6mm 5.5mm;margin-bottom:6mm;
+}
+.masthead img{width:62mm;margin:0 auto 3.5mm}
+.masthead p{
+  margin:0;font-size:7.4pt;letter-spacing:.14em;text-transform:uppercase;color:#e7ded2;
+}
+
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:0 9mm}
+.col{min-width:0}
+.col > .course + .course{margin-top:6mm}
+
+.course{break-inside:avoid;page-break-inside:avoid}
+.course h2{
+  margin:0 0 1mm;font-family:var(--body);font-size:8.6pt;font-weight:600;
+  letter-spacing:.2em;text-transform:uppercase;
+  border-bottom:.5pt solid var(--ink);padding-bottom:1.6mm;
+}
+.course .sub{
+  margin:1.4mm 0 0;font-size:7pt;letter-spacing:.12em;text-transform:uppercase;color:var(--ember);
+}
+.course .note{margin:1.4mm 0 0;font-family:var(--display);font-style:italic;font-size:8.4pt;color:var(--soft)}
+.course ul{list-style:none;margin:3mm 0 0;padding:0}
+.course li{margin:0 0 2.6mm;break-inside:avoid;page-break-inside:avoid}
+
+.row{display:flex;align-items:baseline;gap:1.5mm}
+.nm{font-weight:600;font-size:9.4pt}
+.dots{flex:1 1 auto;border-bottom:.5pt dotted var(--hair);transform:translateY(-1mm);min-width:4mm}
+.pr{font-weight:600;font-size:9.2pt;font-variant-numeric:tabular-nums;white-space:nowrap}
+.ds{display:block;font-family:var(--display);font-style:italic;font-size:8.3pt;line-height:1.3;color:var(--soft);margin-top:.5mm;max-width:92%}
+.m{
+  font-style:normal;font-size:6.2pt;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--ember);border:.5pt solid currentColor;border-radius:1pt;
+  padding:0 .8mm;margin-left:1.4mm;vertical-align:.6mm;
+}
+
+.colophon{
+  margin-top:7mm;padding-top:4mm;border-top:.5pt solid var(--ink);text-align:center;
+}
+.colophon p{margin:0 0 1.4mm;font-size:8.2pt;color:var(--soft)}
+.colophon .big{font-family:var(--display);font-weight:700;font-size:13pt;color:var(--ink);letter-spacing:.01em}
+.colophon .legend{margin-top:3mm;font-size:7.6pt}
+
+.folio{position:absolute;bottom:2mm;left:0;right:0;text-align:center;font-size:7pt;color:var(--soft)}
+
+@media screen {
+  body{background:#efece7;padding:8mm 0}
+  .sheet{width:216mm;min-height:279mm;margin:0 auto 8mm;background:#fff;
+    padding:13mm 12mm 11mm;box-shadow:0 2px 10px rgba(0,0,0,.14)}
+}
+</style>
+</head>
+<body>
+  <article class="sheet">
+      <header class="masthead">
+        <img src="img/logo.png" alt="Tandoor Indian Cuisine">
+        <p>North &amp; South Indian · 1600 N Freedom Blvd, Provo, Utah · (801) 960-9048</p>
+      </header>
+    <div class="cols">
+      <div class="col">
+      <section class="course">
+        <h2>Appetizers</h2>
+        <ul>
+          <li>
+            <span class="row"><span class="nm">Samosa<i class="m">v</i></span><span class="dots"></span><span class="pr">6.95</span></span>
+            <span class="ds">Pastry stuffed with a blend of potatoes and peas</span>
+          </li>
+          <li>
+            <span class="row"><span class="nm">Pani Puri<i class="m">v</i></span><span class="dots"></span><span class="pr">6.95</span></span>
+            <span class="ds">Crispy fried puri filled with potatoes and onions</span>
+          </li>
+          <li>
+            <span class="row"><span class="nm">Vegetable Pakora<i class="m">v</i></span><span class="dots"></span><span class="pr">6.95</span></span>
+            <span class="ds">Mixed vegetables dipped with spiced chickpea batter</span>
+          </li>
+          <li>
+            <span class="row"><span class="nm">Cut Mirchi<i class="m">v</i></span><span class="dots"></span><span class="pr">6.95</span></span>
+            <span class="ds">Peppers coated in a seasoned chickpea-flour batter</span>
+          </li>
+          <li>
+            <span class="row"><span class="nm">Potato Bhajji<i class="m">v</i></span><span class="dots"></span><span class="pr">6.95</span></span>
+            <span class="ds">Crispy battered potato slices seasoned with spices</span>
+          </li>
+          <li>
+            <span class="row"><span class="nm">Vegetable Spring Roll<i class="m">v</i></span><span class="dots"></span><span class="pr">5.95</span></span>
+            <span class="ds">Crispy golden pastry filled with mixed vegetables</span>
+          </li>
+          <li>
+            <span class="row"><span class="nm">Bhel Puri<i class="m">v</i></span><span class="dots"></span><span class="pr">5.95</span></span>
+            <span class="ds">Crispy puffed rice tossed with vegetables, chutneys and spices</span>
+          </li>
+          <li>
+            <span class="row"><span class="nm">Paneer Pakora<i class="m">v</i></span><span class="dots"></span><span class="pr">7.95</span></span>
+            <span class="ds">Crispy golden fried paneer</span>
+          </li>
+          <li>
+            <span class="row"><span class="nm">Samosa Chana Chaat<i class="m">v</i></span><span class="dots"></span><span class="pr">8.95</span></span>
+            <span class="ds">Samosa topped with chickpeas, chutney, and spices</span>
+          </li>
+          <li>
+            <span class="row"><span class="nm">Assorted Snacks<i class="m">v</i></span><span class="dots"></span><span class="pr">8.95</span></span>
+            <span class="ds">Platter with samosa, pakora, bhaji and cut mirchi</span>
+          </li>
+          <li>
+            <span class="row"><span class="nm">Chicken Pakora</span><span class="dots"></span><span class="pr">7.95</span></span>
+            <span class="ds">Chicken tenders coated in a seasoned chickpea-flour batter</span>
+          </li>
+          <li>
+            <span class="row"><span class="nm">Peppery Calamari</span><span class="dots"></span><span class="pr">7.95</span></span>
+            <span class="ds">Crisp calamari seasoned with masala</span>
+          </li>
+          <li>
+            <span class="row"><span class="nm">Fish Pakora</span><span class="dots"></span><span class="pr">7.95</span></span>
+            <span class="ds">Tender fish pieces coated in a spiced batter and fried until crispy</span>
+          </li>
+        </ul>
+      </section>
+      </div>
+      <div class="col">
+      <section class="course">
+        <h2>Soups &amp; Salads</h2>
+        <p class="sub">All vegetarian</p>
+        <ul>
+          <li>
+            <span class="row"><span class="nm">Kachumber<i class="m">gf</i></span><span class="dots"></span><span class="pr">6.95</span></span>
+            <span class="ds">Diced cucumber and tomatoes with lemon dressing</span>
+          </li>
+          <li>
+            <span class="row"><span class="nm">Butternut Squash Soup<i class="m">gf</i></span><span class="dots"></span><span class="pr">5.95</span></span>
+            <span class="ds">Cumin-spiced house specialty</span>
+          </li>
+          <li>
+            <span class="row"><span class="nm">Tomato Soup</span><span class="dots"></span><span class="pr">5.95</span></span>
+            <span class="ds">Creamy tomato-butter soup</span>
+          </li>
+        </ul>
+      </section>
+      <section class="course">
+        <h2>Indo-Chinese</h2>
+        <ul>
+          <li>
+            <span class="row"><span class="nm">Gobi Manchurian<i class="m">v</i></span><span class="dots"></span><span class="pr">12.95</span></span>
+            <span class="ds">Crispy cauliflower tossed in tomato-soy sauce</span>
+          </li>
+          <li>
+            <span class="row"><span class="nm">Chilli Paneer<i class="m">v</i></span><span class="dots"></span><span class="pr">13.95</span></span>
+            <span class="ds">Crispy paneer tossed in hot, sweet and tangy chilli sauce</span>
+          </li>
+          <li>
+            <span class="row"><span class="nm">Chicken Manchurian</span><span class="dots"></span><span class="pr">13.95</span></span>
+            <span class="ds">Crispy deep-fried chicken in tomato-soy sauce</span>
+          </li>
+          <li>
+            <span class="row"><span class="nm">Chicken 65</span><span class="dots"></span><span class="pr">13.95</span></span>
+            <span class="ds">Crispy fried chicken marinated in yogurt and red chillies</span>
+          </li>
+          <li>
+            <span class="row"><span class="nm">Chilli Chicken</span><span class="dots"></span><span class="pr">13.95</span></span>
+            <span class="ds">Crispy chicken in hot, sweet and tangy chilli sauce</span>
+          </li>
+        </ul>
+      </section>
+      </div>
+    </div>
+    <span class="folio">1 / 4</span>
+  </article>
+  <article class="sheet">
+    <div class="cols">
+      <div class="col">
+      <section class="course">
+        <h2>Dosa</h2>
+        <p class="sub">South</p>
+        <p class="note">Served with assorted chutneys and sambar.</p>
+        <ul>
+          <li>
+            <span class="row"><span class="nm">Masala Dosa<i class="m">v</i></span><span class="dots"></span><span class="pr">12.95</span></span>
+            <span class="ds">Thin lentil crepe with spiced potato stuffing</span>
+          </li>
+          <li>
+            <span class="row"><span class="nm">Mysore Masala Dosa<i class="m">v</i></span><span class="dots"></span><span class="pr">12.95</span></span>
+            <span class="ds">Crepe with spicy garlicky red chutney and potato filling</span>
+          </li>
+          <li>
+            <span class="row"><span class="nm">Paneer Tikka Dosa<i class="m">v</i></span><span class="dots"></span><span class="pr">12.95</span></span>
+            <span class="ds">Thin lentil crepe with diced paneer and bell peppers</span>
+          </li>
+          <li>
+            <span class="row"><span class="nm">Ghee Roast Dosa<i class="m">v</i></span><span class="dots"></span><span class="pr">12.95</span></span>
+            <span class="ds">Crispy lentil crepe roasted with ghee and onions</span>
+          </li>
+          <li>
+            <span class="row"><span class="nm">Chole Bhatura<i class="m">v</i></span><span class="dots"></span><span class="pr">12.95</span></span>
+            <span class="ds">Soft fluffy deep-fried bread served with chickpea curry</span>
+          </li>
+          <li>
+            <span class="row"><span class="nm">Chicken Tikka Dosa</span><span class="dots"></span><span class="pr">12.95</span></span>
+            <span class="ds">Crepe stuffed with chicken and bell peppers</span>
+          </li>
+        </ul>
+      </section>
+      <section class="course">
+        <h2>Biryani</h2>
+        <p class="note">Dum-cooked basmati rice with aromatic spices, served with raita.</p>
+        <ul>
+          <li>
+            <span class="row"><span class="nm">Vegetable Biryani<i class="m">v</i></span><span class="dots"></span><span class="pr">12.95</span></span>
+            <span class="ds">Basmati rice with fresh vegetables and aromatic spices</span>
+          </li>
+          <li>
+            <span class="row"><span class="nm">Paneer Biryani<i class="m">v</i></span><span class="dots"></span><span class="pr">14.95</span></span>
+            <span class="ds">Paneer layered with basmati rice and Indian spices</span>
+          </li>
+          <li>
+            <span class="row"><span class="nm">Egg Biryani</span><span class="dots"></span><span class="pr">13.95</span></span>
+            <span class="ds">Basmati rice layered with boiled eggs and traditional spices</span>
+          </li>
+          <li>
+            <span class="row"><span class="nm">Chicken Biryani</span><span class="dots"></span><span class="pr">14.95</span></span>
+            <span class="ds">Chicken cooked with fragrant basmati rice and herbs</span>
+          </li>
+          <li>
+            <span class="row"><span class="nm">Shrimp Biryani</span><span class="dots"></span><span class="pr">15.95</span></span>
+            <span class="ds">Basmati rice cooked with shrimp and aromatic spices</span>
+          </li>
+          <li>
+            <span class="row"><span class="nm">Lamb Biryani</span><span class="dots"></span><span class="pr">16.95</span></span>
+            <span class="ds">Tender lamb with aromatic basmati rice and spices</span>
+          </li>
+          <li>
+            <span class="row"><span class="nm">Goat Biryani</span><span class="dots"></span><span class="pr">16.95</span></span>
+            <span class="ds">Traditional dum biryani with tender goat and fragrant rice</span>
+          </li>
+        </ul>
+      </section>
+      </div>
+      <div class="col">
+      <section class="course">
+        <h2>Vegetarian Delights</h2>
+        <p class="sub">All vegetarian</p>
+        <ul>
+          <li>
+            <span class="row"><span class="nm">Aloo Gobi</span><span class="dots"></span><span class="pr">12.95</span></span>
+            <span class="ds">Cauliflower and potatoes in masala sauce</span>
+          </li>
+          <li>
+            <span class="row"><span class="nm">Dal Makhani</span><span class="dots"></span><span class="pr">12.95</span></span>
+            <span class="ds">Slow-simmered black lentils in creamy house gravy</span>
+          </li>
+          <li>
+            <span class="row"><span class="nm">Dal Tadka</span><span class="dots"></span><span class="pr">12.95</span></span>
+            <span class="ds">Yellow lentils tempered with garlic, cumin and herbs</span>
+          </li>
+          <li>
+            <span class="row"><span class="nm">Vegetable Coconut Korma</span><span class="dots"></span><span class="pr">12.95</span></span>
+            <span class="ds">South Indian vegetables in coconut onion sauce</span>
+          </li>
+          <li>
+            <span class="row"><span class="nm">Veg Madras Masala</span><span class="dots"></span><span class="pr">12.95</span></span>
+            <span class="ds">Mixed vegetables in a spicy South Indian coconut curry</span>
+          </li>
+          <li>
+            <span class="row"><span class="nm">Chana Masala</span><span class="dots"></span><span class="pr">12.95</span></span>
+            <span class="ds">Garbanzo beans with black cumin and onion sauce</span>
+          </li>
+          <li>
+            <span class="row"><span class="nm">Pumpkin Masala</span><span class="dots"></span><span class="pr">12.95</span></span>
+            <span class="ds">Pumpkin, onions and tomatoes in home-style masala</span>
+          </li>
+          <li>
+            <span class="row"><span class="nm">Hyderabadi Bagara Baingan</span><span class="dots"></span><span class="pr">12.95</span></span>
+            <span class="ds">Baby eggplant in coconut and sesame sauce</span>
+          </li>
+          <li>
+            <span class="row"><span class="nm">Bhindi Masala</span><span class="dots"></span><span class="pr">12.95</span></span>
+            <span class="ds">Tender okra stir-fried with cumin and coriander</span>
+          </li>
+          <li>
+            <span class="row"><span class="nm">Malai Kofta</span><span class="dots"></span><span class="pr">13.95</span></span>
+            <span class="ds">Fried vegetable dumplings in a rich creamy sauce</span>
+          </li>
+          <li>
+            <span class="row"><span class="nm">Paneer Saag</span><span class="dots"></span><span class="pr">13.95</span></span>
+            <span class="ds">Paneer cooked in spinach and onion sauce</span>
+          </li>
+          <li>
+            <span class="row"><span class="nm">Paneer Karahi Masala</span><span class="dots"></span><span class="pr">13.95</span></span>
+            <span class="ds">Paneer stir-fried with peppers and onions</span>
+          </li>
+          <li>
+            <span class="row"><span class="nm">Paneer Makhani</span><span class="dots"></span><span class="pr">13.95</span></span>
+            <span class="ds">Paneer in tomato-butter sauce</span>
+          </li>
+          <li>
+            <span class="row"><span class="nm">Paneer Tikka Masala</span><span class="dots"></span><span class="pr">13.95</span></span>
+            <span class="ds">Cottage cheese in rich tomato cream sauce</span>
+          </li>
+          <li>
+            <span class="row"><span class="nm">Shahi Paneer</span><span class="dots"></span><span class="pr">13.95</span></span>
+            <span class="ds">Cottage cheese in creamy cashew and saffron gravy</span>
+          </li>
+          <li>
+            <span class="row"><span class="nm">Methi Malai Matar</span><span class="dots"></span><span class="pr">13.95</span></span>
+            <span class="ds">Green peas in a creamy fenugreek sauce</span>
+          </li>
+          <li>
+            <span class="row"><span class="nm">Methi Paneer Matar</span><span class="dots"></span><span class="pr">13.95</span></span>
+            <span class="ds">Paneer and peas in a creamy fenugreek sauce</span>
+          </li>
+        </ul>
+      </section>
+      </div>
+    </div>
+    <span class="folio">2 / 4</span>
+  </article>
+  <article class="sheet">
+    <div class="cols">
+      <div class="col">
+      <section class="course">
+        <h2>From the Tandoor Oven</h2>
+        <p class="sub">North</p>
+        <ul>
+          <li>
+            <span class="row"><span class="nm">Chicken Tandoori</span><span class="dots"></span><span class="pr">13.95</span></span>
+            <span class="ds">Chicken leg quarters served with grilled onions and bell peppers</span>
+          </li>
+          <li>
+            <span class="row"><span class="nm">Salmon Tandoori</span><span class="dots"></span><span class="pr">13.95</span></span>
+            <span class="ds">Yogurt-marinated salmon served with onion and bell peppers</span>
+          </li>
+          <li>
+            <span class="row"><span class="nm">Paneer Tikka Kebab<i class="m">v</i></span><span class="dots"></span><span class="pr">13.95</span></span>
+            <span class="ds">Marinated paneer with bell pepper, onions and spices</span>
+          </li>
+          <li>
+            <span class="row"><span class="nm">Chicken Tikka Kebab</span><span class="dots"></span><span class="pr">15.95</span></span>
+            <span class="ds">Chicken breast in yogurt, fenugreek and mustard</span>
+          </li>
+          <li>
+            <span class="row"><span class="nm">Reshmi Kebab</span><span class="dots"></span><span class="pr">15.95</span></span>
+            <span class="ds">Cashew-crusted chicken thigh in yogurt and spices</span>
+          </li>
+          <li>
+            <span class="row"><span class="nm">Chicken Lollipop</span><span class="dots"></span><span class="pr">15.95</span></span>
+            <span class="ds">Fried chicken lollipops tossed in a spicy sauce</span>
+          </li>
+          <li>
+            <span class="row"><span class="nm">Shrimp Tandoori</span><span class="dots"></span><span class="pr">17.95</span></span>
+            <span class="ds">Yogurt-marinated shrimp with onions &amp; bell peppers</span>
+          </li>
+          <li>
+            <span class="row"><span class="nm">Lamb Boti Kebab</span><span class="dots"></span><span class="pr">17.95</span></span>
+            <span class="ds">Tender lamb leg marinated in yogurt and spices</span>
+          </li>
+          <li>
+            <span class="row"><span class="nm">Mixed Grill</span><span class="dots"></span><span class="pr">18.95</span></span>
+            <span class="ds">Assorted tandoori chicken, chicken tikka, lamb kebab and tandoori shrimp</span>
+          </li>
+        </ul>
+      </section>
+      <section class="course">
+        <h2>Naan</h2>
+        <p class="sub">All vegetarian</p>
+        <ul>
+          <li>
+            <span class="row"><span class="nm">Plain / Butter Naan</span><span class="dots"></span><span class="pr">2.95</span></span>
+          </li>
+          <li>
+            <span class="row"><span class="nm">Roti</span><span class="dots"></span><span class="pr">2.95</span></span>
+          </li>
+          <li>
+            <span class="row"><span class="nm">Garlic Naan</span><span class="dots"></span><span class="pr">2.95</span></span>
+          </li>
+          <li>
+            <span class="row"><span class="nm">Cheese Naan</span><span class="dots"></span><span class="pr">3.50</span></span>
+          </li>
+          <li>
+            <span class="row"><span class="nm">Chilli Naan</span><span class="dots"></span><span class="pr">3.95</span></span>
+          </li>
+          <li>
+            <span class="row"><span class="nm">Onion Naan</span><span class="dots"></span><span class="pr">3.95</span></span>
+          </li>
+          <li>
+            <span class="row"><span class="nm">Cheese &amp; Onion Naan</span><span class="dots"></span><span class="pr">3.95</span></span>
+          </li>
+          <li>
+            <span class="row"><span class="nm">Peshawari Naan</span><span class="dots"></span><span class="pr">4.95</span></span>
+          </li>
+          <li>
+            <span class="row"><span class="nm">Assorted Bread Basket</span><span class="dots"></span><span class="pr">9.95</span></span>
+            <span class="ds">Butter naan, chilli naan, garlic naan and onion naan</span>
+          </li>
+        </ul>
+      </section>
+      </div>
+      <div class="col">
+      <section class="course">
+        <h2>Non-Vegetarian Delights</h2>
+        <p class="note">Add $2 for lamb and $3 for shrimp unless noted otherwise.</p>
+        <ul>
+          <li>
+            <span class="row"><span class="nm">Chicken Tikka Masala</span><span class="dots"></span><span class="pr">14.95</span></span>
+            <span class="ds">Grilled chicken in tandoor, simmered in a creamy tomato sauce</span>
+          </li>
+          <li>
+            <span class="row"><span class="nm">Butter Chicken</span><span class="dots"></span><span class="pr">14.95</span></span>
+            <span class="ds">Boneless chicken in a creamy tomato cashew sauce</span>
+          </li>
+          <li>
+            <span class="row"><span class="nm">Coconut Chicken Korma</span><span class="dots"></span><span class="pr">14.95</span></span>
+            <span class="ds">Boneless chicken in a delicious creamy coconut sauce</span>
+          </li>
+          <li>
+            <span class="row"><span class="nm">Chicken Madras Masala</span><span class="dots"></span><span class="pr">14.95</span></span>
+            <span class="ds">Boneless chicken in a spicy south Indian coconut curry</span>
+          </li>
+          <li>
+            <span class="row"><span class="nm">Chicken Karahi</span><span class="dots"></span><span class="pr">14.95</span></span>
+            <span class="ds">Boneless chicken cooked in a spiced tomato gravy</span>
+          </li>
+          <li>
+            <span class="row"><span class="nm">Mango Chicken</span><span class="dots"></span><span class="pr">14.95</span></span>
+            <span class="ds">Boneless chicken in a sweet-spiced mango curry</span>
+          </li>
+          <li>
+            <span class="row"><span class="nm">Chicken Curry</span><span class="dots"></span><span class="pr">14.95</span></span>
+            <span class="ds">Boneless chicken in a homestyle curry</span>
+          </li>
+          <li>
+            <span class="row"><span class="nm">Chicken Saag</span><span class="dots"></span><span class="pr">14.95</span></span>
+            <span class="ds">Boneless chicken cooked with spinach and spices</span>
+          </li>
+          <li>
+            <span class="row"><span class="nm">Chicken Vindaloo</span><span class="dots"></span><span class="pr">14.95</span></span>
+            <span class="ds">Boneless chicken cooked in a Goan style curry</span>
+          </li>
+          <li>
+            <span class="row"><span class="nm">Chicken Cilantro</span><span class="dots"></span><span class="pr">14.95</span></span>
+            <span class="ds">Boneless chicken cooked with fresh cilantro and spices</span>
+          </li>
+          <li>
+            <span class="row"><span class="nm">Goat Curry</span><span class="dots"></span><span class="pr">16.95</span></span>
+            <span class="ds">Slow-cooked goat curry with house spices</span>
+          </li>
+          <li>
+            <span class="row"><span class="nm">Laal Maas</span><span class="dots"></span><span class="pr">16.95</span></span>
+            <span class="ds">Rajasthani lamb curry with sweet chilies &amp; spices</span>
+          </li>
+        </ul>
+      </section>
+      </div>
+    </div>
+    <span class="folio">3 / 4</span>
+  </article>
+  <article class="sheet">
+    <div class="cols">
+      <div class="col">
+      <section class="course">
+        <h2>Desserts</h2>
+        <p class="sub">All vegetarian</p>
+        <ul>
+          <li>
+            <span class="row"><span class="nm">Rice Kheer</span><span class="dots"></span><span class="pr">2.95</span></span>
+          </li>
+          <li>
+            <span class="row"><span class="nm">Gulab Jamun</span><span class="dots"></span><span class="pr">3.95</span></span>
+          </li>
+          <li>
+            <span class="row"><span class="nm">Mango Kulfi</span><span class="dots"></span><span class="pr">3.95</span></span>
+          </li>
+        </ul>
+      </section>
+      <section class="course">
+        <h2>Beverages</h2>
+        <p class="sub">All vegetarian</p>
+        <ul>
+          <li>
+            <span class="row"><span class="nm">Mango Coconut Lassi</span><span class="dots"></span><span class="pr">3.50</span></span>
+            <span class="ds">Creamy mango lassi blended with tropical coconut</span>
+          </li>
+          <li>
+            <span class="row"><span class="nm">Strawberry Lassi</span><span class="dots"></span><span class="pr">3.50</span></span>
+            <span class="ds">Sweet and creamy yogurt drink blended with strawberries</span>
+          </li>
+          <li>
+            <span class="row"><span class="nm">Mango Lassi</span><span class="dots"></span><span class="pr">3.95</span></span>
+            <span class="ds">Refreshing yogurt drink blended with sweet mango</span>
+          </li>
+          <li>
+            <span class="row"><span class="nm">Chikoo Lassi</span><span class="dots"></span><span class="pr">3.95</span></span>
+            <span class="ds">Smooth yogurt drink blended with sweet chikoo fruit</span>
+          </li>
+          <li>
+            <span class="row"><span class="nm">Chai</span><span class="dots"></span><span class="pr">3.95</span></span>
+            <span class="ds">Traditional Indian tea with milk and aromatic spices</span>
+          </li>
+          <li>
+            <span class="row"><span class="nm">Coffee</span><span class="dots"></span><span class="pr">3.95</span></span>
+            <span class="ds">Freshly brewed hot coffee</span>
+          </li>
+          <li>
+            <span class="row"><span class="nm">Fountain Drinks</span><span class="dots"></span><span class="pr">2.95</span></span>
+            <span class="ds">Coke, Diet Coke, Sprite &amp; Fanta</span>
+          </li>
+          <li>
+            <span class="row"><span class="nm">Water Bottle</span><span class="dots"></span><span class="pr">1.00</span></span>
+          </li>
+        </ul>
+      </section>
+      </div>
+      <div class="col">
+      <section class="course">
+        <h2>Condiments</h2>
+        <p class="sub">All vegetarian</p>
+        <ul>
+          <li>
+            <span class="row"><span class="nm">Mango Chutney</span><span class="dots"></span><span class="pr">2.95</span></span>
+          </li>
+          <li>
+            <span class="row"><span class="nm">Tamarind Chutney</span><span class="dots"></span><span class="pr">2.95</span></span>
+          </li>
+          <li>
+            <span class="row"><span class="nm">Mint Chutney</span><span class="dots"></span><span class="pr">2.95</span></span>
+          </li>
+          <li>
+            <span class="row"><span class="nm">Papadam</span><span class="dots"></span><span class="pr">2.95</span></span>
+          </li>
+          <li>
+            <span class="row"><span class="nm">Raita</span><span class="dots"></span><span class="pr">2.95</span></span>
+          </li>
+          <li>
+            <span class="row"><span class="nm">Steamed Rice</span><span class="dots"></span><span class="pr">2.95</span></span>
+          </li>
+        </ul>
+      </section>
+      </div>
+    </div>
+      <footer class="colophon">
+        <p class="big">Tandoor Indian Cuisine</p>
+        <p>1600 N Freedom Blvd, Provo, UT 84604 · (801) 960-9048 · tandoorslc@gmail.com</p>
+        <p>Monday – Saturday, 11 am – 10 pm · Closed Sunday · Dine in · Takeout · Delivery · Catering</p>
+        <p class="legend"><i class="m">v</i> Vegetarian &nbsp;·&nbsp; <i class="m">gf</i> Gluten-free &nbsp;·&nbsp;
+           Please tell your server about any allergy before ordering. Prices in USD.</p>
+      </footer>
+    <span class="folio">4 / 4</span>
+  </article>
+</body>
+</html>
