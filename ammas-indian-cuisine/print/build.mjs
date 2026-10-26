@@ -1,10 +1,11 @@
 /**
- * Builds the printed two-sided menu (US Letter, front and back) from the
- * website's own CONFIG and MENU, so the paper menu and the site never drift.
+ * Builds the printed menu (four US Letter pages: two sheets printed both
+ * sides, or one 11x17 sheet folded) from the website's own CONFIG and MENU,
+ * so the paper menu and the site never drift.
  *
  *   node ammas-indian-cuisine/print/build.mjs
  *
- * Writes print/menu.html and print/menu.pdf. Fails if either side overflows
+ * Writes print/menu.html and print/menu.pdf. Fails if any page overflows
  * the sheet, so a longer menu is caught here rather than at the printer.
  */
 import { readFileSync, writeFileSync } from "node:fs";
@@ -21,11 +22,17 @@ const end = site.indexOf("// ---------------------------------------------------
 if (start === -1 || end === -1) throw new Error("could not find the CONFIG/MENU block in index.html");
 const { CONFIG, MENU } = new Function(site.slice(start, end) + "; return { CONFIG, MENU };")();
 
-/* Which sections go on which side. Front ~39 dishes, back ~37. */
-const FRONT = ["Appetizers", "65 & Indo-Chinese", "Sizzling Tandoori", "Biryani & Pulav", "Vegetable Curries"];
-const BACK = ["Non-Veg Curries", "Naan", "Breakfast", "Drinks & Desserts"];
-const missing = Object.keys(MENU).filter((s) => !FRONT.includes(s) && !BACK.includes(s));
-if (missing.length) throw new Error("sections not placed on either side: " + missing.join(", "));
+/* Each page is [left column, right column]; a section never splits across
+   columns. The last page's footer carries hours and address. */
+const PAGES = [
+  [["Appetizers"], ["65 & Indo-Chinese"]],
+  [["Sizzling Tandoori", "Naan"], ["Biryani & Pulav"]],
+  [["Vegetable Curries"], ["Non-Veg Curries"]],
+  [["Breakfast"], ["Drinks & Desserts"]]
+];
+const placed = PAGES.flat(2);
+const missing = Object.keys(MENU).filter((s) => !placed.includes(s));
+if (missing.length) throw new Error("sections not placed on any page: " + missing.join(", "));
 
 const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
 
@@ -115,41 +122,44 @@ h1, h2, h3, p { margin: 0; font-weight: 400; }
   pointer-events: none;
 }
 
-.mast { text-align: center; display: grid; gap: 3pt; justify-items: center; margin-bottom: 14pt; }
-.mast h1 { font-family: var(--display); font-size: 30pt; line-height: 1; letter-spacing: 0.01em; }
-.mast .sub { font: 500 6.6pt/1.4 var(--sans); letter-spacing: 0.36em; text-transform: uppercase; color: var(--soft); }
-.mast .rule { width: 26pt; height: 0.75pt; background: var(--brass); margin: 7pt 0 5pt; }
-.mast .motto { font-family: var(--serif); font-style: italic; font-size: 8.6pt; color: var(--soft); }
-.mast.small h1 { font-size: 20pt; }
+.mast { text-align: center; display: grid; gap: 4pt; justify-items: center; margin-bottom: 22pt; }
+.mast h1 { font-family: var(--display); font-size: 40pt; line-height: 1; letter-spacing: 0.01em; }
+.mast .sub { font: 500 7.6pt/1.4 var(--sans); letter-spacing: 0.36em; text-transform: uppercase; color: var(--soft); }
+.mast .rule { width: 30pt; height: 0.75pt; background: var(--brass); margin: 9pt 0 6pt; }
+.mast .motto { font-family: var(--serif); font-style: italic; font-size: 10pt; color: var(--soft); }
+.mast.small { margin-bottom: 18pt; }
+.mast.small h1 { font-size: 22pt; }
 
 .cols {
   flex: 1;
   min-height: 0;
-  columns: 3;
-  column-gap: 0.3in;
-  column-rule: 0.5pt solid var(--hair);
-  column-fill: balance;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0 0.5in;
 }
+.col { min-height: 0; overflow: hidden; }
+.col + .col { border-left: 0.5pt solid var(--hair); padding-left: 0.5in; margin-left: -0.25in; }
+.col:first-child { padding-right: 0.25in; }
 .sec { text-align: center; }
-.sec + .sec { margin-top: 15pt; }
+.sec + .sec { margin-top: 28pt; }
 .keep, .whole { break-inside: avoid; }
 .sec h2 {
-  font: 500 7.8pt/1.3 var(--sans);
+  font: 500 9pt/1.3 var(--sans);
   letter-spacing: 0.34em;
   text-transform: uppercase;
   padding-top: 2pt;
 }
-.sec h2::after { content: ""; display: block; width: 18pt; height: 0.75pt; background: var(--brass); margin: 5pt auto 7pt; }
-.note { font-family: var(--serif); font-style: italic; font-size: 6.9pt; line-height: 1.3; color: var(--brass); margin: -2pt auto 6pt; }
+.sec h2::after { content: ""; display: block; width: 18pt; height: 0.75pt; background: var(--brass); margin: 7pt auto 10pt; }
+.note { font-family: var(--serif); font-style: italic; font-size: 8.2pt; line-height: 1.3; color: var(--brass); margin: -3pt auto 9pt; max-width: 3.1in; }
 
-.dish { break-inside: avoid; display: grid; justify-items: center; gap: 0.8pt; padding-bottom: 7.6pt; }
-.tag { font: 500 5.4pt/1.3 var(--sans); letter-spacing: 0.24em; text-transform: uppercase; color: var(--brass); }
-.dish h3 { font: 500 7.2pt/1.35 var(--sans); letter-spacing: 0.15em; text-transform: uppercase; }
-.dish h3 .price, .dish h3 .mk { margin-left: 3pt; text-transform: none; }
-.dish p { font-family: var(--serif); font-style: italic; font-size: 7.6pt; line-height: 1.32; color: var(--soft); }
-.price { font: 500 7.3pt/1.35 var(--sans); letter-spacing: 0.06em; color: var(--brass); font-variant-numeric: tabular-nums; }
-.price.ask { font: italic 400 7.2pt/1.35 var(--serif); letter-spacing: 0; }
-.mk { font: 500 5.2pt/1 var(--sans); letter-spacing: 0.1em; color: var(--soft); border: 0.5pt solid var(--hair); padding: 1.2pt 2pt 1pt; }
+.dish { break-inside: avoid; display: grid; justify-items: center; gap: 1.6pt; padding-bottom: 13pt; }
+.tag { font: 500 6.2pt/1.3 var(--sans); letter-spacing: 0.24em; text-transform: uppercase; color: var(--brass); }
+.dish h3 { font: 500 8.8pt/1.35 var(--sans); letter-spacing: 0.16em; text-transform: uppercase; }
+.dish h3 .price, .dish h3 .mk { margin-left: 4pt; text-transform: none; }
+.dish p { font-family: var(--serif); font-style: italic; font-size: 9.4pt; line-height: 1.36; color: var(--soft); max-width: 3.1in; }
+.price { font: 500 8.9pt/1.35 var(--sans); letter-spacing: 0.06em; color: var(--brass); font-variant-numeric: tabular-nums; }
+.price.ask { font: italic 400 8.8pt/1.35 var(--serif); letter-spacing: 0; }
+.mk { font: 500 6pt/1 var(--sans); letter-spacing: 0.1em; color: var(--soft); border: 0.5pt solid var(--hair); padding: 1.2pt 2pt 1pt; }
 
 .foot {
   margin-top: 8pt;
@@ -158,37 +168,34 @@ h1, h2, h3, p { margin: 0; font-weight: 400; }
   text-align: center;
   display: grid;
   gap: 2.5pt;
-  font: 400 6.6pt/1.45 var(--sans);
+  font: 400 7.4pt/1.5 var(--sans);
   color: var(--soft);
 }
-.foot b { font-weight: 500; color: var(--ink); letter-spacing: 0.2em; text-transform: uppercase; font-size: 6.2pt; }
+.foot b { font-weight: 500; color: var(--ink); letter-spacing: 0.2em; text-transform: uppercase; font-size: 7.2pt; }
 </style>
 </head>
 <body>
-  <div class="sheet" id="front">
-    <header class="mast">
+${PAGES.map((secs, i) => {
+  const first = i === 0, last = i === PAGES.length - 1;
+  const mast = first
+    ? `<header class="mast">
       <h1>Amma's</h1>
       <span class="sub">Curated Indian Cuisine</span>
       <span class="rule"></span>
       <p class="motto">Every dish is served with love, tradition, and a little taste of home.</p>
-    </header>
-    <div class="cols">${FRONT.map(section).join("")}</div>
-    <footer class="foot">
-      <span>V vegetarian &nbsp;·&nbsp; S spicy &nbsp;·&nbsp; Spice level adjusted on request &nbsp;·&nbsp; Please tell us about any allergies</span>
-    </footer>
-  </div>
-  <div class="sheet" id="back">
-    <header class="mast small">
-      <h1>Amma's</h1>
-      <span class="rule"></span>
-    </header>
-    <div class="cols">${BACK.map(section).join("")}</div>
-    <footer class="foot">
-      <b>${esc(hoursLine())}</b>
+    </header>`
+    : `<header class="mast small"><h1>Amma's</h1><span class="rule"></span></header>`;
+  const foot = last
+    ? `<b>${esc(hoursLine())}</b>
       <span>${CONFIG.address.map(esc).join(", ")} &nbsp;·&nbsp; ${esc(CONFIG.phone)} &nbsp;·&nbsp; ${esc(CONFIG.email)}</span>
-      <span>V vegetarian &nbsp;·&nbsp; S spicy &nbsp;·&nbsp; Thank you for dining with us</span>
-    </footer>
-  </div>
+      <span>V vegetarian &nbsp;·&nbsp; S spicy &nbsp;·&nbsp; Thank you for dining with us</span>`
+    : `<span>V vegetarian &nbsp;·&nbsp; S spicy &nbsp;·&nbsp; Spice level adjusted on request &nbsp;·&nbsp; Please tell us about any allergies</span>`;
+  return `<div class="sheet" id="page-${i + 1}">
+    ${mast}
+    <div class="cols">${secs.map((col) => `<div class="col">${col.map(section).join("")}</div>`).join("")}</div>
+    <footer class="foot">${foot}</footer>
+  </div>`;
+}).join("\n")}
 </body>
 </html>
 `;
@@ -202,16 +209,17 @@ const page = await browser.newPage();
 await page.goto(pathToFileURL(htmlPath).href);
 await page.evaluate(() => document.fonts.ready);
 
-/* A multicol box that is too short pushes extra columns out sideways. */
-const overflow = await page.evaluate(() => [...document.querySelectorAll(".cols")].map((c) => ({
-  side: c.closest(".sheet").id,
-  over: c.scrollWidth - c.clientWidth,
-  spare: c.clientHeight
+/* A column whose content is taller than the page would be clipped. */
+const overflow = await page.evaluate(() => [...document.querySelectorAll(".col")].map((c, i) => ({
+  side: `${c.closest(".sheet").id} column ${(i % 2) + 1}`,
+  over: c.scrollHeight - c.clientHeight,
+  spare: c.clientHeight - [...c.children].reduce((h, el) => Math.max(h, el.offsetTop + el.offsetHeight - c.offsetTop), 0)
 })));
+console.log(overflow.map((o) => `${o.side}: ${o.over > 1 ? "OVER " + o.over : o.spare + "px spare"}`).join("\n"));
 const bad = overflow.filter((o) => o.over > 1);
 if (bad.length) {
   await browser.close();
-  throw new Error("menu does not fit: " + bad.map((o) => `${o.side} side overflows by ${o.over}px`).join("; "));
+  throw new Error("menu does not fit: " + bad.map((o) => `${o.side} overflows by ${o.over}px`).join("; "));
 }
 
 await page.pdf({ path: resolve(here, "menu.pdf"), width: "8.5in", height: "11in", printBackground: true, preferCSSPageSize: true });
