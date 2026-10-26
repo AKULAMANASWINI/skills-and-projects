@@ -215,28 +215,20 @@ section { padding-block: 120px; }
 }
 .menu-sub label { display: inline-flex; gap: 10px; align-items: center; cursor: pointer; }
 .menu-sub input { accent-color: var(--ink); width: 16px; height: 16px; }
-.section-note { text-align: center; font-family: var(--serif); font-style: italic; color: var(--soft); margin: -16px auto 44px; max-width: 60ch; }
-.menu-head { text-align: center; font-family: var(--display); font-size: 2rem; margin-bottom: 40px; }
-.menu-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 40px 96px; max-width: 1080px; margin: 0 auto; }
-@media (max-width: 760px) { .menu-list { grid-template-columns: minmax(0, 1fr); gap: 32px; } }
-.dish { display: grid; gap: 6px; }
-.dish-top { display: flex; align-items: baseline; gap: 14px; }
-.dish h3 { font-family: var(--serif); font-size: 1.15rem; letter-spacing: 0.01em; }
-.dish .dots { flex: 1; border-bottom: 1px dotted #c9c3bb; transform: translateY(-4px); min-width: 20px; }
-.dish .price { font-family: var(--serif); font-variant-numeric: tabular-nums lining-nums; font-size: 1.05rem; white-space: nowrap; }
-.dish .price.ask { font-style: italic; color: var(--soft); font-size: 0.95rem; }
-.dish p { color: var(--soft); font-size: 0.97rem; max-width: 48ch; }
-.dish .marks { display: inline-flex; gap: 8px; margin-left: 2px; vertical-align: 2px; }
-.dish .marks abbr {
-  text-decoration: none;
-  font: 500 0.62rem/1 var(--sans);
-  letter-spacing: 0.12em;
-  border: 1px solid var(--hair);
-  color: var(--soft);
-  padding: 3px 5px;
-}
-.dish .marks .sig { color: var(--brass); border-color: currentColor; }
-.menu-empty { text-align: center; color: var(--soft); grid-column: 1 / -1; }
+.section-note { text-align: center; font-family: var(--serif); font-style: italic; color: var(--soft); margin: -20px auto 48px; max-width: 52ch; }
+/* Tasting-menu setting: one centred column, names in tracked caps, italic descriptions, price beneath */
+.menu-head { text-align: center; font: 500 0.8rem/1.4 var(--sans); letter-spacing: 0.34em; text-transform: uppercase; margin-bottom: 52px; }
+.menu-head::after { content: ""; display: block; width: 28px; height: 1px; background: var(--brass); margin: 18px auto 0; }
+.menu-list { display: grid; gap: 40px; max-width: 580px; margin: 0 auto; text-align: center; }
+.dish { display: grid; gap: 6px; justify-items: center; }
+.dish .sig { font: 500 0.62rem/1.4 var(--sans); letter-spacing: 0.24em; text-transform: uppercase; color: var(--brass); }
+.dish h3 { font: 500 0.9rem/1.5 var(--sans); letter-spacing: 0.2em; text-transform: uppercase; }
+.dish p { font-family: var(--serif); font-style: italic; color: var(--soft); font-size: 1.02rem; max-width: 46ch; }
+.dish .line { display: flex; flex-wrap: wrap; justify-content: center; gap: 4px 14px; font: 400 0.82rem/1.5 var(--sans); letter-spacing: 0.06em; color: var(--soft); }
+.dish .price { font: 500 0.95rem/1.5 var(--sans); letter-spacing: 0.06em; color: var(--brass); font-variant-numeric: tabular-nums; }
+.dish .price.ask { font-weight: 400; font-style: italic; font-family: var(--serif); letter-spacing: 0; }
+.dish .line span + span::before { content: "·"; margin-right: 14px; color: var(--hair); }
+.menu-empty { text-align: center; color: var(--soft); }
 .menu-foot { text-align: center; color: var(--soft); font-size: 0.85rem; margin-top: 64px; }
 
 /* Breakfast */
@@ -392,7 +384,7 @@ footer small { font-size: 0.8rem; }
       </div>
       <div class="menu-nav" role="tablist" aria-label="Menu sections" id="tabs"></div>
       <div class="menu-sub">
-        <span><abbr title="Vegetarian" style="text-decoration:none">V</abbr> vegetarian &nbsp;·&nbsp; <abbr title="Spicy" style="text-decoration:none">S</abbr> spicy &nbsp;·&nbsp; spice level adjusted on request</span>
+        <span>Spice level adjusted on request</span>
         <label for="veg-only"><input type="checkbox" id="veg-only"> Vegetarian only</label>
       </div>
       <h3 class="menu-head" id="menu-head"></h3>
@@ -640,20 +632,15 @@ function renderMenu() {
   $("#section-note").hidden = !note;
   $("#menu-list").setAttribute("aria-labelledby", "tab-" + slug(active));
   $("#menu-list").innerHTML = items.length ? items.map((d) => {
-    const marks = [
-      d.veg ? `<abbr title="Vegetarian">V</abbr>` : "",
-      d.hot ? `<abbr title="Spicy">S</abbr>` : "",
-      d.tag ? `<abbr class="sig" title="${d.tag}">${d.tag.toUpperCase()}</abbr>` : ""
-    ].join("");
     const price = money(d.price);
+    const notes = [d.veg ? "Vegetarian" : "", d.hot ? "Spicy" : ""].filter(Boolean)
+      .map((t) => `<span>${t}</span>`).join("");
     return `
     <article class="dish">
-      <div class="dish-top">
-        <h3>${d.name}${marks ? ` <span class="marks">${marks}</span>` : ""}</h3>
-        <span class="dots" aria-hidden="true"></span>
-        <span class="price${price ? "" : " ask"}">${price || "on request"}</span>
-      </div>
+      ${d.tag ? `<span class="sig">${d.tag}</span>` : ""}
+      <h3>${d.name}</h3>
       <p>${d.desc}</p>
+      <div class="line"><span class="price${price ? "" : " ask"}">${price || "Price on request"}</span>${notes}</div>
     </article>`;
   }).join("")
     : `<p class="menu-empty">No vegetarian dishes in this section.</p>`;
