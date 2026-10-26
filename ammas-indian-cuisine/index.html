@@ -193,7 +193,14 @@ section { padding-block: 120px; }
 @media (max-width: 860px) { .sig-grid { grid-template-columns: minmax(0, 1fr); gap: 56px; } }
 
 /* Menu */
-.menu { background: var(--page); border-top: 1px solid var(--hair); }
+.menu {
+  border-top: 1px solid var(--hair);
+  /* Faint line doodles from the kitchen: chilli, curry leaf, samosa, chai, bowl, dosa, star anise, cardamom */
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='340' height='340' viewBox='0 0 340 340'%3E%3Cg fill='none' stroke='%2394661c' stroke-width='1.3' stroke-opacity='0.16' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M34 46q32 0 44 38q-28-6-44-38z'/%3E%3Cpath d='M34 46q-7-9-2-16'/%3E%3Cpath d='M190 64q22-34 56-34q-10 34-56 34z'/%3E%3Cpath d='M190 64l56-34'/%3E%3Cpath d='M206 56l-2-10M220 48l-2-11M232 40l-2-9'/%3E%3Cpath d='M96 182l32-58l32 58z'/%3E%3Cpath d='M104 174l24-42l24 42'/%3E%3Cpath d='M240 136h34l-5 48h-24z'/%3E%3Cpath d='M243 150h28'/%3E%3Cpath d='M252 126q-6-9 0-18q6-9 0-18'/%3E%3Cpath d='M264 126q-6-9 0-18'/%3E%3Cpath d='M30 262h68q-5 34-34 34q-29 0-34-34z'/%3E%3Cpath d='M50 252q-5-8 0-16M66 252q-5-8 0-16M82 252q-5-8 0-16'/%3E%3Cpath d='M168 280l82-28q9 11 0 24z'/%3E%3Cpath d='M184 275l4-12M204 268l4-12M224 262l3-11'/%3E%3Ccircle cx='290' cy='290' r='4'/%3E%3Cpath d='M290 276v-10M290 304v10M276 290h-10M304 290h10M280 280l-7-7M300 300l7 7M300 280l7-7M280 300l-7 7'/%3E%3Cellipse cx='150' cy='38' rx='7' ry='4' transform='rotate(-30 150 38)'/%3E%3Cellipse cx='318' cy='70' rx='7' ry='4' transform='rotate(20 318 70)'/%3E%3Cellipse cx='20' cy='160' rx='7' ry='4' transform='rotate(60 20 160)'/%3E%3Cellipse cx='150' cy='320' rx='7' ry='4' transform='rotate(-10 150 320)'/%3E%3C/g%3E%3C/svg%3E") center top / 340px 340px repeat,
+    var(--page);
+}
+.menu .wrap { position: relative; }
 .menu-nav {
   display: flex;
   flex-wrap: wrap;
