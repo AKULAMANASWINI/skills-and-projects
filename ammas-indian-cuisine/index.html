@@ -110,13 +110,10 @@ a { color: inherit; }
 .header-right { justify-self: end; display: flex; align-items: center; gap: 28px; }
 .header-right .btn { padding: 12px 20px; }
 .btn.call { display: inline-flex; align-items: center; gap: 8px; white-space: nowrap; }
-.btn.call .call-label { display: none; }
-.btn.call .call-number { letter-spacing: 0.12em; }
+.btn.call .call-number { display: none; }
 @media (max-width: 860px) {
   .header-right { gap: 10px; }
   .header-right .btn { padding: 11px 14px; }
-  .btn.call .call-label { display: inline; }
-  .btn.call .call-number { display: none; }
 }
 @media (max-width: 380px) {
   .site-header .wrap { gap: 8px; }
@@ -334,7 +331,7 @@ footer small { font-size: 0.8rem; }
     <a class="wordmark" href="#top">Amma's</a>
     <div class="header-right">
       <nav class="nav caps" aria-label="Secondary"><a href="#visit">Visit</a></nav>
-      <a class="btn call" id="call-link" href="#visit"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true"><path fill="currentColor" d="M6.6 10.8a15.1 15.1 0 0 0 6.6 6.6l2.2-2.2a1 1 0 0 1 1-.25 11.4 11.4 0 0 0 3.6.57 1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1c0 1.25.2 2.45.57 3.57a1 1 0 0 1-.25 1z"/></svg><span class="call-label">Call</span><span class="call-number" id="call-number"></span></a>
+      <a class="btn call" id="call-link" href="#visit"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true"><path fill="currentColor" d="M6.6 10.8a15.1 15.1 0 0 0 6.6 6.6l2.2-2.2a1 1 0 0 1 1-.25 11.4 11.4 0 0 0 3.6.57 1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1c0 1.25.2 2.45.57 3.57a1 1 0 0 1-.25 1z"/></svg><span class="call-label">Call</span><span class="call-number" id="call-number" hidden></span></a>
       <a class="btn solid" href="#reserve">Reservations</a>
     </div>
   </div>
