@@ -31,6 +31,16 @@ const PAGES = [
   [["Breakfast"], ["Drinks & Desserts"]]
 ];
 const placed = PAGES.flat(2);
+
+/* One photo under each page's masthead. Pages 2 and 3 borrow dishes from
+   elsewhere until there are photos of biryani, tandoori and a curry. */
+const PHOTOS = [
+  { src: "samosa.jpg", caption: "Samosa" },
+  { src: "gobi-manchurian.jpg", caption: "Gobi Manchurian" },
+  { src: "medu-vada.jpg", caption: "Medu Vada" },
+  { src: "gulab-jamun.jpg", caption: "Gulab Jamun" }
+];
+if (PHOTOS.length !== PAGES.length) throw new Error("need one photo per page");
 const missing = Object.keys(MENU).filter((s) => !placed.includes(s));
 if (missing.length) throw new Error("sections not placed on any page: " + missing.join(", "));
 
@@ -64,6 +74,10 @@ function dish(d) {
     <h3>${esc(d.name)} ${price}${marks}</h3>
     <p>${esc(d.desc)}</p>
   </article>`;
+}
+
+function photo({ src, caption }) {
+  return `<figure class="photo"><img src="../images/${src}" alt="${esc(caption)}"><figcaption>${esc(caption)}</figcaption></figure>`;
 }
 
 function section(name) {
@@ -122,12 +136,19 @@ h1, h2, h3, p { margin: 0; font-weight: 400; }
   pointer-events: none;
 }
 
-.mast { text-align: center; display: grid; gap: 4pt; justify-items: center; margin-bottom: 22pt; }
+.mast { text-align: center; display: grid; gap: 4pt; justify-items: center; margin-bottom: 16pt; }
 .mast h1 { font-family: var(--display); font-size: 40pt; line-height: 1; letter-spacing: 0.01em; }
 .mast .sub { font: 500 7.6pt/1.4 var(--sans); letter-spacing: 0.36em; text-transform: uppercase; color: var(--soft); }
 .mast .rule { width: 30pt; height: 0.75pt; background: var(--brass); margin: 9pt 0 6pt; }
 .mast .motto { font-family: var(--serif); font-style: italic; font-size: 10pt; color: var(--soft); }
-.mast.small { margin-bottom: 18pt; }
+.mast.small { margin-bottom: 14pt; }
+.photo { margin: 6pt 0 0; display: grid; justify-items: center; gap: 2pt; }
+.photo img { height: 0.95in; width: auto; display: block; mix-blend-mode: multiply; }
+.photo figcaption { font: italic 400 7pt/1.3 var(--serif); color: var(--soft); }
+.mast:not(.small) .photo img { height: 0.85in; }
+/* The back page also carries hours and address, so it sets a little tighter. */
+.last .photo img { height: 0.7in; }
+.last .dish { padding-bottom: 8.5pt; }
 .mast.small h1 { font-size: 22pt; }
 
 .cols {
@@ -141,7 +162,7 @@ h1, h2, h3, p { margin: 0; font-weight: 400; }
 .col + .col { border-left: 0.5pt solid var(--hair); padding-left: 0.5in; margin-left: -0.25in; }
 .col:first-child { padding-right: 0.25in; }
 .sec { text-align: center; }
-.sec + .sec { margin-top: 28pt; }
+.sec + .sec { margin-top: 22pt; }
 .keep, .whole { break-inside: avoid; }
 .sec h2 {
   font: 500 9pt/1.3 var(--sans);
@@ -152,7 +173,7 @@ h1, h2, h3, p { margin: 0; font-weight: 400; }
 .sec h2::after { content: ""; display: block; width: 18pt; height: 0.75pt; background: var(--brass); margin: 7pt auto 10pt; }
 .note { font-family: var(--serif); font-style: italic; font-size: 8.2pt; line-height: 1.3; color: var(--brass); margin: -3pt auto 9pt; max-width: 3.1in; }
 
-.dish { break-inside: avoid; display: grid; justify-items: center; gap: 1.6pt; padding-bottom: 13pt; }
+.dish { break-inside: avoid; display: grid; justify-items: center; gap: 1.4pt; padding-bottom: 10.5pt; }
 .tag { font: 500 6.2pt/1.3 var(--sans); letter-spacing: 0.24em; text-transform: uppercase; color: var(--brass); }
 .dish h3 { font: 500 8.8pt/1.35 var(--sans); letter-spacing: 0.16em; text-transform: uppercase; }
 .dish h3 .price, .dish h3 .mk { margin-left: 4pt; text-transform: none; }
@@ -183,14 +204,14 @@ ${PAGES.map((secs, i) => {
       <span class="sub">Curated Indian Cuisine</span>
       <span class="rule"></span>
       <p class="motto">Every dish is served with love, tradition, and a little taste of home.</p>
+      ${photo(PHOTOS[i])}
     </header>`
-    : `<header class="mast small"><h1>Amma's</h1><span class="rule"></span></header>`;
+    : `<header class="mast small"><h1>Amma's</h1><span class="rule"></span>${photo(PHOTOS[i])}</header>`;
   const foot = last
     ? `<b>${esc(hoursLine())}</b>
-      <span>${CONFIG.address.map(esc).join(", ")} &nbsp;·&nbsp; ${esc(CONFIG.phone)} &nbsp;·&nbsp; ${esc(CONFIG.email)}</span>
-      <span>V vegetarian &nbsp;·&nbsp; S spicy &nbsp;·&nbsp; Thank you for dining with us</span>`
+      <span>${CONFIG.address.map(esc).join(", ")} &nbsp;·&nbsp; ${esc(CONFIG.phone)} &nbsp;·&nbsp; ${esc(CONFIG.email)} &nbsp;·&nbsp; V vegetarian &nbsp;·&nbsp; S spicy</span>`
     : `<span>V vegetarian &nbsp;·&nbsp; S spicy &nbsp;·&nbsp; Spice level adjusted on request &nbsp;·&nbsp; Please tell us about any allergies</span>`;
-  return `<div class="sheet" id="page-${i + 1}">
+  return `<div class="sheet${last ? " last" : ""}" id="page-${i + 1}">
     ${mast}
     <div class="cols">${secs.map((col) => `<div class="col">${col.map(section).join("")}</div>`).join("")}</div>
     <footer class="foot">${foot}</footer>
