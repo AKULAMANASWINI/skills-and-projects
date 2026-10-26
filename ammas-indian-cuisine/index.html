@@ -398,7 +398,7 @@ footer small { font-size: 0.8rem; }
     <div class="wrap">
       <figure><img src="images/dosa.jpg" width="900" height="476" alt="Masala dosa with sambar and coconut chutney" loading="lazy"></figure>
       <div class="breakfast-copy">
-        <span class="caps muted">Every day · 11am – 1pm</span>
+        <span class="caps muted">Monday – Saturday · 11am – 1pm</span>
         <h2>Breakfast at Amma's</h2>
         <p>Dosas straight off the griddle, with fresh medu vada, masala vada and Mysore bonda served with chutney. Every dosa is <span id="dosa-price">$12.95</span>.</p>
         <div class="breakfast-list">
@@ -494,11 +494,11 @@ footer small { font-size: 0.8rem; }
 const CONFIG = {
   phone: "(555) 010-2026",               // PLACEHOLDER
   email: "hello@ammasindiancuisine.com", // PLACEHOLDER
-  address: ["123 Main Street", "Your City, ST 00000"], // PLACEHOLDER
+  address: ["250 Crossroads Blvd", "Saratoga Springs, UT 84045"],
   currency: "$",
-  // Day index: 0 = Sunday. null = closed. Open every day 11am – 10pm; breakfast is 11am – 1pm.
+  // Day index: 0 = Sunday. null = closed. Open Monday – Saturday 11am – 10pm, closed Sunday; breakfast is 11am – 1pm.
   hours: [
-    { day: "Sunday",    open: "11:00", close: "22:00" },
+    { day: "Sunday",    open: null,    close: null },
     { day: "Monday",    open: "11:00", close: "22:00" },
     { day: "Tuesday",   open: "11:00", close: "22:00" },
     { day: "Wednesday", open: "11:00", close: "22:00" },
@@ -570,7 +570,7 @@ const MENU = {
     { name: "Fish Curry", veg: false, price: 18.95, desc: "Tender fish simmered in a tangy, aromatic curry." },
     { name: "Nellore Chepala Pulusu", veg: false, price: 18.95, desc: "Traditional Andhra-style fish curry with tangy tamarind spices.", tag: "Andhra special" }
   ]},
-  "Breakfast": { note: "Served every day, 11am – 1pm.", items: [
+  "Breakfast": { note: "Served Monday – Saturday, 11am – 1pm.", items: [
     { name: "Plain Dosa", veg: true, price: 12.95, desc: "Golden, crispy rice and lentil crêpe." },
     { name: "Onion Dosa", veg: true, price: 12.95, desc: "Crispy dosa topped with finely chopped onions." },
     { name: "Masala Dosa", veg: true, price: 12.95, desc: "Golden dosa filled with spiced potato masala." },
